@@ -8,19 +8,7 @@
     "start": "next start",
     "lint": "next lint"
   },
-  "dependencies": {
-    "@chakra-ui/icons": "^1.1.7",
-    "@chakra-ui/next-js": "^2.2.0",
-    "@chakra-ui/react": "^1.8.9",
-    "@chakra-ui/system": "^1.12.1",
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
-    "@fortawesome/fontawesome-svg-core": "^6.5.1",
-    "@fortawesome/free-solid-svg-icons": "^6.5.1",
-    "@fortawesome/react-fontawesome": "^0.2.0",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
+  "dependencies": {    
     "axios": "^0.21.1",
     "chat-app": "file:..",
     "framer-motion": "^4.1.17",
