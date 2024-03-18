@@ -1,0 +1,136 @@
+.preference-modal-bg-container {
+  min-width: 30%;
+  background-color: #fff;
+  left: 30%;
+  top: 15%;
+  /* bottom: 50%; */
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 60px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.cross-button {
+  width: 25px;
+  height: 25px;
+  background-color: #f2f5fb;
+  border-radius: 50%;
+  padding: 0;
+  border: none;
+  align-self: flex-end;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: -36px;
+}
+
+.pref-head-text {
+  /* width: 143px;
+  height: 29px; */
+  flex-grow: 0;
+  margin: 0;
+  font-family: Poppins, Arial;
+  font-size: 24px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  /* line-height: 1.21; */
+  letter-spacing: normal;
+  text-align: left;
+  color: #2b2b2b;
+  margin-bottom: 26px;
+}
+
+.Gender {
+  flex-grow: 0;
+  margin: 0 0px 8px 0;
+  font-family: Poppins, Arial;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.21;
+  letter-spacing: normal;
+  text-align: left;
+  color: rgba(43, 43, 43, 0.8);
+  display: block;
+}
+
+.Gender .text-style-1 {
+  color: #e63946;
+}
+
+.input-pref {
+  width: 300px;
+  height: 40px;
+  flex-grow: 0;
+  margin: 0px 0 0;
+  border-radius: 2px;
+  border: none;
+  background-color: #f2f5fb;
+  padding-left: 12px;
+  outline: none;
+}
+
+.slider {
+  -webkit-appearance: none;
+  background-color: #8f47ff;
+  width: 210px;
+  height: 3px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: url("../../../assets/images/rangeThumb.svg") center/contain no-repeat;
+  height: 20px;
+  width: 20px;
+}
+
+.input-range-container {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.preference-inner-container {
+  margin-bottom: 1.12rem;
+}
+
+.topics-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 382px;
+  gap: 14px;
+}
+
+.topic-item-container {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  background-color: #f2f5fb;
+  margin-bottom: -6px;
+}
+
+.topic-item-container span {
+  flex-grow: 0;
+  margin: 0 6px 0 0;
+  font-family: poppins, arial;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.21;
+  letter-spacing: normal;
+  text-align: left;
+  color: rgba(43, 43, 43, 0.8);
+}
+
+.save-btn {
+  align-self: flex-end;
+  cursor: pointer;
+}

@@ -237,3 +237,46 @@
     transform: rotate(0deg);
   }
 }
+
+
+
+
+.sideBarIconTextContainer {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+
+.sideBarText {
+  margin: 0;
+  margin-bottom: 2px;
+  font-family: Poppins;
+  font-size: 15px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.21;
+  /* letter-spacing: -0.9px; */
+  text-align: left;
+  color: #fff;
+}
+
+
+.saveButton {
+  background-color: #8f47ff;
+  padding: 9px 14px;
+  border-radius: 6px;
+  border: none;
+
+
+    font-family: Poppins, Arial;
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    color: #fff;
+    cursor: pointer;
+}
