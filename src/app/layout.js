@@ -5,7 +5,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body>
+      <body style={{ margin: '0px' }}> 
         <ChatProvider>{children}</ChatProvider>
       </body>
     </html>

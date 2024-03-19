@@ -1,5 +1,5 @@
 export const Input = (props) => {
-    return <input type={props.type} className={props.css} placeholder={props.placeholder} onChange={() => props.onChange(e)} value={props.value} />
+    return <input type={props.type} className={props.className} placeholder={props.placeholder} onChange={(e) => props.onChange(e.target.value)} value={props.value} />
 }
 
 export const Button = (props) => {
