@@ -21,6 +21,7 @@ import "./sidebar.css";
 import { SideBarSelections } from "../commonComponents/commonComponents";
 import { useDispatch } from "react-redux";
 import {
+  setBadgesModal,
   setPreferenceModal,
   setProfileModal,
 } from "../../Context/features/modalSlice";
@@ -49,6 +50,9 @@ const SideBar = () => {
     dispatch(setPreferenceModal());
   };
 
+  const handleBadgeSelection = () => {
+    dispatch(setBadgesModal());
+  };
   return (
     <div className={`sidebar-bg-container ${isOpen ? "open" : "closed"}`}>
       <div className="side-bar-top-container">
@@ -121,7 +125,10 @@ const SideBar = () => {
           <BillingSvg />
           <p className="mobile-number-text ">Billing</p>
         </div>
-        <div className="side-bar-icon-text-container pointer">
+        <div
+          className="side-bar-icon-text-container pointer "
+          onClick={handleBadgeSelection}
+        >
           <BadgesSvg />
           <p className="mobile-number-text">Badges</p>
         </div>

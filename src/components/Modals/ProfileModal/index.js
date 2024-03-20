@@ -65,6 +65,7 @@ const ProfileModal = () => {
 
   const handleGenderSelection = (gender) => {
     console.log(gender);
+    setDropDownSelected(false);
     setSelectedGender(gender.sex);
   };
 
