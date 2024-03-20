@@ -6,7 +6,9 @@ import ProfileModal from "../../components/Modals/ProfileModal";
 import { useSelector } from "react-redux";
 import PrivacyPolicyModal from "../../components/Modals/PrivacyPolicyModal";
 import NotificationModal from "../../components/Modals/NotificationModal";
-const Test = () => {
+import BillingModal from "../../components/Modals/BillingModal";
+
+const test = () => {
   const modalSelector = useSelector((state) => state.modalSlice);
   const {
     preferenceModal,
@@ -18,6 +20,7 @@ const Test = () => {
   return (
     <>
       <SideBar />
+      <BillingModal />
       {privacyAndSecurityModal && <PrivacyPolicyModal />}
       {notificationModal && <NotificationModal />}
       {preferenceModal && <PreferenceModal />}
@@ -26,4 +29,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default test;

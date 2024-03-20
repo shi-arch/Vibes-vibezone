@@ -1,10 +1,17 @@
 import React from "react";
 import "./index.css";
 import { CrossSvg } from "../../svgComponents/svgComponents";
+import { setPrivacyAndSecurityModal } from "../../../Context/features/modalSlice";
+import { useDispatch } from "react-redux";
+
 const PrivacyPolicyModal = () => {
+  const dispatch = useDispatch();
+  const handleClose = () => {
+    dispatch(setPrivacyAndSecurityModal());
+  };
   return (
     <div className="privacy-policy-main-container">
-      <button className="cross-button">
+      <button className="cross-button" onClick={handleClose}>
         <CrossSvg />
       </button>
       <h1 className="privacy-security">Privacy and Security</h1>

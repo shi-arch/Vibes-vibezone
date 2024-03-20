@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import { CrossSvg } from "../../svgComponents/svgComponents";
 import "./index.css";
+import { setNotificationModal } from "../../../Context/features/modalSlice";
+import { useDispatch } from "react-redux";
 
 const index = () => {
   const [notification, setNotification] = useState(false);
   const [email, setEmail] = useState(false);
   const [sms, setSms] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleClose = () => {
+    dispatch(setNotificationModal());
+  };
 
   return (
     <div className="Notifications-main-container">
-      <button className="cross-button">
+      <button className="cross-button" onClick={handleClose}>
         <CrossSvg />
       </button>
       <h1 className="notifications-heading ">Notifications</h1>
