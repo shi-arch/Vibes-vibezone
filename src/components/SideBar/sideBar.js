@@ -21,8 +21,11 @@ import "./sidebar.css";
 import { SideBarSelections } from "../commonComponents/commonComponents";
 import { useDispatch } from "react-redux";
 import {
-  setBadgesModal,
+  setNotificationModal,
   setPreferenceModal,
+  setBillingModal,
+  setPrivacyAndSecurityModal,
+  setBadgesModal,
   setProfileModal,
 } from "../../Context/features/modalSlice";
 
@@ -31,6 +34,13 @@ const SideBar = () => {
 
   //redux-tool kit
   const dispatch = useDispatch();
+
+  const handlePrivacySelection = () => {
+    dispatch(setPrivacyAndSecurityModal());
+  };
+  const handleNotificationSelection = () => {
+    dispatch(setNotificationModal());
+  };
 
   const handleSelection = () => {
     console.log("Selection");
@@ -111,17 +121,23 @@ const SideBar = () => {
 
           <p className="mobile-number-text">Preferences</p>
         </div>
-        <div className="side-bar-icon-text-container pointer">
+        <div
+          onClick={handleNotificationSelection}
+          className="side-bar-icon-text-container pointer"
+        >
           <NotificationSvg />
 
           <p className="mobile-number-text">Notifications</p>
         </div>
-        <div className="side-bar-icon-text-container pointer">
+        <div
+          onClick={handlePrivacySelection}
+          className="side-bar-icon-text-container pointer"
+        >
           <PrivacySvg />
 
           <p className="mobile-number-text">Privacy and Security</p>
         </div>
-        <div className="side-bar-icon-text-container pointer">
+        <div onClick={() =>  dispatch(setBillingModal())} className="side-bar-icon-text-container pointer">
           <BillingSvg />
           <p className="mobile-number-text ">Billing</p>
         </div>
