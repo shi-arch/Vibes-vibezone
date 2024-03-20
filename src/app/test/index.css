@@ -1,0 +1,16 @@
+.test-bg-container{
+    filter: blur(1px);
+    z-index: -1;
+    /* opacity: 0.5; */
+}
+
+.pricing-bg{
+    max-width: 85%;
+    height: 100%;
+
+}
+
+.test-bg{
+    display: flex;
+    
+}

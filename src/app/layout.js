@@ -1,13 +1,13 @@
-import { ChatProvider } from '../Context/ChatProvider'
+import { ChatProvider } from "../Context/ChatProvider";
 
-export default function RootLayout({
-  children,
-}) {
+import { Providers } from "../Context/Provider";
+
+export default function RootLayout({ children }) {
   return (
-    <html lang='en'>
-      <body style={{ margin: '0px' }}> 
-        <ChatProvider>{children}</ChatProvider>
+    <html lang="en">
+      <body style={{ margin: "0px", height: "100vh" }}>
+        <Providers>{children}</Providers>
       </body>
     </html>
-  )
+  );
 }
