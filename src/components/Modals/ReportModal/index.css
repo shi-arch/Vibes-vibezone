@@ -1,7 +1,7 @@
 .report-container {
   left: 35%;
   top: 10%;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -12,6 +12,7 @@
   border-radius: 15px;
   background-color: #fff;
   justify-content: space-between;
+
 }
 .cross-button {
   width: 25px;

@@ -73,10 +73,10 @@ background-color: #fff;
 .line{
   border: none;
   border-top: 1px solid #ccc; 
-  width: 633px;
+  /* width: 633px; */
   height: 0.4px;
   flex-grow: 0;
-  margin: 18.6px 0 0;
+  /* margin: 18.6px 0 0; */
   background-color: rgba(43, 43, 43, 0.2);
 }
 .new-msg-heading{
