@@ -1,0 +1,95 @@
+.report-container {
+  left: 35%;
+  top: 10%;
+  border: 1px solid #ccc;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 555px;
+  height: 632px;
+  flex-grow: 0;
+  padding: 31px 27px 47.4px 57px;
+  border-radius: 15px;
+  background-color: #fff;
+  justify-content: space-between;
+}
+.cross-button {
+  width: 25px;
+  height: 25px;
+  background-color: #f2f5fb;
+  border-radius: 50%;
+  padding: 0;
+  border: none;
+  align-self: flex-end;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: -15px;
+}
+.issue {
+  width: 62px;
+  height: 29px;
+  flex-grow: 0;
+  margin: 0 370px 17px 0;
+  font-family: Poppins, Arial;
+  font-size: 24px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.21;
+  letter-spacing: normal;
+  text-align: left;
+  color: #2b2b2b;
+}
+.issue-label {
+  width: 100%;
+  height: 50px;
+  flex-grow: 0;
+  margin: 17px 0 0;
+  padding: 13px 26px 12px 381px;
+  border-radius: 2px;
+  background-color: #f2f5fb;
+}
+.description-text {
+  width: 136px;
+  height: 29px;
+  flex-grow: 0;
+  margin: 30px 179px 17px 0;
+  font-family: Poppins, Arial;
+  font-size: 24px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.21;
+  letter-spacing: normal;
+  text-align: left;
+  color: #2b2b2b;
+}
+.description-information {
+  width: 100%;
+  height: 240px;
+  flex-grow: 0;
+  margin: 17px 14px 40px 0;
+  border-radius: 2px;
+  background-color: #f2f5fb;
+}
+.custom-button {
+  width: 117px;
+  height: 49.7x;
+  flex-grow: 0;
+  margin: 10px 14px 0px 179px;
+  padding: 12.8px 22px 12.8px;
+  border-radius: 5px;
+  background-color: #8f47ff;
+  font-family: Poppins, Arial;
+  font-size: 20px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.21;
+  letter-spacing: normal;
+  text-align: right;
+  color: #fff;
+  align-self: flex-end;
+}

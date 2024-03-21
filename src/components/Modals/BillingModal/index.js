@@ -75,6 +75,10 @@ const downloadInvoice = (invoiceId) => {
   console.log(`Downloading invoice with ID: ${invoiceId}`);
 };
 
+const handleClose = () => {
+  window.location.href = "about:blank";
+};
+
 export default function PricingTable() {
   return (
     <Container className="billing-container" maxWidth="md">
@@ -97,9 +101,16 @@ export default function PricingTable() {
         <Button
           className="button"
           variant="contained"
-          onClick={() => setOpen(true)}
+          sx={{
+            textTransform: "none",
+            boxShadow: "none",
+            "&:hover": {
+              backgroundColor: "#8f47ff",
+            },
+          }}
+          onClick={handleClose}
         >
-          Cancel
+          Close
         </Button>
       </Grid>
     </Container>

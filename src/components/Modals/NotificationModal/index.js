@@ -8,6 +8,7 @@ const index = () => {
   const [notification, setNotification] = useState(false);
   const [email, setEmail] = useState(false);
   const [sms, setSms] = useState(false);
+
   const dispatch = useDispatch();
 
   const handleClose = () => {

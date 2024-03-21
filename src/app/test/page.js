@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import PrivacyPolicyModal from "../../components/Modals/PrivacyPolicyModal";
 import NotificationModal from "../../components/Modals/NotificationModal";
 import BillingModal from "../../components/Modals/BillingModal";
-
+import ReportModal from "../../components/Modals/ReportModal";
 const test = () => {
   const modalSelector = useSelector((state) => state.modalSlice);
   const {
@@ -20,7 +20,8 @@ const test = () => {
   return (
     <>
       <SideBar />
-      <BillingModal />
+      <ReportModal />
+      {/* <BillingModal /> */}
       {privacyAndSecurityModal && <PrivacyPolicyModal />}
       {notificationModal && <NotificationModal />}
       {preferenceModal && <PreferenceModal />}
