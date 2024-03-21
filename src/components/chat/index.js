@@ -223,9 +223,9 @@ const updateChatList = (chatList) => {
   return chatList;
 };
 
-chatList.sort((a, b) => a.date - b.date);
-
 chatList = updateChatList(chatList);
+
+chatList.sort((a, b) => b.date - a.date);
 
 let lastDisplayedDate = null;
 
@@ -243,12 +243,6 @@ const Chat = () => {
       return chatList[index].sender === chatList[index + 1].sender;
     }
   };
-
-  // const getLastDate = (chatList, index) => {
-  //   if (index < chatList.length - 1) {
-  //     return chatList[index].date === chatList[index + 1].date;
-  //   }
-  // };
 
   const getLastDate = (chatList, index, prevDate) => {
     if (index < chatList.length - 1) {
@@ -289,7 +283,7 @@ const Chat = () => {
           <div className="search-container">
             <Input
               type="search"
-              className="search-input"
+              css="search-input"
               onChange={setSearchInput}
               placeholder="Search"
               value={searchInput}
@@ -514,14 +508,14 @@ const Chat = () => {
             </div>
             <div className="send-msg-con-1">
               <div className="send-msg-con-2">
-                <div className="attach-type">
+                <div className="attach-type-con">
                   <Attachment />
                   <Input
                     type="text"
-                    className="send-msg"
+                    css="input-send-message"
                     placeholder="Type a message"
                     value={message}
-                    onChange={setMessage}
+                    onChange={(e) => setMessage(e.target.value)}
                   />
                 </div>
                 <Send />

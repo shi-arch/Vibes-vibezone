@@ -6,7 +6,7 @@ export const Input = (props) => {
       type={props.type}
       className={props.css}
       placeholder={props.placeholder}
-      onChange={() => props.onChange(e)}
+      onChange={(e) => props.onChange(e)}
       value={props.value}
     />
   );
