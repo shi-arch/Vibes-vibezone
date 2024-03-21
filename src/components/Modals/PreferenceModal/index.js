@@ -1,12 +1,16 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, {useState } from "react";
 import "./index.css";
 import { CrossSvg } from "../../svgComponents/svgComponents";
 import { Button } from "../../commonComponents/commonComponents";
 
 import styles from "./index.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setPreferenceModal } from "../../../Context/features/modalSlice";
+import Modal from "@mui/material/Modal";
+import { Box, Slider, Typography } from "@mui/material";
+
+import rangeThumbSvg from "../../../assets/images/rangeThumb.svg"
 
 // import rangeThumb  from "../../../assets/images/rangeThumb.svg"
 
@@ -73,26 +77,16 @@ const InputComponent = (props) => {
   );
 };
 
+
+function valuetext(value) {
+  return `${value}°C`;
+}
+
 const PreferenceModal = () => {
-  const preferenceModalRef = useRef();
+  const [open,setOpen] = useState(false)
+  const modalSelector = useSelector((state) => state.modalSlice);
+  const { preferenceModal } = modalSelector;
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (
-        preferenceModalRef.current &&
-        !preferenceModalRef.current.contains(event.target)
-      ) {
-        dispatch(setPreferenceModal());
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dispatch]);
 
   const [gender, setGender] = useState();
   const [otherQuestions, setOtherQuestions] = useState();
@@ -105,72 +99,108 @@ const PreferenceModal = () => {
   const handleClose = () => {
     dispatch(setPreferenceModal());
   };
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    minWidth: "30%",
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+  };
+
+
+    const [value, setValue] = useState([20, 37]);
+
+    const handleChange = (event, newValue) => {
+      setValue(newValue);
+    };
+
   return (
-    <div className="preference-modal-bg-container" ref={preferenceModalRef}>
-      <button className="cross-button" onClick={handleClose}>
-        <CrossSvg />
-      </button>
-      <h4 className="pref-head-text">Preferences</h4>
-      <InputComponent
-        label="Gender"
-        onChange={setGender}
-        value={gender}
-        placeholder=""
-      />
-
-      <div className="preference-inner-container">
-        <span className="Gender">
-          Age
-          <span className="text-style-1">*</span>
-        </span>
-
-        <div className="input-range-container">
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            className="slider"
+    <Modal
+      open={preferenceModal}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box style={style}>
+        <div className="preference-modal-bg-container">
+          <button className="cross-button" onClick={handleClose}>
+            <CrossSvg />
+          </button>
+          <h4 className="pref-head-text">Preferences</h4>
+          <InputComponent
+            label="Gender"
+            onChange={setGender}
+            value={gender}
+            placeholder=""
           />
-          <span className="-to-20">15 to 20</span>
-          {/* <p>{age}</p> */}
-        </div>
-      </div>
 
-      <div className="preference-inner-container">
-        <span className="Gender">Topics</span>
-        <div className="topics-container">
-          {topicsData.map((topic) => (
-            <div key={topic.id} className="topic-item-container">
-              <span>{topic.name}</span>
-              <CrossSvg
-                width="15px"
-                height="15px"
-                color="rgba(43, 43, 43, 0.6)"
-              />
+          <div className="preference-inner-container">
+            <span className="Gender">
+              Age
+              <span className="text-style-1">*</span>
+            </span>
+
+            <div className="input-range-container">
+              {/* <input
+                type="range"
+                min="0"
+                max="100"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                className="slider"
+              /> */}
+              <Box sx={{ width: 300 }}>
+                <Slider
+                  getAriaLabel={() => "Temperature range"}
+                  value={value}
+                  onChange={handleChange}
+                  valueLabelDisplay="auto"
+                  // className="slider"
+                />
+              </Box>
+              <span className="-to-20">15 to 20</span>
+              {/* <p>{age}</p> */}
             </div>
-          ))}
+          </div>
+
+          <div className="preference-inner-container">
+            <span className="Gender">Topics</span>
+            <div className="topics-container">
+              {topicsData.map((topic) => (
+                <div key={topic.id} className="topic-item-container">
+                  <span>{topic.name}</span>
+                  <CrossSvg
+                    width="15px"
+                    height="15px"
+                    color="rgba(43, 43, 43, 0.6)"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+          <InputComponent
+            label="Other Questions"
+            onChange={setOtherQuestions}
+            value={otherQuestions}
+            placeholder=""
+          />
+
+          <div className="save-btn">
+            <Button
+              type="submit"
+              onClick={handleSave}
+              label="Save"
+              css={styles.saveButton}
+            />
+          </div>
         </div>
-      </div>
-      <InputComponent
-        label="Other Questions"
-        onChange={setOtherQuestions}
-        value={otherQuestions}
-        placeholder=""
-      />
-
-      <div className="save-btn">
-        <Button
-          type="submit"
-          onClick={handleSave}
-          label="Save"
-          css={styles.saveButton}
-        />
-      </div>
-
-      {/* <button className="saveButton">Save</button> */}
-    </div>
+      </Box>
+    </Modal>
   );
 };
 

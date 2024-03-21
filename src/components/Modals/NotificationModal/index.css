@@ -70,14 +70,16 @@ background-color: #fff;
   text-align: left;
   color: rgba(43, 43, 43, 0.35);
 }
-.line{
+.noti-line{
   border: none;
   border-top: 1px solid #ccc; 
-  width: 633px;
-  height: 0.4px;
-  flex-grow: 0;
-  margin: 18.6px 0 0;
-  background-color: rgba(43, 43, 43, 0.2);
+  /* width: 633px; */
+  /* height: 0.4px; */
+  flex-grow: 1;
+  width: 100%;
+  margin: 18.6px 0 10px;
+  background-color: rgba(255, 254, 254, 0.2);
+  
 }
 .new-msg-heading{
   flex-grow: 0;
@@ -94,7 +96,6 @@ background-color: #fff;
 }
 .msg-container{
  height:10px;
- 
 }
 
 
@@ -168,23 +169,25 @@ background-color: #fff;
 }
 .scroll-bar {
   height:300px;
-  border-radius: 25px;
+  /* border-radius: 25px; */
   overflow-y:auto;
+  width: calc(100% + 5px);
 }
 .scroll-bar::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
+
 }
 
 .scroll-bar::-webkit-scrollbar-track {
   width: 3px;
-  height: 60px;
+  /* height: 60px; */
   border-radius: 25px;
   background-color: #f2f2f2;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 .scroll-bar::-webkit-scrollbar-thumb {
-  width: 5px;
+  width: 3px;
   border-radius: 10px;
   background: #8f47ff;
 } 

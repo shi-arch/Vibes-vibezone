@@ -1,17 +1,17 @@
 .privacy-policy-main-container { 
   width:40%;
   background-color: #fff;
-  left: 30%;
+  /* left: 30%;
   top: 15%;
-  /* bottom: 50%; */
+  bottom: 50%; */
   border: 1px solid #ccc;
   border-radius: 12px;
-  position: absolute;
+  /* position: absolute; */
   display: flex;
   flex-direction: column;
   padding: 22px 60px;
   border-radius: 5px;
-  background-color: #fff;
+
 }
 
 .cross-button {
