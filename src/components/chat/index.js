@@ -12,8 +12,7 @@ import Image from "next/image";
 import url1 from "../../assets/images/profile1.svg";
 import url2 from "../../assets/images/profile2.svg";
 import url3 from "../../assets/images/profile3.svg";
-import MsgSeen from "../svgComponents/index.js";
-import { ArrowLeft, ArrowDown } from "../svgComponents/index.js";
+import { MsgSeen, ArrowLeft, ArrowDown } from "../svgComponents";
 import "./index.css";
 
 const recentUsers = [
