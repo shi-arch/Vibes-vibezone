@@ -19,7 +19,7 @@
 }
 
 .sidebar-bg-container.closed{
-  transform: translateX(-235px);
+  transform: translateX(-245px);
 }
 
 ::-webkit-scrollbar{

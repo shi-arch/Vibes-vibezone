@@ -73,6 +73,8 @@
   background-color: #fff;
   border:none;
   width:100%;
+  padding: 0px;
+
 } 
 .button{
   width: 83px;
@@ -93,10 +95,10 @@
   color: #fff;
 }
 .line{
-  width: 858.1px;
+  /* width: 858.1px; */
   height: 0.4px;
   flex-grow: 0;
-  margin: 71.6px 47.4px 39.6px 37.5px;
+  /* margin: 71.6px 47.4px 39.6px 37.5px; */
   transform: rotate(-360deg);
   background-color: rgba(0, 0, 0, 0.2);
 }

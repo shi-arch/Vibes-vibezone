@@ -30,6 +30,7 @@ import {
   Send,
 } from "../svgComponents/index.js";
 import "./index.css";
+import SideBar from "../SideBar/sideBar";
 
 const recentUsers = [
   {
@@ -262,7 +263,12 @@ const Chat = () => {
 
   return (
     <div className="main-container">
-      <div className="side-panel"></div>
+      {/* <div className="side-panel"></div> */}
+      <SideBar />
+
+      {/* <div className="pricing-bg">
+        <PricingPlansModal />
+      </div> */}
 
       <div className="right-side-con">
         <div className="header-container">

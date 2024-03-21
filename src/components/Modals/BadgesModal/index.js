@@ -93,6 +93,7 @@ const index = () => {
     minWidth: "40%",
     bgcolor: "background.paper",
     border: "0px solid #000",
+    backgroundColor:"#fff",
     border: "none",
     boxShadow: 24,
     p: 4,

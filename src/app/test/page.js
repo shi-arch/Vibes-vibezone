@@ -11,32 +11,34 @@ import NotificationModal from "../../components/Modals/NotificationModal";
 import BillingModal from "../../components/Modals/BillingModal";
 
 import "./index.css";
+import Chat from "../../components/chat";
 
 const Test = () => {
   const modalSelector = useSelector((state) => state.modalSlice);
-  const { preferenceModal, profileModal, privacyAndSecurityModal, notificationModal, billingModal} = modalSelector;
+  const {
+    preferenceModal,
+    profileModal,
+    privacyAndSecurityModal,
+    notificationModal,
+    billingModal,
+  } = modalSelector;
 
   return (
     <div>
-      <div
-        className={`test-bg ${
-          (preferenceModal || profileModal) && "test-bg-container"
-        } `}
-      >
+      <div className={`test-bg `}>
         <SideBar />
+        <Chat />
         <div className="pricing-bg">
-          {" "}
           <PricingPlansModal />{" "}
         </div>
       </div>
-      {/* <BadgesModal /> */}
-      {preferenceModal && <PreferenceModal />}
-      {profileModal && <ProfileModal />}
-      {billingModal && <BillingModal />}
-      {privacyAndSecurityModal && <PrivacyPolicyModal />}
-      {notificationModal && <NotificationModal />}
-      {preferenceModal && <PreferenceModal />}
-      {profileModal && <ProfileModal />}
+      <BadgesModal />
+      <ProfileModal />
+      <BillingModal />
+      <PrivacyPolicyModal />
+      <NotificationModal />
+      <PreferenceModal />
+      <ProfileModal />
     </div>
   );
 };
