@@ -226,17 +226,22 @@ const updateChatList = (chatList) => {
 
 chatList = updateChatList(chatList);
 
-chatList.sort((a, b) => b.date - a.date);
+chatList.sort((a, b) => a.date - b.date);
 
 let lastDisplayedDate = null;
 
 const Chat = () => {
   const [searchInput, setSearchInput] = useState("");
   const [message, setMessage] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isRightOpen, setRightOpen] = useState(true);
+  const [isLeftOpen, setLeftOpen] = useState(true);
+
+  const onClickSideBar = () => {
+    setLeftOpen((prevState) => !prevState);
+  };
 
   const toggleArrowSize = () => {
-    setIsExpanded((prevState) => !prevState);
+    setRightOpen((prevState) => !prevState);
   };
 
   const getLastChat = (chatList, index) => {
@@ -264,13 +269,13 @@ const Chat = () => {
   return (
     <div className="main-container">
       {/* <div className="side-panel"></div> */}
-      <SideBar />
+      <SideBar isLeftOpen={isLeftOpen} handleSideBar={onClickSideBar} />
 
       {/* <div className="pricing-bg">
         <PricingPlansModal />
       </div> */}
 
-      <div className="right-side-con">
+      <div className={`right-side-con ${isLeftOpen ? "" : "right-con-sidebar-close expand-left"}`}>
         <div className="header-container">
           <div className="recent-user-con">
             {recentUsers.map((eachUser) => (
@@ -327,7 +332,7 @@ const Chat = () => {
               </div>
             </div>
           </div>
-          <div className={`chat-container ${isExpanded ? "expand" : ""}`}>
+          <div className="chat-container">
             <div className="chat-header">
               <div className="icon-username">
                 <Image
@@ -528,7 +533,7 @@ const Chat = () => {
               </div>
             </div>
           </div>
-          <div className={`friends-container ${isExpanded ? "expanded" : ""}`}>
+          <div className={`friends-container ${(!isLeftOpen && !isRightOpen) ? 'left-and-right-expand' : !isRightOpen ? 'expanded' : ''}`}>
             <div>
               <div className="chats-arrow">
                 <p className="chat-text">Chats</p>
