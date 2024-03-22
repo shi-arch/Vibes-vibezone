@@ -65,65 +65,74 @@ const Notification = () => {
   };
 
   return (
-    <Box sx={{display:'flex', justifyContent:'center', alignItem:'center'}}>
-        <Box sx={{ width: 600, margin: "auto", padding: 2 }}>
+    <Box
+      sx={{ display: "flex", justifyContent: "center", alignItem: "center" }}
+    >
+      <Box sx={{ width: 600, margin: "auto", padding: 2 }}>
         <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ fontFamily: "Poppins, Arial", fontWeight: "bold" , fontSize:'25px'}}
+          variant="h6"
+          gutterBottom
+          sx={{
+            fontFamily: "Poppins, Arial",
+            fontWeight: "bold",
+            fontSize: "25px",
+          }}
         >
-            Notifications
+          Notifications
         </Typography>
         <List>
-            {notifications.map((notification) => (
+          {notifications.map((notification) => (
             <div key={notification.id}>
-                <ListItem>
+              <ListItem>
+                <ListItemText
+                  primary={
+                    <>
+                      {notification.message}
+                      <span style={{ fontWeight: "bold" }}>
+                        {notification.id}
+                      </span>
+                    </>
+                  }
+                  secondary={`${calculateDaysSinceReceived(
+                    notification.receivedDate
+                  )} d`}
+                />
                 <ListItemSecondaryAction>
-                    <Button
+                  <Button
                     onClick={() => handleConfirm(notification.id)}
                     aria-label="confirm"
                     sx={{
+                      backgroundColor: "#8f47ff",
+                      color: "#ffffff",
+                      marginRight: "8px",
+                      "&:hover": {
                         backgroundColor: "#8f47ff",
                         color: "#ffffff",
-                        marginRight: "8px",
-                        "&:hover": { backgroundColor: "#8f47ff", color: "#ffffff" },
+                      },
                     }}
-                    >
+                  >
                     Confirm
-                    </Button>
-                    <Button
+                  </Button>
+                  <Button
                     variant="outlined"
                     onClick={() => handleDelete(notification.id)}
                     edge="end"
                     aria-label="delete"
                     sx={{
-                        borderColor: "#2B2B2B",
-                        color: "#2B2B2B",
-                        "&:hover": { borderColor: "#2B2B2B", color: "#2B2B2B" },
+                      borderColor: "#2B2B2B",
+                      color: "#2B2B2B",
+                      "&:hover": { borderColor: "#2B2B2B", color: "#2B2B2B" },
                     }}
-                    >
+                  >
                     Delete
-                    </Button>
+                  </Button>
                 </ListItemSecondaryAction>
-                <ListItemText
-                    primary={
-                    <>
-                        {notification.message}
-                        <span style={{ fontWeight: "bold" }}>
-                        {notification.id}
-                        </span>
-                    </>
-                    }
-                    secondary={`${calculateDaysSinceReceived(
-                    notification.receivedDate
-                    )} d`}
-                />
-                </ListItem>
-                <Divider />
+              </ListItem>
+              <Divider />
             </div>
-            ))}
+          ))}
         </List>
-        </Box>
+      </Box>
     </Box>
   );
 };

@@ -7,6 +7,7 @@ const initialState = {
   privacyAndSecurityModal: false,
   billingModal: false,
   badgesModal: false,
+  pricingAndPlans:false
 };
 
 const modalSlice = createSlice({
@@ -31,6 +32,9 @@ const modalSlice = createSlice({
     setBadgesModal: (state) => {
       state.badgesModal = !state.badgesModal;
     },
+    setPricingAndPlans:(state)=>{
+      state.pricingAndPlans = !state.pricingAndPlans;
+    }
   },
 });
 
@@ -41,6 +45,7 @@ export const {
   setPrivacyAndSecurityModal,
   setBillingModal,
   setBadgesModal,
+  setPricingAndPlans,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

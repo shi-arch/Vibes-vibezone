@@ -33,16 +33,16 @@ const index = () => {
   const dispatch = useDispatch();
 
   const style = {
-    height: "100%",
+    height: "calc(100% - 2rem)",
     width: "100%",
-    border: "0px solid red",
     backgroundColor: "transparent",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     // justifyContent: "center",
-
+    
     padding: "2rem 2rem 0rem 2rem",
+    border: "0px solid red",
   };
 
   const handleClose = () => {};

@@ -1,9 +1,5 @@
 .sidebar-bg-container {
-  width: 218px;
-  min-width:15%;
-  height: calc(100vh - 30px);
-  /* margin: 0 15px 0 0; */
-  /* width:15%; */
+  width: 15%;
   height: calc(100vh - 30px);
   margin: 0 15px 0 0;
   padding:15px 12px 15px 28px;
@@ -11,15 +7,32 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: transform 0.9s ease-in-out;
+  border-radius: 0px;
+  transition: width 0.5s ease 0s;
+  overflow-x: hidden;
 }
 
-.sidebar-bg-container.open{
-  transform: translateX(0px);
+.closed {
+  width: calc(0% - 100px);
+  padding: 15px 0px;
+  margin: 0;
 }
 
-.sidebar-bg-container.closed{
-  transform: translateX(-245px);
+.closed-2 {
+  width: 0%;
+  overflow: visible;
+}
+
+.sidebar-bg-container-2 {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  bottom: 50%;
+  border-radius: 25px;
+  height: 85vh;
+  padding: 5px;
+  margin: auto;
+  z-index: 1;
 }
 
 ::-webkit-scrollbar{
@@ -147,13 +160,28 @@
   padding: 0px;
   border: none;
   position: absolute;
-  right: 0;
   top: 50%;
   bottom: 50%;
+  right: 0;
+  /* left: 0; */
   cursor: pointer;
-  /* right: -30px; */
+  /* position: fixed; */
+}
+
+.update-left-open-button {
+  right: -30px;
+  
+  /* margin-right: 25px; */
 }
 
 .pointer{
   cursor: pointer;
+}
+
+.side-bar-arrow {
+  right: 15px;
+}
+
+.side-con {
+  z-index: 100;
 }
