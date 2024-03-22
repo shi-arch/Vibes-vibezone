@@ -1,0 +1,5 @@
+.features-container{
+    background-image: url('https://res.cloudinary.com/dhczdaczx/image/upload/v1710847568/wka0buw3vcx1gkfesjpn.jpg');
+    display: flex;
+    flex-direction: column;
+}

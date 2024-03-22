@@ -1,15 +1,13 @@
-"use client"
-import Home from "../../components/home";
-import Styles from '../page.module.css'
+import React from 'react'
+import {Box} from '@mui/material'
+import HomeComponent from '../../components/HomeComponent'
 
-function Homepage() {
-
+const LandingPage = () => {
   return (
-    <div className={Styles.main}>
-      <h1>Welcome to Vibe Zone</h1>
-      <Home />
-    </div>
-  );
+    <Box>
+      <HomeComponent/>
+    </Box>
+  )
 }
 
-export default Homepage;
+export default LandingPage  

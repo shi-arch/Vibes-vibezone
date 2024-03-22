@@ -1,4 +1,5 @@
-import { Input, Button } from "../components/commonComponents/commonComponents";
+"use client"
+import {Input, Button} from '../components/commonComponents/commonComponents'
 
 const Home = (props) => {
   const testChange = (e) => {
