@@ -1,0 +1,36 @@
+.review-container {
+    position: relative;
+  }
+  
+  .review-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .profile-image {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+  
+  .review-card img {
+    border-radius: 50%;
+  }
+  
+  .back-arrow,
+  .next-arrow {
+    bottom: 5px;
+    right: 70px;
+    background-color: #8f47ff;
+    color: white;
+  }
+  
+  .back-arrow:hover,
+  .next-arrow:hover {
+    background-color: #8f47ff;
+  }
+  

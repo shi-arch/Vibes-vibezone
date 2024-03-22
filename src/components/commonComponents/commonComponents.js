@@ -3,5 +3,5 @@ export const Input = (props) => {
 }
 
 export const Button = (props) => {
-    return <button type={props.type} className={props.css} onClick={props.onClick()}>{props.label}</button>
+    return <button type={props.type} className={props.css} onClick={props.onClick}>{props.label}</button>
 }
