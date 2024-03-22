@@ -29,7 +29,7 @@ import {
   ArrowDown,
   Send,
 } from "../svgComponents/index.js";
-import { MsgSeen, ArrowLeft, ArrowDown } from "../svgComponents";
+// import { MsgSeen, ArrowLeft, ArrowDown } from "../svgComponents";
 import "./index.css";
 import SideBar from "../SideBar/sideBar";
 
