@@ -268,7 +268,6 @@ const Chat = () => {
 
   return (
     <div className="main-container">
-      {/* <div className="side-panel"></div> */}
       <SideBar isLeftOpen={isLeftOpen} handleSideBar={onClickSideBar} />
 
       {/* <div className="pricing-bg">
@@ -533,7 +532,7 @@ const Chat = () => {
               </div>
             </div>
           </div>
-          <div className={`friends-container ${(!isLeftOpen && !isRightOpen) ? 'left-and-right-expand' : !isRightOpen ? 'expanded' : ''}`}>
+          <div className={`friends-container ${(!isLeftOpen && !isRightOpen) ? 'left-and-right-expand' : ''}  ${!isRightOpen ? 'expanded' : ''}`}>
             <div>
               <div className="chats-arrow">
                 <p className="chat-text">Chats</p>

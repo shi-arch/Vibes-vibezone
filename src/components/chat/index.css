@@ -1,6 +1,7 @@
 .main-container {
   display: flex;
   font-family: "Roboto";
+  position: relative;
   height: 100vh;
   width: 100%;
 }
