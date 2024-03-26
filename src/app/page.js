@@ -4,17 +4,15 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import { useEffect } from "react";
 import { useRouter } from 'next/navigation'
-import axios from "axios";
+import { setLoginDetails } from "../Context/features/loginSlice";
+import { useDispatch } from "react-redux";
 
 export default function Home() {
   const router = useRouter()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    axios.post("http://localhost:8080/api/guest").then(result => {
-      console.log(result)
-      debugger
-    })
-   /// router.push("/home")
+    router.push("/home")  
   }, []);
 
   return (

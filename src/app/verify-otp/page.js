@@ -1,14 +1,21 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/navbar";
+import { useDispatch, useSelector } from "react-redux";
 import OtpInput from "../../components/otpInput/otpInput";
 import "./page.css";
+import { useRouter } from "next/navigation";
+import { setVerifyOtp } from "../../Context/features/loginSlice";
+import { postApi} from "../../response/api"
 
 const Page = (props) => {
   console.log("props", props);
-
+  const {email, Contact, CountryCode} = useSelector(state => state.loginSlice.loginDetails);
+  const dispatch = useDispatch();
+  const router = useRouter();
   const [timer, setTimer] = useState(30);
   const [disableResend, setDisableResend] = useState(false);
+  const [otp, setOtp] = useState("");
 
   useEffect(() => {
     let interval;
@@ -40,7 +47,7 @@ const Page = (props) => {
           <p className="verification-text">
             Enter We have sent Verification code to
             <br />
-            +9999999999
+            {CountryCode && CountryCode+" "} {email && email || Contact && Contact}
             <span>
               <a href="signup" className="Edit">
                 {" "}
@@ -48,8 +55,22 @@ const Page = (props) => {
               </a>
             </span>
           </p>
-          <OtpInput />
-          <button className="verify-button">Verify</button>
+          <OtpInput getOtp={setOtp} />
+          <button onClick={async () => {
+            let userCred = {Contact}
+            if(email){
+              userCred = {email}
+            }
+            userCred.otp = otp.join("")
+            const res = await postApi('/verify-otp', userCred)
+            if(res.status !== 400){
+              localStorage.setItem("userData", JSON.stringify(res)); 
+              dispatch(setVerifyOtp(true))
+              router.push("/chat-test");
+            } else {
+              alert("Invalid OTP")
+            }            
+          }} className="verify-button">Verify</button>
           <p
             className="resend-text"
             onClick={handleResendOtp}

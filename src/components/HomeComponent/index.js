@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useEffect } from 'react'
 import {Box} from '@mui/material'
 import NavBar from '../navbar/NavBar'
 import EarlyAccess from '../earlyaccess/EarlyAccess'
@@ -11,8 +12,23 @@ import JoinUs from '../joinus/JoinUs';
 import Footer from '../footer/Footer';
 import Review from '../review/Review';
 import FreqAskQuestion from '../freqaskquestion/FreqAskQuestion';
+import { useRouter } from 'next/navigation'
+import { setLoginDetails, setToken } from "../../Context/features/loginSlice";
+import { useDispatch } from "react-redux";
 
 const HomeComponent = () => {
+  const router = useRouter()
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+  let userData = localStorage.getItem("userData")
+  if(userData){
+    const parsedData = JSON.parse(userData)
+    dispatch(setLoginDetails(parsedData.user));
+    dispatch(setToken(parsedData.token));
+    router.push("/chat-test")
+  }  
+  }, []);
   return (
     <Box>
         <NavBar/>

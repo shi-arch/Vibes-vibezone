@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import "./otpInput.css";
-const OtpInput = ({ length = 4, onOtpSubmit = () => {} }) => {
+const OtpInput = ({ length = 4, getOtp }) => {
   const [otp, setOtp] = useState(new Array(length).fill(""));
 
   const inputRefs = useRef([]);
@@ -19,9 +19,7 @@ const OtpInput = ({ length = 4, onOtpSubmit = () => {} }) => {
     const newOtp = [...otp];
     newOtp[index] = value.substring(value.length - 1);
     setOtp(newOtp);
-
-    const combinedOtp = newOtp.join("");
-    if (combinedOtp.length === length) onOtpSubmit(combinedOtp);
+    getOtp(newOtp)
 
     // Move to next input if the currently field is filled
     if (value && index < length - 1 && inputRefs.current[index + 1]) {

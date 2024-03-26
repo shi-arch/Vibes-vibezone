@@ -1,31 +1,40 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../../components/Navbar/navbar";
+import { setLoginDetails } from "../../Context/features/loginSlice";
 import "./page.css";
 import { useRouter } from "next/navigation";
+import {getApi, postApi} from "../../response/api"
+const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+const phoneRegex = /^[6-9]\d{9}$/
 
 const Page = () => {
-  const [phoneNumber, setPhoneNumber] = useState("");
-
+  const [userInput, setUserInput] = useState("");
+  const dispatch = useDispatch();
   const router = useRouter();
-  const handleGetOtp = () => {
-    router.push("/VerifyOtp", { phoneNumber });
-  };
-  const [showOtpInput, setShowOtpInput] = useState(false);
-
-  const handlePhoneNumber = (event) => {
-    setPhoneNumber(event.target.value);
-  };
-
-  const handlePhoneSubmit = (event) => {
-    event.preventDefault();
-
-    const regex = /[^0-9]/g;
-    if (phoneNumber.length < 10 || regex.test(phoneNumber)) {
-      alert("Invalid Phone Number");
-      return;
+  const handleGetOtp = async () => {
+    let obj = {Contact: userInput}
+    let isErr = true
+    if(emailRegex.test(userInput)){
+      obj = {email: userInput, CountryCode: "+91"}
+      isErr = false 
+    } else if(phoneRegex.test(userInput)){
+      obj = {Contact: userInput, CountryCode: "+91"}
+      isErr = false
     }
-    setShowOtpInput(true);
+    if(isErr){
+      alert("Invalid Email or Phone Number")
+      return
+    }    
+    const res = await postApi('/login', obj)
+    if(res){      
+      dispatch(setLoginDetails(res));
+      router.push("/verify-otp");  
+    }    
+  };
+  const handleEmailOrPhoneNumber = (event) => {
+    setUserInput(event.target.value);
   };
 
   return (
@@ -39,13 +48,13 @@ const Page = () => {
             sign up
           </h1>
           <p className="Enter-your-number">Enter your number</p>
-          <form onSubmit={handlePhoneSubmit}>
+          <form>
             <input
               type="tel"
               className="number-box"
-              value={phoneNumber}
-              onChange={handlePhoneNumber}
-              placeholder="Enter your 10 digit number"
+              value={userInput}
+              onChange={handleEmailOrPhoneNumber}
+              placeholder="Enter your 10 digit number or email"
             />
             <p className="privacy-policy">
               By continuing, I agree to the terms
@@ -56,7 +65,7 @@ const Page = () => {
                 </a>
               </span>
             </p>
-            <button type="submit" onClick={handleGetOtp} className="button-otp">
+            <button style={{cursor: "pointer"}} type="button" onClick={handleGetOtp} className="button-otp">
               Get OTP
             </button>
           </form>

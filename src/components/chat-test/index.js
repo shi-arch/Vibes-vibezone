@@ -1,3 +1,4 @@
+"use client"
 import { Input } from "../commonComponents/commonComponents";
 import { useState, useRef, useEffect } from "react";
 import Tooltip from "@mui/material/Tooltip";
@@ -235,12 +236,12 @@ chatList = updateChatList(chatList);
 
 chatList.sort((a, b) => a.date - b.date);
 
+var socket;
 
 
 const Chat = () => {
   const [searchInput, setSearchInput] = useState("");
   const [message, setMessage] = useState("");
-  const [isRightOpen, setRightOpen] = useState(true);
   const [isLeftOpen, setLeftOpen] = useState(true);
   const [videoCall, setVideoCall] = useState(false);
   const [stream, setStream] = useState(null);
@@ -249,42 +250,27 @@ const Chat = () => {
   const [mySocketId, setMySocketId] = useState(null)
   const [socketConnected, setSocketConnected] = useState(null)
   const [disconnect, setDisconnect] = useState(false)
-
-  
-
-
+  const [test, setTest] = useState("")
   const modalSelector = useSelector(state => state.modalSlice)
-  const {pricingAndPlans} = modalSelector
+  const { email, Contact } = useSelector(state => state.loginSlice.loginDetails);
+  const { pricingAndPlans } = modalSelector
 
   const userVideo = useRef();
   const connectionRef = useRef();
   const myVideo = useRef(null);
 
-  const onClickSideBar = () => {
-    setLeftOpen((prevState) => !prevState);
-  };
-
-  const toggleArrowSize = () => {
-    setRightOpen((prevState) => !prevState);
-  };
-
-  var socket;
-
   
-  var testSocket;
   useEffect(() => {
-    let str = Math.floor(Math.random() * 1000000000);
-    setUserId(str)
-    console.log(str,'sssssssssssssssss')
     socket = io(endpoint);
-    testSocket = socket
-    socket.emit("setup", str);
-    debugger
+    setUserId(email || Contact)
+    socket.emit("setup", email || Contact);
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
     socket.on("mySocketId", (id) => {
       setMySocketId(id);
+      setTest(id)
+      debugger
     });
     socket.on("callUser", (data) => {
       setReceivingCall(true);
@@ -293,15 +279,21 @@ const Chat = () => {
       setCallerSignal(data.signal);
     });
     socket.on("getUserSocketId", () => {
-      setUserSocketId(me)
+      
+      console.log(mySocketId)
+      console.log(test)
+      debugger
+      //let gtt = localStorage.getItem('socket')
+      console.log(gtt)
+      socket.emit("sendSocketIdToServer", { socketId: mySocketId, userId: "kashyapshivram612@gmail.com" });
+      //setUserSocketId(mySocketId)
     })
-  }, []);
-  
-  useEffect(() => {
-    if(disconnect){
-      socket.emit("disconnect", userId)
-    }
-  }, [disconnect])
+    socket.on("sendSocketIdToClient", (obj) => {
+      debugger
+      //socket.emit("sendSocketIdToServer", {socketId: mySocketId, userId: "kashyapshivram612@gmail.com"});
+      //setUserSocketId(mySocketId)
+    })
+  }, [])
 
   useEffect(() => {
     if (videoCall) {
@@ -312,19 +304,26 @@ const Chat = () => {
             myVideo.current.srcObject = stream;
           }
         })
-      selectedChat.users.forEach((o) => {
-        if(o._id == user._id) return;
-        socket.emit("initVideoCall", o._id);
-      })      
+        console.log(mySocketId)
+        debugger
+      socket.emit("initVideoCall", "kashyapshivram512@gmail.com");
     }
   }, [videoCall]);
 
-  
 
   useEffect(() => {
-    if(userSocketId){
+    if (disconnect) {
+      socket.emit("disconnect", userId)
+    }
+  }, [disconnect])
+
+
+
+  useEffect(() => {
+    if (userSocketId) {
+      debugger
       callUser(userSocketId)
-    }    
+    }
   }, [userSocketId])
 
   const callUser = async (id) => {
@@ -342,7 +341,7 @@ const Chat = () => {
     connectionRef.current = peer
   }
 
-  
+
 
 
   return (
@@ -355,10 +354,9 @@ const Chat = () => {
         </div>
       ) : (
         <div
-          style={{margin: "0px 40px 0px 40px"}}
-          className={`right-side-con ${
-            isLeftOpen ? "" : "right-con-sidebar-close expand-left"
-          }`}
+          style={{ margin: "0px 40px 0px 40px" }}
+          className={`right-side-con ${isLeftOpen ? "" : "right-con-sidebar-close expand-left"
+            }`}
         >
           <div className="header-container">
             <div className="recent-user-con">
@@ -387,11 +385,13 @@ const Chat = () => {
             </div>
             <div className="new-chats-con">
               <p className="new-chat">New Chats</p>
-              <Plus onClick={() => setVideoCall(true)} />
+              <Plus style={{ cursor: "pointer" }} />
               <button type="button" onClick={() => setDisconnect(true)} className="reject">
-                  Disconnect
-                </button>
-                <button type="button" className="reject">Active</button>
+                Disconnect
+              </button>
+              <button type="button" onClick={() => {
+                setVideoCall(!videoCall)
+              }} className="reject">Active</button>
             </div>
             <div className="notification-icon-con">
               <Notification />
@@ -490,7 +490,7 @@ const Chat = () => {
                   <ThreeDots />
                 </div>
               </div>
-              <div className="arrow-container" onClick={toggleArrowSize}>
+              <div className="arrow-container">
                 <ArrowLeft className="arrow-left" />
               </div>
               <div className="chat-container-2">
@@ -517,7 +517,7 @@ const Chat = () => {
                 !isLeftOpen && !isRightOpen ? "left-and-right-expand" : ""
               }  ${!isRightOpen ? "expanded" : ""}`}
             > */}
-              {/* <div>
+            {/* <div>
                 <div className="chats-arrow">
                   <p className="chat-text">Chats</p>
                   <ArrowDown />
@@ -542,7 +542,7 @@ const Chat = () => {
                   </ul>
                 ))}
               </div> */}
-              {/* <div>
+            {/* <div>
                 <div className="chats-arrow">
                   <p className="chat-text">Friends</p>
                   <ArrowDown />
