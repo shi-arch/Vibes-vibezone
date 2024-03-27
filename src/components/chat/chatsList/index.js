@@ -2,41 +2,25 @@ import Image from "next/image";
 import { MsgSeen } from "../../svgComponents";
 import url1 from "../../../assets/images/profile1.svg";
 import url2 from "../../../assets/images/profile2.svg";
-
-import "../index.css"
-
-const ChatsList = ({ chatList }) => {
+import { chatList, updateChatList } from "../propsData";
+import "../index.css";
 
 
-    let lastDisplayedDate = null;
+const ChatsList = () => {
+  let lastDisplayedDate = null;
 
-      const getLastChat = (chatList, index) => {
-        if (index < chatList.length - 1) {
-          return chatList[index].sender === chatList[index + 1].sender;
-        }
-      };
+  updateChatList(chatList);
 
-      const getLastDate = (chatList, index, prevDate) => {
-        if (index < chatList.length - 1) {
-          const currentDate = chatList[index].date;
-          const nextDate = chatList[index + 1].date;
-          const isNewDate = currentDate !== nextDate;
-          const isDifferentFromPrev = currentDate !== prevDate;
+  const getLastChat = (chatList, index) => {
+    if (index < chatList.length - 1) {
+      return chatList[index].sender === chatList[index + 1].sender;
+    }
+  };
 
-          // Update the previous date
-          prevDate = currentDate;
-
-          return isNewDate && isDifferentFromPrev;
-        }
-
-        return true; // Always show the date for the last chat
-      };
   return (
     <>
       {chatList.map((chat, index) => {
-        const prevDate = index > 0 ? chatList[index - 1].date : null;
         const isLastChat = getLastChat(chatList, index);
-        const isLastDate = getLastDate(chatList, index, prevDate);
         const isImage = chat.message.startsWith("http");
 
         // Check if the current date is today
@@ -126,5 +110,4 @@ const ChatsList = ({ chatList }) => {
   );
 };
 
-
-export default ChatsList
+export default ChatsList;

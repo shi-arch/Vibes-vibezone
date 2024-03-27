@@ -35,8 +35,8 @@
   z-index: 1;
 }
 
-::-webkit-scrollbar{
-    height: 0px;
+.sidebar-bg-container::-webkit-scrollbar{
+  display: none;
 }
 
 .sidebar-profile {
@@ -161,7 +161,6 @@
   border: none;
   position: absolute;
   top: 50%;
-  bottom: 50%;
   right: 0;
   /* left: 0; */
   cursor: pointer;

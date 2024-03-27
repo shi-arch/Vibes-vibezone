@@ -1,7 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
-
 import VibeZonePlans from "../VibeZonePlans";
 import {
   AtSvg,
@@ -19,7 +17,6 @@ import {
 
 import "./sidebar.css";
 import { SideBarSelections } from "../commonComponents/commonComponents";
-import { useDispatch } from "react-redux";
 import {
   setNotificationModal,
   setPreferenceModal,
@@ -27,10 +24,13 @@ import {
   setPrivacyAndSecurityModal,
   setBadgesModal,
   setProfileModal,
+  setLeftOpen,
 } from "../../Context/features/modalSlice";
+import { useSelector, useDispatch } from "react-redux";
 
-const SideBar = (props) => {
-  const { isLeftOpen } = props;
+const SideBar = () => {
+  const modalSelector = useSelector(state => state.modalSlice);
+  const {leftOpen} = modalSelector;
   
   //redux-tool kit
   const dispatch = useDispatch();
@@ -61,13 +61,12 @@ const SideBar = (props) => {
   };
 
   const onClickLeftOpen = () => {
-    const { handleSideBar } = props;
-    handleSideBar();
+    dispatch(setLeftOpen());
   };
 
   return (
     <>
-      <div className={`side-con sidebar-bg-container ${isLeftOpen ? "" : "closed"}`}>
+      <div className={`side-con sidebar-bg-container ${leftOpen ? "" : "closed"}`}>
         <div className="side-bar-top-container">
           <div className="profile-container">
             <div className="sidebar-profile"></div>
@@ -167,22 +166,22 @@ const SideBar = (props) => {
         <VibeZonePlans />
 
         <button
-          className={`close-left-side-bar-button `}
+          className="close-left-side-bar-button"
           onClick={onClickLeftOpen}
         >
           <LeftArrowSvg />
         </button>
       </div>
 
-      {!isLeftOpen && (
+      {!leftOpen && (
         <div
           className={`sidebar-bg-container sidebar-bg-container-2 ${
-            isLeftOpen ? "" : "closed-2"
+            leftOpen ? "" : "closed-2"
           }`}
         >
           <button
             className={`close-left-side-bar-button ${
-              !isLeftOpen ? "update-left-open-button" : ""
+              !leftOpen ? "update-left-open-button" : ""
             }`}
             onClick={onClickLeftOpen}
           >
