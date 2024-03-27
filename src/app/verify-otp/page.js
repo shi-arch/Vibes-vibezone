@@ -66,7 +66,7 @@ const Page = (props) => {
             if(res.status !== 400){
               localStorage.setItem("userData", JSON.stringify(res)); 
               dispatch(setVerifyOtp(true))
-              router.push("/chat-test");
+              router.push("/chat");
             } else {
               alert("Invalid OTP")
             }            
