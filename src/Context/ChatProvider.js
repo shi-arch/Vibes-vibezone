@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { createContext, useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 
@@ -10,16 +10,11 @@ export const ChatProvider = ({ children }) => {
 
   return (
     <div>
-      <ChatContext.Provider value={{ user }}>
-        {children}
-      </ChatContext.Provider>
+      <ChatContext.Provider value={{ user }}>{children}</ChatContext.Provider>
     </div>
-
   );
 };
 
 export const ChatState = () => {
-  return useContext(ChatContext)
-}
-
-
+  return useContext(ChatContext);
+};

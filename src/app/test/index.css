@@ -1,0 +1,12 @@
+
+.pricing-bg{
+    height: 100%;
+    flex-grow: 1;
+    border:1px solid green;
+    display: flex;
+    max-width: 85%;
+}
+
+.test-bg{
+    display: flex;
+}

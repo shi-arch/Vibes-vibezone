@@ -1,8 +1,8 @@
-import { AppBar, Toolbar, Box, Typography, Button } from '@mui/material';
-import './NavBar.css';
+import React from "react";
+import {AppBar, Toolbar, Typography, Box, Button, } from '@mui/material'
+import "./navBar.css";
 
 const NavBar = () => {
-
   return (
     <AppBar position='sticky' sx={{backgroundColor:'#ffffff', color:'#2b2b2b', fontFamily:'Poppins, Arial',}}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>

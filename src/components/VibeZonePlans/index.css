@@ -1,0 +1,79 @@
+
+.vibezone-plans-bg-container{
+    /* width: 170px; */
+    width: 80%;
+    flex-grow: 0;
+    margin-top: auto ;
+    padding: 18px 15px 18px 16px;
+    border-radius: 25px;
+    border: solid 1px #fff;
+    background-color: #16172b;
+}
+
+
+.VibeZone-Plans {
+    /* margin: 0 0 14px; */
+    font-family: Poppins, Arial;
+    font-size: 18px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.21;
+    letter-spacing: normal;
+    text-align: left;
+    color: #fff;
+
+
+}
+
+.VibeZone-Plans .text-style-1 {
+    color: #0bee80;
+
+}
+
+
+.mt-vibe{
+    margin-top: 14px;
+}
+
+.VibeZone-Free {
+    /* width: 85px; */
+    /* height: 15px; */
+    flex-grow: 0;
+    margin-bottom: 8px;
+    font-family: Poppins, Arial;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    /* line-height: 1.21; */
+    letter-spacing: normal;
+    text-align: left;
+    color: #fff;
+    display: block;
+}
+
+.Rectangle-44 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    border-radius: 6px;
+    background-color: #8f47ff;
+}
+
+.Upgrade-Now {
+    width: 96px;
+    height: 17px;
+    flex-grow: 0;
+    font-family: Poppins, Arial;
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.21;
+    letter-spacing: normal;
+    text-align: left;
+    color: #fff;
+    cursor: pointer;
+}

@@ -1,0 +1,125 @@
+.Sign-Up {
+  width: 100%;
+  height: 100vh;
+  height:calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 0;
+  background-color: #f3f2ff;
+}
+.login-form {
+  width: 448px;
+  height: 300px;
+  padding:44px;
+  border-radius: 15px;
+  background-color: #fff;
+  box-shadow: 0px 10px 20px #ccc; /* Adjusted box shadow */
+  display: flex;
+  flex-direction: column;
+}
+.Login-or-sign-up {
+  
+  font-family: Poppins ,Arial;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.25;
+  /* text-align:start; */
+  color: #2b2b2b;
+}
+
+.Login-or-sign-up .text-style-1 {
+  font-size: 22px;
+  font-weight: normal;
+}
+.Enter-your-number {
+  flex-grow: 0;
+  margin: 0 291px 16px 0;
+  font-family: Poppins,Arial;
+  font-size: 16px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.67;
+  letter-spacing: normal;
+  color: #2b2b2b;
+}
+.privacy-policy {
+  width: 460px;
+  height: 50px;
+  flex-grow: 0;
+  margin: 20px 0 0;
+  font-family: Poppins, Arial;
+  font-size: 15px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.67;
+  letter-spacing: normal;
+  text-align: left;
+  color: #2b2b2b;
+}
+
+
+.text-style-2 {
+  font-size: 16px;
+  font-weight: 550;
+  text-decoration: none;
+  color: #000;
+}
+
+.number-box {
+  width:calc(100% - 28px);
+  height: 40px;
+  flex-grow: 0;
+  margin: 16px 0 0;
+  padding-left: 28px;
+  /* padding: 18px 225px 17px 28px; */
+  border-radius: 6px;
+  border: solid 1px rgba(43, 43, 43, 0.2);
+
+  background-color: #fff;
+  border: none;
+
+}
+.button-otp {
+  width: 100%;
+  height: 40px;
+  flex-grow: 0;
+  margin: 10px 0 10px;
+  /* padding: 15px 190px; */
+  border-radius: 6px;
+  background-color: #8f47ff;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  font-size: 15px;
+  
+}
+
+
+.Have-trouble-logging-in-Get-help {
+  width: 263px;
+  height: 27px;
+  flex-grow: 0;
+  margin: 20px 197px 0 0;
+  font-family: Poppins, Arial;
+  font-size: 15px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.8;
+  letter-spacing: normal;
+  text-align: left;
+  color: #2b2b2b;
+}
+
+.Have-trouble-logging-in-Get-help .text-style-1 {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.Have-trouble-logging-in-Get-help .text-style-2 {
+  font-size: 16px;
+  font-weight: 600;
+}
