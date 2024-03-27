@@ -8,8 +8,8 @@ import './Features.css';
 
 const Features = () => {
   return (
-    <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', marginBottom:'40px'}}>
-        <Box className='features-container'  sx={{padding:'30px', width:'90%', height:'30vh'}}>
+    <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', marginBottom:'40px', }}>
+        <Box className='features-container' sx={{padding:'30px', height:'30vh', width:'90%'}}>
             <Box sx={{padding:'20px'}}>
                 <Typography variant='h6' sx={{fontFamily:'Poppins, Arial', fontWeight:'bold', fontSize:'30px', textAlign:'center'}}>Features</Typography>
                 <Box sx={{display:'flex',justifyContent:'space-between',fontFamily:'Poppins, Arial', marginTop:'40px'}}>

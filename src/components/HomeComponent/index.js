@@ -11,12 +11,15 @@ import JoinUs from '../joinus/JoinUs';
 import Footer from '../footer/Footer';
 import Review from '../review/Review';
 import FreqAskQuestion from '../freqaskquestion/FreqAskQuestion';
+import './index.css'
+
 
 const HomeComponent = () => {
   return (
-    <Box>
+    <Box  className="home-container" >
         <NavBar/>
-        <Box sx={{display:'flex', flexDirection:'column', alignItem:'center', justifyContent:'center', width:'100%'}}  >
+        <Box sx={{display:'flex', flexDirection:'column', alignItem:'center', justifyContent:'center',
+        }}  >
           <EarlyAccess/>
           <About/>
           <TodayTask/>

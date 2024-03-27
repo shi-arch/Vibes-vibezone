@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 
 const TodayTask = () => {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", padding:'30px'}}>
+    <Box sx={{ display: "flex", flexDirection: "column", width:'100%'}}>
       <Typography variant="h6" sx={{color:'#2b2b2b', fontSize:'30px', fontWeight:'bold', fonrFamily:'Poppins, Arial'}}>What do I want today?</Typography>
       <Box sx={{ display: "flex", fontFamily:'Poppins, Arial', justifyContent:'space-between', alignItems:'center'}}>
         <Box sx={{ display: "flex", flexDirection: "column" , padding:'30px',width:'30%'}}>
@@ -44,9 +44,9 @@ const TodayTask = () => {
           </Typography>
         </Box>
         <Box >
-          <Box component="img" src="https://res.cloudinary.com/dhczdaczx/image/upload/v1710910136/xoetpelag0vjevuj9djt.jpg"/>
+          <Box component="img" src="https://res.cloudinary.com/dhczdaczx/image/upload/v1710910136/xoetpelag0vjevuj9djt.jpg" width="100%"/>
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "column", padding:'30px', fontFamily:'Poppins, Arial', width:'30%'}}>
+        <Box sx={{ display: "flex", flexDirection: "column", fontFamily:'Poppins, Arial', width:'30%'}}>
           <Typography
             p={2}
             color="#8f47ff"

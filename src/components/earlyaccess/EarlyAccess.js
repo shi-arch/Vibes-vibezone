@@ -3,7 +3,7 @@ import "./EarlyAccess.css";
 
 const EarlyAccess = () => {
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center"}}>
       <Box
         sx={{
           display: "flex",
@@ -11,7 +11,6 @@ const EarlyAccess = () => {
           marginTop: "30px",
           marginBottom: "20px",
           justifyContent: "space-between",
-          width:'100%'
         }}
       >
         <Box sx={{ width: "50%", padding: "50px" }}>

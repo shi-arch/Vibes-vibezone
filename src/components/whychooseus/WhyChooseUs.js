@@ -4,23 +4,21 @@ import { Box, Typography, IconButton, Card } from "@mui/material";
 const WhyChooseUs = () => {
   return (
     <Box
-      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%",}}
     >
       <Card
         sx={{
           display: "flex",
           flexDirection: "row",
           boxShadow: "10px",
-          padding: "30px",
           fontFamily: "Poppins, Arial",
-          width: "80%",
           boxShadow: "20px",
           marginBottom: "50px",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <Box sx={{ padding: "30px", width: "40%" }}>
+        <Box sx={{marginRight:'20px'}}>
           <Box
             component="img"
             src="https://res.cloudinary.com/dhczdaczx/image/upload/v1710911014/zxhcte2czeuqw71v2atk.png"
@@ -28,7 +26,7 @@ const WhyChooseUs = () => {
             width="300px"
           />
         </Box>
-        <Box sx={{ padding: "10px", width: "60%", width: "60%" }}>
+        <Box sx={{ width: "60%", width: "60%" }}>
           <Typography
             variant="h6"
             sx={{
@@ -143,7 +141,7 @@ const WhyChooseUs = () => {
                 sx={{
                   backgroundColor: "#E4D4FD",
                   borderRadius: "50%",
-                  width: "60px",
+                  width: "50px",
                   height: "50px",
                   display: "flex",
                   justifyContent: "center",

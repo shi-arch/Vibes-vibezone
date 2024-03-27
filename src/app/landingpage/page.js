@@ -4,9 +4,7 @@ import HomeComponent from '../../components/HomeComponent'
 
 const LandingPage = () => {
   return (
-    <Box>
       <HomeComponent/>
-    </Box>
   )
 }
 

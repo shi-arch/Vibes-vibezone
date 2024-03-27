@@ -3,7 +3,7 @@ import { Box , Typography} from "@mui/material";
 
 const Footer = () => {
   return (
-    <Box sx={{display:'flex', flexDirection:'column', backgroundColor:'#212121',  padding:'30px',}}>
+    <Box sx={{display:'flex', flexDirection:'column', backgroundColor:'#212121', justifyContent:'center', aignItems:'center',}}>
       <Box sx={{display:'flex', justifyContent:'space-between', marginBottom:'30px'}}>
                 <Box sx={{display:'flex', flexDirection:'column', fontFamily:'Poppins, Arial'}}>
                     <Typography variant="h6" sx={{fontSize:'25px', fontWeight:'bold', marginBottom:'20px', color:'#ffffff'}}>Business Chat</Typography>
