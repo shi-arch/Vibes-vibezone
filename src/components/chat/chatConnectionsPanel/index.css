@@ -1,0 +1,197 @@
+
+
+.three-dots-sm svg {
+    width: 12px;
+    height: 12px;
+    margin-left: 10px;
+}
+
+.request {
+    background-color: #0CEF80;
+    color: #2B2B2B;
+    font-family: Poppins, Arial;
+    border: none;
+    border-radius: 4px;
+    font-size: 10px;
+    padding: 4px 9px;
+    margin-right: 5px;
+    cursor: pointer;
+    /* width: 36.5px;
+    height: 14.9px; */
+} 
+
+.ignore {
+    background-color: #E63946;
+    color: #ffffff;
+    font-family: Poppins, Arial;
+    border: none;
+    border-radius: 4px;
+    font-size: 10px;
+    padding: 4px 9px;
+    margin-left: 5px;
+    cursor: pointer;    
+    /* width: 36.5px;
+    height: 14.9px; */
+}
+
+.profile-time-three-dots {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.request-right-con {
+    display: flex;
+    flex-direction: column;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #8f47ff;
+    border-radius: 5px;
+}
+
+.requests-con {
+    display: flex;
+    flex-direction: column;
+    max-height: 50%;
+}
+
+.user-friends-con {
+    display: flex;
+    flex-direction: column;
+    max-height: 50%;
+    padding-top: 10px;
+}
+
+.scroll-con {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.expand-friends {
+    max-height: 100%;
+}
+
+.expand-requests {
+    max-height: calc(100% - 47.6px);
+}
+
+.profile-2 {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+    margin-left: 10px;
+}
+
+.frame {
+    height: 4px;
+    background-color: grey;
+    cursor: row-resize;
+}
+
+.profile-info-padding {
+    padding-left: 10px;
+}
+
+.profile-info-padding-2 {
+    padding: 2.5px 10px 2.5px 10px;
+    transition: padding 0.4s ease 0s;
+}
+
+.arrow-down {
+    padding: 0;
+    margin-top: -5px;
+}
+
+.arrow-right {
+    transform: rotate(270deg);
+    margin-left: -2px;
+}
+
+
+
+
+
+
+
+
+
+
+/* .frame {
+    cursor: row-resize;
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.frame-2 {
+    align-self: center;
+    cursor: row-resize;
+    border-radius: 11px;
+    height: 4px;
+    min-height: 4px;
+    width: 56px;
+} */
+
+
+/* 
+  .friends-container {
+    position: relative;
+    border: 1px solid #ccc;
+    height: 80vh;
+    max-height: 80vh;
+    min-height: 40vh;
+  }
+  
+  .resizeable-box {
+    position: relative;
+  }
+  
+  .resizer {
+    position: absolute;
+    height: 2px; 
+    width: 100%;
+    background-color: #000;
+    cursor: row-resize;
+  }
+  
+  .resizer.rt {
+    top: 0;
+  }
+  
+  .resizer.rb {
+    bottom: 0;
+  }
+  
+  .requests-con,
+  .user-friends-con {
+    overflow-y: auto;
+    padding: 10px;
+  }
+  
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+  } 
+
+
+
+
+ */

@@ -92,7 +92,6 @@ export const ThreeDots = () => (
     height="29"
     viewBox="0 0 6 29"
     fill="none"
-    className="three-dots"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -256,7 +255,6 @@ export const ArrowLeft = () => (
     viewBox="0 0 35 35"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className="arrow-left"
   >
     <path
       d="M20.4167 10.2083L13.125 17.4999L20.4167 24.7916V10.2083Z"
