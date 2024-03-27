@@ -1,5 +1,6 @@
 "use client"
 import { Input } from "../commonComponents/commonComponents";
+import Peer from "simple-peer";
 import { useState, useRef, useEffect } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import Image from "next/image";
@@ -39,6 +40,7 @@ import "./index.css";
 import SideBar from "../SideBar/sideBar";
 import { useSelector } from "react-redux";
 import PricingPlansModal from "../../components/Modals/PricingPlansModal"
+import { CallReceived } from "@mui/icons-material";
 
 const recentUsers = [
   {
@@ -249,8 +251,13 @@ const Chat = () => {
   const [userId, setUserId] = useState(0)
   const [mySocketId, setMySocketId] = useState(null)
   const [socketConnected, setSocketConnected] = useState(null)
+  const [callEnded, setCallEnded] = useState(false)
+  const [name, setName] = useState("")
   const [disconnect, setDisconnect] = useState(false)
-  const [test, setTest] = useState("")
+  const [caller, setCaller] = useState("");
+  const [callerSignal, setCallerSignal] = useState(null);
+  const [callAccepted, setCallAccepted] = useState(false);
+  const [receivingCall, setReceivingCall] = useState(false);
   const modalSelector = useSelector(state => state.modalSlice)
   const { email, Contact } = useSelector(state => state.loginSlice.loginDetails);
   const { pricingAndPlans } = modalSelector
@@ -259,7 +266,7 @@ const Chat = () => {
   const connectionRef = useRef();
   const myVideo = useRef(null);
 
-  
+
   useEffect(() => {
     socket = io(endpoint);
     setUserId(email || Contact)
@@ -269,8 +276,7 @@ const Chat = () => {
     socket.on("stop typing", () => setIsTyping(false));
     socket.on("mySocketId", (id) => {
       setMySocketId(id);
-      setTest(id)
-      debugger
+      localStorage.setItem('socketId', id)
     });
     socket.on("callUser", (data) => {
       setReceivingCall(true);
@@ -279,34 +285,25 @@ const Chat = () => {
       setCallerSignal(data.signal);
     });
     socket.on("getUserSocketId", () => {
-      
       console.log(mySocketId)
-      console.log(test)
       debugger
-      //let gtt = localStorage.getItem('socket')
-      console.log(gtt)
-      socket.emit("sendSocketIdToServer", { socketId: mySocketId, userId: "kashyapshivram612@gmail.com" });
-      //setUserSocketId(mySocketId)
-    })
-    socket.on("sendSocketIdToClient", (obj) => {
-      debugger
-      //socket.emit("sendSocketIdToServer", {socketId: mySocketId, userId: "kashyapshivram612@gmail.com"});
-      //setUserSocketId(mySocketId)
+      setUserSocketId(localStorage.getItem("socketId"));
     })
   }, [])
 
   useEffect(() => {
+    if (userSocketId) {
+      callUser(userSocketId)
+    }
+  }, [userSocketId]);
+
+  useEffect(() => {
     if (videoCall) {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then((stream) => {
-          setStream(stream);
-          if (myVideo.current) {
-            myVideo.current.srcObject = stream;
-          }
-        })
-        console.log(mySocketId)
-        debugger
-      socket.emit("initVideoCall", "kashyapshivram512@gmail.com");
+      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+        myVideo.current.srcObject = stream;
+        myVideo.current.play();
+        socket.emit("initVideoCall", "kashyapshivram512@gmail.com");
+      })
     }
   }, [videoCall]);
 
@@ -317,19 +314,12 @@ const Chat = () => {
     }
   }, [disconnect])
 
-
-
-  useEffect(() => {
-    if (userSocketId) {
-      debugger
-      callUser(userSocketId)
-    }
-  }, [userSocketId])
-
   const callUser = async (id) => {
+    // scr 1
+    debugger
     const peer = new Peer({ initiator: true, trickle: false, stream: stream })
     peer.on("signal", (data) => {
-      socket.emit("callUser", { userToCall: id, signalData: data, from: me, name: localStorage.getItem("name") })
+      socket.emit("callUser", { userToCall: id, signalData: data, from: "kashyapshivram612@gmail.com", name: "Shivram" })
     })
     peer.on("stream", (stream) => {
       userVideo.current.srcObject = stream
@@ -341,18 +331,22 @@ const Chat = () => {
     connectionRef.current = peer
   }
 
-
+  const answerCall = () => {
+    setCallAccepted(true)
+    const peer = new Peer({ initiator: false, trickle: false, stream: stream })
+    peer.on("signal", (data) => {
+      socket.emit("answerCall", { signal: data, to: caller })
+    })
+    peer.on("stream", (stream) => {
+      userVideo.current.srcObject = stream
+    })
+    peer.signal(callerSignal)
+    connectionRef.current = peer
+  }
 
 
   return (
     <div className="main-container">
-      {/* <SideBar isLeftOpen={isLeftOpen} handleSideBar={onClickSideBar} /> */}
-
-      {pricingAndPlans ? (
-        <div className="pricing-bg">
-          <PricingPlansModal />
-        </div>
-      ) : (
         <div
           style={{ margin: "0px 40px 0px 40px" }}
           className={`right-side-con ${isLeftOpen ? "" : "right-con-sidebar-close expand-left"
@@ -401,16 +395,40 @@ const Chat = () => {
           <div className="bottom-con">
             <div className="call-container">
               <div className="images-con">
-                <img
-                  src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222111/Rectangle_28_1_gisnki.png"
-                  className="image"
-                  alt="person1"
-                />
-                <img
-                  src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222352/Rectangle_29_zq40pr.png"
-                  className="image"
-                  alt="person2"
-                />
+                {
+                  videoCall ? <video
+                    ref={myVideo}
+                    style={{ width: '100%', height: 'auto' }}
+                    autoPlay
+                    playsInline
+                    muted
+                  /> : <img
+                    src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222111/Rectangle_28_1_gisnki.png"
+                    className="image"
+                    alt="person1"
+                  />
+                }
+
+                {
+                  callAccepted ? <video
+                    ref={userVideo}
+                    style={{ width: '100%', height: 'auto' }}
+                    autoPlay
+                    playsInline
+                    muted
+                  /> : <img
+                    src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222111/Rectangle_28_1_gisnki.png"
+                    className="image"
+                    alt="person1"
+                  />
+                }
+
+                {receivingCall ?
+                  <div className="caller">
+                    <h1 >{name} is calling...</h1>
+                    <button type="button" onClick={answerCall} className="reject">Answer</button>
+                  </div>
+                  : null}
               </div>
               <div className="call-controllers">
                 <div className="calls">
@@ -512,60 +530,8 @@ const Chat = () => {
                 </div>
               </div>
             </div>
-            {/* <div
-              className={`friends-container ${
-                !isLeftOpen && !isRightOpen ? "left-and-right-expand" : ""
-              }  ${!isRightOpen ? "expanded" : ""}`}
-            > */}
-            {/* <div>
-                <div className="chats-arrow">
-                  <p className="chat-text">Chats</p>
-                  <ArrowDown />
-                </div>
-                {chats.map((eachUser, index) => (
-                  <ul
-                    key={index}
-                    className={`profile-info ${
-                      eachUser.selected ? "active-user" : ""
-                    }`}
-                  >
-                    <div className="profile">
-                      <Image src={url3} width={50} alt="friend-profile" />
-                      <div className="profile-name-desc">
-                        <p className="profile-name">{eachUser.name}</p>
-                        <p className="profile-description">
-                          {eachUser.description}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="profile-time">{eachUser.lastTime}</p>
-                  </ul>
-                ))}
-              </div> */}
-            {/* <div>
-                <div className="chats-arrow">
-                  <p className="chat-text">Friends</p>
-                  <ArrowDown />
-                </div>
-                {friends.map((eachUser, index) => (
-                  <ul key={index} className="profile-info">
-                    <div className="profile">
-                      <Image src={url3} width={50} alt="friend-profile" />
-                      <div className="profile-name-desc">
-                        <p className="profile-name">{eachUser.name}</p>
-                        <p className="profile-description">
-                          {eachUser.description}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="profile-time">{eachUser.lastTime}</p>
-                  </ul>
-                ))}
-              </div> */}
-            {/* </div> */}
           </div>
         </div>
-      )}
     </div>
   );
 };
