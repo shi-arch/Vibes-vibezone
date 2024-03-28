@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Navbar from "../../components/Navbar/navbar";
+//import Navbar from "../../components/Navbar/navbar";
 import { useDispatch, useSelector } from "react-redux";
 import OtpInput from "../../components/otpInput/otpInput";
 import "./page.css";
@@ -40,7 +40,7 @@ const Page = (props) => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="verifyOtp">
         <div className="Otp-verify-container">
           <h1 className="otp-heading">OTP Verification</h1>

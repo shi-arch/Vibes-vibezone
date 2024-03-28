@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Navbar from "../../components/Navbar/navbar";
+//import Navbar from "./../../components/Navbar/NavBar";
 import { setLoginDetails } from "../../Context/features/loginSlice";
 import "./page.css";
 import { useRouter } from "next/navigation";
@@ -39,7 +39,7 @@ const Page = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="Sign-Up">
         <div className="login-form">
           <h1 className="Login-or-sign-up">
