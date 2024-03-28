@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect } from 'react'
 import {Box} from '@mui/material'
-import NavBar from '../navbar/NavBar'
+import NavBar from '../Navbar/navbar'
 import EarlyAccess from '../earlyaccess/EarlyAccess'
 import About from '../about/About'
 import TodayTask from '../todaytask/TodayTask'
