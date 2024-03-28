@@ -1,6 +1,6 @@
 import { ChatProvider } from "../Context/ChatProvider";
 
-import { Providers } from "../Context/Provider";
+import { Providers } from "../Context/provider";
 
 export default function RootLayout({ children }) {
   return (
