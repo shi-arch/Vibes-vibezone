@@ -6,7 +6,7 @@ import io from "socket.io-client";
 import dotenv from 'dotenv'
 dotenv.config()
 
-let endpoint = "http://localhost:8080/"
+let endpoint = process.env.NEXT_PUBLIC_SERVER_BASEURL
 var socket;
 
 const CallInterface = () => {

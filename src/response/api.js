@@ -5,7 +5,7 @@ export const getApi = async (url) => {
     return response.data
 }
 
-export const postApi = async (url, data, token) => {
+export const postApi = async (url, data, token) =>  {
     const headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
