@@ -1,0 +1,84 @@
+.Rectangle-156 {
+    height: 80px;
+    width: 100%; /* Set width to 100% */
+    margin: 0 auto; /* Center the navbar horizontally */
+    background-color: white;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .VibeZone {
+    padding: 23px 24px 24px 100px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #8f47ff;
+    /* width: 104px;
+    height: 33px; */
+    flex-grow: 0;
+    object-fit: contain;
+    font-family: Poppins, Arial;
+    font-size: 22px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+  }
+  
+  .text-style-1 {
+    color: #000;
+    font-size: 1.5rem;
+    font-family: Poppins, Arial;
+  
+  }
+  
+  .nav-link {
+    text-decoration: none;
+    margin: 6px auto 5px 0;
+    padding: 27px 50px 26px; 
+    width: auto; /* Allow the width to adjust based on content */
+    height: auto; /* Allow the height to adjust based on content */
+    font-family: Poppins, Arial;
+    font-size: 18px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #2b2b2b;
+  }
+  
+  .sign-up {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #8f47ff;
+    padding: 10px 15px; /* Adjusted padding to provide enough space around the text */
+    border: none;
+    border-radius: 5px;
+    width: auto; /* Allow the button width to adjust based on its content */
+    height: auto; /* Allow the button height to adjust based on its content */
+    flex-grow: 0;
+    font-family: Poppins, Arial;
+    font-size: 18px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center; /* Center the text horizontally */
+    color: #fff;
+  }
+  
+  .LinksContainer {
+    display: flex;
+    align-items: center;
+  }
