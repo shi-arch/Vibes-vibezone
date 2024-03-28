@@ -1,5 +1,5 @@
 "use client"
-import Navbar from "./Navbar/NavBar";
+import Navbar from "../../components/Navbar/navbar";
 import React from "react";
 
 import "./page.css";
