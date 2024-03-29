@@ -17,7 +17,7 @@ export const Button = (props) => {
     <button
       type={props.type}
       className={styles.saveButton}
-      onClick={props.onClick()}
+      onClick={() => props.onClick()}
     >
       {props.label}
     </button>
@@ -28,7 +28,7 @@ export const SideBarSelections = (props) => (
   <div
     className={styles.sideBarIconTextContainer}
     type="button"
-    onClick={props.onClick()}
+    onClick={() => props.onClick()}
   >
     <props.name color={props.color} size={props.size} />
     <p className={styles.sideBarText}>{props.label}</p>

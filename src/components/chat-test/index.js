@@ -286,7 +286,7 @@ const Chat = () => {
     });
     socket.on("getUserSocketId", () => {
       console.log(mySocketId)
-      debugger
+      
       setUserSocketId(localStorage.getItem("socketId"));
     })
   }, [])
@@ -316,7 +316,7 @@ const Chat = () => {
 
   const callUser = async (id) => {
     // scr 1
-    debugger
+    
     const peer = new Peer({ initiator: true, trickle: false, stream: stream })
     peer.on("signal", (data) => {
       socket.emit("callUser", { userToCall: id, signalData: data, from: "kashyapshivram612@gmail.com", name: "Shivram" })

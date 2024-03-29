@@ -125,6 +125,7 @@ const PreferenceModal = () => {
   const [value, setValue] = useState([15, 20]);
   const dispatch = useDispatch();
   const modalSelector = useSelector((state) => state.modalSlice);
+  const token = useSelector((state) => state.loginSlice.token);
   const { preferenceModal } = modalSelector;
 
   const style = {
@@ -139,9 +140,7 @@ const PreferenceModal = () => {
     p: 4,
   };
 
-  const loginSelector = useSelector((state) => state.loginSlice);
-  const { token } = loginSelector;
-
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

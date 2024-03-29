@@ -16,7 +16,7 @@ const chatSlice = createSlice({
       state.searchUserData = actions.payload;
     },
     setSelectedUserData: (state, actions) => {
-      debugger
+      
       state.selectedUserData = actions.payload;
     },
   },

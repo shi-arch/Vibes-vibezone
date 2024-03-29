@@ -64,6 +64,7 @@ const CallInterface = () => {
         myVideo.current.play();
         setStream(stream)               
       })
+      debugger
       socket.emit("initVideoCall", selectedUserData.Contact);
     }
   }, [videoCall]);
@@ -81,7 +82,7 @@ const CallInterface = () => {
     peer.on("signal", (data) => {
       socket.emit("callUser", { userToCall: id, signalData: data, from: "9354347650", name: "Shivram" })
     })
-    //debugger
+    //
     peer.on("stream", (stream) => {
       userVideo.current.srcObject = stream
       userVideo.current.play();
