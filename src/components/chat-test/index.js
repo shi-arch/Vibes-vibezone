@@ -375,7 +375,7 @@ const Chat = () => {
                 placeholder="Search user by email or contact"
                 value={searchInput}
               />
-              <Search onClick={alert('ddddd')} />
+              <Search />
             </div>
             <div className="new-chats-con">
               <p className="new-chat">New Chats</p>
