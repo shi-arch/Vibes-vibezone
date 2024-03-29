@@ -55,6 +55,7 @@
   text-align: left;
   color: rgba(43, 43, 43, 0.8);
   display: block;
+  
 }
 
 .Gender .text-style-1 {
@@ -95,6 +96,7 @@
 
 .preference-inner-container {
   margin-bottom: 1.12rem;
+  padding-top: 20px;
 }
 
 .topics-container {
@@ -110,6 +112,9 @@
   padding: 5px;
   background-color: #f2f5fb;
   margin-bottom: -6px;
+  cursor: pointer;
+  text-align: center;
+  margin: auto;
 }
 
 .topic-item-container span {
@@ -129,4 +134,12 @@
 .save-btn {
   align-self: flex-end;
   cursor: pointer;
+}
+.topic-item-container.selected {
+  background-color:#8f47ff;
+  color: #ffffff;
+  font-family: Poppins,Arial;
+  border-radius: 5px;
+  text-align: center;
+  margin: auto;
 }

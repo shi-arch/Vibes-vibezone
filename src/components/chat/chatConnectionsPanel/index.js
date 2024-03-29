@@ -82,19 +82,23 @@
 
 
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowDown, ThreeDots } from "../../svgComponents/index.js";
 import Image from "next/image";
 import url3 from "../../../assets/images/profile3.svg";
 import Badges from "../badges/index.js";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { chats } from '../propsData';
+import { setSelectedUserData } from "@/Context/features/chatSlice.js";
 import "./index.css";
 
 const ChatConnectionsPanel = () => {
-  const [requestsOpen, setRequestsOpen] = useState(true);
-  const [friendsOpen, setFriendsOpen] = useState(true);
+  const dispatch = useDispatch();
+  const [requestsOpen, setRequestsOpen] = useState(false);
+  const [friendsOpen, setFriendsOpen] = useState(false);
+  const [usersOpen, setUsersOpen] = useState(false);
   const modalSelector = useSelector(state => state.modalSlice);
+  const searchUserData = useSelector(state => state.chatSlice.searchUserData);
   const {leftOpen, rightOpen} = modalSelector;
 
   const toggleRequests = () => {
@@ -163,6 +167,26 @@ const ChatConnectionsPanel = () => {
               </div>
             </div>
             <p className="profile-time">{eachUser.lastTime}</p>
+          </div>
+        ))}
+        </div>
+      </div>
+      <div className={`user-friends-con ${requestsOpen ? '' : 'expand-friends'}`}>
+        <div className="chats-arrow">
+          <p className="chat-text">New User</p>
+          <div onClick={() => setUsersOpen(!usersOpen)} className={`${usersOpen ? "arrow-down" : "arrow-right"}`}><ArrowDown /></div>
+        </div>
+        <div className={`scroll-con ${rightOpen ? '' : 'hide-scrollbar'}`}>
+        {usersOpen && searchUserData.length && searchUserData.map((o, index) => (
+          <div key={index} className={`profile-info ${rightOpen ? '' : 'profile-info-padding-2'}`}>
+            <div onClick={() => dispatch(setSelectedUserData(o))} className="profile-2">
+              <Image src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
+              <div className="profile-name-desc">
+                <p className="profile-name">{o.name || o.Contact || o.email}</p>
+                <p className="profile-description">{o.userType}</p>
+              </div>
+            </div>
+            <p className="profile-time">{o.updatedAt}</p>
           </div>
         ))}
         </div>

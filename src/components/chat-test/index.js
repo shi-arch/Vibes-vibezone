@@ -371,11 +371,11 @@ const Chat = () => {
               <Input
                 type="search"
                 css="search-input"
-                onChange={setSearchInput}
-                placeholder="Search"
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Search user by email or contact"
                 value={searchInput}
               />
-              <Search />
+              <Search onClick={alert('ddddd')} />
             </div>
             <div className="new-chats-con">
               <p className="new-chat">New Chats</p>

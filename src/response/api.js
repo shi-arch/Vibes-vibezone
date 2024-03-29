@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const getApi = async (url) => {
-    const response = await axios.get(process.env.NEXT_PUBLIC_SERVER_BASEURL + '/api' + url)
+    const response = await axios.get(process.env.NEXT_PUBLIC_BASEURL + '/api' + url)
     return response.data
 }
 
@@ -12,7 +12,8 @@ export const postApi = async (url, data, token) =>  {
     }
     if (token) {
         headers['Authorization'] = `Bearer ${token}`
+        headers['token'] = `${token}`
     }
-    const response = await axios.post(process.env.NEXT_PUBLIC_SERVER_BASEURL + '/api' + url, data, {headers})
+    const response = await axios.post(process.env.NEXT_PUBLIC_BASEURL + '/api' + url, data, {headers})
     return response.data
 }

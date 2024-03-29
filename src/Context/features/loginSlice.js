@@ -17,6 +17,7 @@ const loginSlice = createSlice({
       state.verifyOtp = actions.payload;
     },
     setToken: (state, actions) => {
+      debugger
       state.token = actions.payload;
     },
   },

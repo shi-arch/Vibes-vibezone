@@ -1,13 +1,29 @@
 import { useState } from "react";
 import { Input } from "../../commonComponents/commonComponents.js";
+import { useDispatch, useSelector } from "react-redux";
 import { Notification, Search, Plus } from "../../svgComponents/index.js";
 import Image from "next/image";
 import { recentUsers } from '../propsData';
+import { postApi } from "@/response/api.js";
+import { setSearchUserData } from "@/Context/features/chatSlice.js";
 
 const notification = true;
 
 const Header = () => {
+  const dispatch = useDispatch();
   const [searchInput, setSearchInput] = useState("");
+  const token = useSelector(state => state.loginSlice.token)
+  const searchUser = async () => {
+   console.log(token)   
+    let col = "email"
+    if(isNaN()) { 
+      col = "Contact"
+    }
+    const result = await postApi('/search',{[col]: searchInput}, token)
+    if(result){
+      dispatch(setSearchUserData(result.data))
+    }
+  }
 
   return (
     <div className="header-container">
@@ -28,10 +44,10 @@ const Header = () => {
           type="search"
           css="search-input"
           onChange={setSearchInput}
-          placeholder="Search"
+          placeholder="Search user by email or contact"
           value={searchInput}
         />
-        <Search />
+        <div onClick={searchUser}><Search/></div>        
       </div>
       <div className="new-chats-con">
         <p className="new-chat">New Chats</p>

@@ -6,10 +6,12 @@ import io from "socket.io-client";
 import dotenv from 'dotenv'
 dotenv.config()
 
-let endpoint = process.env.NEXT_PUBLIC_SERVER_BASEURL
+let endpoint = process.env.NEXT_PUBLIC_BASEURL
 var socket;
 
 const CallInterface = () => {
+  const selectedUserData = useSelector(state => state.chatSlice.selectedUserData);
+  const [isTyping, setIsTyping] = useState(false);
   const [videoCall, setVideoCall] = useState(false);
   const [userSocketId, setUserSocketId] = useState("");
   const [userId, setUserId] = useState(0)
@@ -49,6 +51,7 @@ const CallInterface = () => {
       setCallerSignal(data.signal);
     });
     socket.on("getUserSocketId", () => {
+      debugger
       setUserSocketId(localStorage.getItem("socketId"));
       callUser(localStorage.getItem("socketId"))
     })
@@ -61,9 +64,7 @@ const CallInterface = () => {
         myVideo.current.play();
         setStream(stream)               
       })
-      setTimeout(() => {
-        socket.emit("initVideoCall", "9354347660");    
-      }, 5000)  
+      socket.emit("initVideoCall", selectedUserData.Contact);
     }
   }, [videoCall]);
 
@@ -76,7 +77,6 @@ const CallInterface = () => {
 
   const callUser = async (id) => {
     console.log(stream)
-    debugger
     const peer = new Peer({ initiator: true, trickle: false, stream: stream})
     peer.on("signal", (data) => {
       socket.emit("callUser", { userToCall: id, signalData: data, from: "9354347650", name: "Shivram" })
@@ -95,7 +95,6 @@ const CallInterface = () => {
 
   const answerCall = () => {
     setCallAccepted(true)
-    debugger
     const peer = new Peer({ initiator: false, trickle: false, stream: stream })
     peer.on("signal", (data) => {
       socket.emit("answerCall", { signal: data, to: caller })
