@@ -1,4 +1,4 @@
-"use client"
+
 import Navbar from "../../components/Navbar/navbar";
 import React from "react";
 

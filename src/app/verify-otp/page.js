@@ -1,18 +1,16 @@
-"use client";
+
 import React, { useState, useEffect } from "react";
-//import Navbar from "../../components/Navbar/navbar";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import OtpInput from "../../components/otpInput/otpInput";
-import "./page.css";
-import { useRouter } from "next/navigation";
-import { setVerifyOtp } from "../../Context/features/loginSlice";
+import { setVerifyOtp } from "../../redux/features/loginSlice";
 import { postApi} from "../../response/api"
-
+import "./page.css";
 const Page = (props) => {
   console.log("props", props);
   const {email, Contact, CountryCode} = useSelector(state => state.loginSlice.loginDetails);
   const dispatch = useDispatch();
-  const router = useRouter();
+  const router = useNavigate();
   const [timer, setTimer] = useState(30);
   const [disableResend, setDisableResend] = useState(false);
   const [otp, setOtp] = useState("");
@@ -66,7 +64,7 @@ const Page = (props) => {
             if(res.status !== 400){
               localStorage.setItem("userData", JSON.stringify(res)); 
               dispatch(setVerifyOtp(true))
-              router.push("/chat");
+              router("/chat");
             } else {
               alert("Invalid OTP")
             }            

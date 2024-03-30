@@ -1,5 +1,3 @@
-"use client";
-
 import VibeZonePlans from "../VibeZonePlans";
 import {
   AtSvg,
@@ -25,7 +23,7 @@ import {
   setBadgesModal,
   setProfileModal,
   setLeftOpen,
-} from "../../Context/features/modalSlice";
+} from "../../redux/features/modalSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 const SideBar = () => {

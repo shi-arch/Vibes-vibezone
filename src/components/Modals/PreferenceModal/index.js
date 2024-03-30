@@ -1,10 +1,9 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import "./index.css";
 import { CrossSvg } from "../../svgComponents/svgComponents";
 import { Button } from "../../commonComponents/commonComponents";
 import { useDispatch, useSelector } from "react-redux";
-import { setPreferenceModal } from "../../../Context/features/modalSlice";
+import { setPreferenceModal } from "../../../redux/features/modalSlice";
 import Modal from "@mui/material/Modal";
 import { Box, Slider } from "@mui/material";
 import { postApi } from "../../../response/api";

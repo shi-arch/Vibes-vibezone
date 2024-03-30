@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import "./navbar.css";
 
 const Navbar = () => {
@@ -9,23 +9,23 @@ const Navbar = () => {
         Vibe<span className="text-style-1">Zone</span>
       </div>
       <div className="LinksContainer">
-        <Link href="/home" className="nav-link">
+        <Link to="/home" className="nav-link">
           <span>Home</span>
         </Link>
-        <Link href="/about" className="nav-link">
+        <Link to="/about" className="nav-link">
           <span>About</span>
         </Link>
-        <Link href="/early-access" className="nav-link">
+        <Link to="/early-access" className="nav-link">
           <span>Early Access</span>
         </Link>
-        <Link href="/pricing" className="nav-link">
+        <Link to="/pricing" className="nav-link">
           <span>Pricing</span>
         </Link>
-        <Link href="/contact" className="nav-link">
+        <Link to="/contact" className="nav-link">
           <span>Contact</span>
         </Link>
-        <Link href="/signup" className="nav-link">
-          <button className="sign-up">Sign Up</button>
+        <Link to="/signup" className="nav-link">
+          <button style={{cursor: "pointer"}} className="sign-up">Sign Up</button>
         </Link>
       </div>
     </nav>

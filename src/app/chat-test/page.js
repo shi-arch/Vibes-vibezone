@@ -1,4 +1,4 @@
-"use client"
+
 import Chat from '../../components/chat-test'
 
 function ChatPage() {

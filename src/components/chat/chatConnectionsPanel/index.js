@@ -1,5 +1,5 @@
 // import { ArrowDown, ThreeDots } from "../../svgComponents/index.js";
-// import Image from "next/image";
+// 
 // import url3 from "../../../assets/images/profile3.svg";
 // import Badges from "../badges";
 // import "./index.css";
@@ -25,7 +25,7 @@
 //             className={`profile-info ${eachUser.selected ? "active-user" : ""}`}
 //           >
 //             <div className="profile">
-//               <Image src={url3} width={isRightOpen ? 45 : 55} alt="friend-profile" />
+//               <img src={url3} width={isRightOpen ? 45 : 55} alt="friend-profile" />
 //               <div className="profile-name-desc">
 //                 <p className="profile-name">{eachUser.name}</p>
 //                 <Badges />
@@ -61,7 +61,7 @@
 //         {friends.map((eachUser, index) => (
 //           <div key={index} className="profile-info">
 //             <div className="profile">
-//               <Image src={url3} width={50} alt="friend-profile" />
+//               <img src={url3} width={50} alt="friend-profile" />
 //               <div className="profile-name-desc">
 //                 <p className="profile-name">{eachUser.name}</p>
 //                 <p className="profile-description">{eachUser.description}</p>
@@ -84,12 +84,12 @@
 
 import React, { useEffect, useState } from "react";
 import { ArrowDown, ThreeDots } from "../../svgComponents/index.js";
-import Image from "next/image";
+
 import url3 from "../../../assets/images/profile3.svg";
 import Badges from "../badges/index.js";
 import { useSelector, useDispatch } from "react-redux";
 import { chats } from '../propsData';
-import { setSelectedUserData } from "@/Context/features/chatSlice.js";
+import { setSelectedUserData } from "../../../redux/features/chatSlice.js";
 import "./index.css";
 
 const ChatConnectionsPanel = () => {
@@ -124,7 +124,7 @@ const ChatConnectionsPanel = () => {
         {requestsOpen && chats.map((eachUser, index) => (
           <div key={index} className={`profile-info ${rightOpen ? '' : 'profile-info-padding'} ${eachUser.selected ? "active-user" : ""}`}>
             <div className="profile-2">
-              <Image src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
+              <img src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
               <div className="profile-name-desc">
                 <p className="profile-name">{eachUser.name}</p>
                 <Badges />
@@ -160,7 +160,7 @@ const ChatConnectionsPanel = () => {
         {friendsOpen && chats.map((eachUser, index) => (
           <div key={index} className={`profile-info ${rightOpen ? '' : 'profile-info-padding-2'}`}>
             <div className="profile-2">
-              <Image src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
+              <img src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
               <div className="profile-name-desc">
                 <p className="profile-name">{eachUser.name}</p>
                 <p className="profile-description">{eachUser.description}</p>
@@ -180,7 +180,7 @@ const ChatConnectionsPanel = () => {
         {usersOpen && searchUserData.length && searchUserData.map((o, index) => (
           <div key={index} className={`profile-info ${rightOpen ? '' : 'profile-info-padding-2'}`}>
             <div onClick={() => dispatch(setSelectedUserData(o))} className="profile-2">
-              <Image src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
+              <img src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
               <div className="profile-name-desc">
                 <p className="profile-name">{o.name || o.Contact || o.email}</p>
                 <p className="profile-description">{o.userType}</p>
@@ -280,7 +280,7 @@ export default ChatConnectionsPanel;
 //         {chats.map((eachUser, index) => (
 //           <ul key={index} className={`profile-info ${eachUser.selected ? "active-user" : ""}`}>
 //             <div className="profile">
-//               <Image src={url3} width={isRightOpen ? 45 : 55} alt="friend-profile" />
+//               <img src={url3} width={isRightOpen ? 45 : 55} alt="friend-profile" />
 //               <div className="profile-name-desc">
 //                 <p className="profile-name">{eachUser.name}</p>
 //                 <Badges />
@@ -321,7 +321,7 @@ export default ChatConnectionsPanel;
 //         {friends.map((eachUser, index) => (
 //           <ul key={index} className="profile-info">
 //             <div className="profile">
-//               <Image src={url3} width={50} alt="friend-profile" />
+//               <img src={url3} width={50} alt="friend-profile" />
 //               <div className="profile-name-desc">
 //                 <p className="profile-name">{eachUser.name}</p>
 //                 <p className="profile-description">{eachUser.description}</p>

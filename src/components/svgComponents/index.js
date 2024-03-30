@@ -238,7 +238,7 @@ export const Badge4 = () => (
       >
         <use xlinkHref="#image0_112_1261" transform="scale(0.01)" />
       </pattern>
-      <image
+      <img
         id="image0_112_1261"
         width="100"
         height="100"

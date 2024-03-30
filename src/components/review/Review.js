@@ -1,4 +1,4 @@
-"use client"
+
 import React , {useState}from 'react';
 import { Box, Typography, IconButton, Card} from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';

@@ -1,19 +1,21 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-//import Navbar from "./../../components/Navbar/NavBar";
-import { setLoginDetails } from "../../Context/features/loginSlice";
+import { setLoginDetails } from "../../redux/features/loginSlice";
 import "./page.css";
-import { useRouter } from "next/navigation";
-import {getApi, postApi} from "../../response/api"
+import { useNavigate } from "react-router-dom";
+import { postApi} from "../../response/api"
+import {Loader} from '../../components/commonComponents/commonComponents'
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const phoneRegex = /^[6-9]\d{9}$/
 
+
 const Page = () => {
   const [userInput, setUserInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const router = useRouter();
+  const router = useNavigate();
   const handleGetOtp = async () => {
+    setIsLoading(true)
     let obj = {Contact: userInput}
     let isErr = true
     if(emailRegex.test(userInput)){
@@ -30,8 +32,9 @@ const Page = () => {
     const res = await postApi('/login', obj)
     if(res){      
       dispatch(setLoginDetails(res));
-      router.push("/verify-otp");  
-    }    
+      router("/verify-otp");  
+    } 
+    setIsLoading(false)   
   };
   const handleEmailOrPhoneNumber = (event) => {
     setUserInput(event.target.value);
@@ -41,6 +44,7 @@ const Page = () => {
     <>
       {/* <Navbar /> */}
       <div className="Sign-Up">
+      { isLoading ? <Loader /> : ""}
         <div className="login-form">
           <h1 className="Login-or-sign-up">
             Login

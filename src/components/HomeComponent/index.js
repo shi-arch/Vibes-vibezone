@@ -1,4 +1,4 @@
-"use client"
+
 import React, { useEffect } from 'react'
 import {Box} from '@mui/material'
 import NavBar from '../Navbar/navbar'
@@ -12,12 +12,12 @@ import JoinUs from '../joinus/JoinUs';
 import Footer from '../footer/Footer';
 import Review from '../review/Review';
 import FreqAskQuestion from '../freqaskquestion/FreqAskQuestion';
-import { useRouter } from 'next/navigation'
-import { setLoginDetails, setToken } from "../../Context/features/loginSlice";
+import { useNavigate } from "react-router-dom";
+import { setLoginDetails, setToken } from "../../redux/features/loginSlice";
 import { useDispatch } from "react-redux";
 
 const HomeComponent = () => {
-  const router = useRouter()
+  const router = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const HomeComponent = () => {
     const parsedData = JSON.parse(userData)
     dispatch(setLoginDetails(parsedData.user));
     dispatch(setToken(parsedData.token));
-    router.push("/chat")
+    router("/chat")
   }  
   }, []);
   return (

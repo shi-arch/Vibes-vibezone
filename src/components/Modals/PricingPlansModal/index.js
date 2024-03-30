@@ -23,7 +23,7 @@ const data = [
   },
 ];
 
-const index = () => {
+const Index = () => {
   const [selectedDuration, setSelectedDuration] = useState(data[0].name);
 
   const handlePlanSelection = (item) => {
@@ -111,4 +111,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

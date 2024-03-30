@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { CrossSvg } from "../../svgComponents/svgComponents";
 import "./index.css";
-import { setNotificationModal } from "../../../Context/features/modalSlice";
+import { setNotificationModal } from "../../../redux/features/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Modal } from "@mui/material";
 
-const index = () => {
+const Index = () => {
   const [notification, setNotification] = useState(false);
   const [email, setEmail] = useState(false);
   const [sms, setSms] = useState(false);
@@ -220,4 +220,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

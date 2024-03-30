@@ -1,18 +1,18 @@
-"use client"
 
-import Image from "next/image";
+
+
 import styles from "./page.module.css";
 import { useEffect } from "react";
-import { useRouter } from 'next/navigation'
+import { useNavigate } from "react-router-dom";
 import { setLoginDetails } from "../Context/features/loginSlice";
 import { useDispatch } from "react-redux";
 
 export default function Home() {
-  const router = useRouter()
+  const router = useNavigate()
   const dispatch = useDispatch();
 
   useEffect(() => {
-    router.push("/home")  
+    router("/home")  
   }, []);
 
   return (

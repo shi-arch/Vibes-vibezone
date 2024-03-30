@@ -1,9 +1,9 @@
-"use client"
+
 import { Input } from "../commonComponents/commonComponents";
 import Peer from "simple-peer";
 import { useState, useRef, useEffect } from "react";
 import Tooltip from "@mui/material/Tooltip";
-import Image from "next/image";
+
 import url3 from "../../assets/images/profile3.svg";
 import url4 from "../../assets/images/recentUser1.svg";
 import url5 from "../../assets/images/recentUser2.svg";
@@ -356,7 +356,7 @@ const Chat = () => {
             <div className="recent-user-con">
               {recentUsers.map((eachUser) => (
                 <div key={eachUser.id} className="recent-user">
-                  <Image
+                  <img
                     src={eachUser.profileIcon}
                     alt="recent-user-icon"
                     className="user-icon"
@@ -441,7 +441,7 @@ const Chat = () => {
             <div className="chat-container">
               <div className="chat-header">
                 <div className="icon-username">
-                  <Image
+                  <img
                     src={url7}
                     alt="chat-profile-icon"
                     className="chat-icon"

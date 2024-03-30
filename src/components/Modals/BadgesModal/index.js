@@ -1,7 +1,7 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setBadgesModal } from "../../../Context/features/modalSlice";
+import { setBadgesModal } from "../../../redux/features/modalSlice";
 import {
   CertifiedSharpBadge,
   ColdStreak,
@@ -75,7 +75,7 @@ const data = [
   },
 ];
 
-const index = () => {
+const Index = () => {
   const modalSelector = useSelector((state) => state.modalSlice);
   const dispatch = useDispatch();
   const { badgesModal } = modalSelector;
@@ -177,4 +177,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

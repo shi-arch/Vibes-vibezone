@@ -11,7 +11,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useDispatch, useSelector } from "react-redux";
-import { setBillingModal } from "../../../Context/features/modalSlice";
+import { setBillingModal } from "../../../redux/features/modalSlice";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -28,11 +28,11 @@ const columns = [
     headerName: "Invoice",
     width: 100,
     renderCell: (params) => {
-      const invoiceId = params.row.invoice;
+      //const invoiceId = params.row.invoice || "";
       return (
         <button
           className="download-btn"
-          onClick={() => downloadInvoice(invoiceId)}
+          //onClick={() => downloadInvoice(invoiceId)}
         >
           Download
         </button>
@@ -159,7 +159,8 @@ export default function PricingTable() {
                   <TableCell align="center">
                     <button
                       className="download-btn"
-                      onClick={() => downloadInvoice(invoiceId)}
+                      onClick={() => downloadInvoice()}
+                      // onClick={() => downloadInvoice(invoiceId)}
                     >
                       Download
                     </button>

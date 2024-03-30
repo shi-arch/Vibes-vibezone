@@ -1,15 +1,28 @@
 import { Mute, Video, EndCall } from "../../svgComponents/index.js";
-import Peer from "simple-peer";
+//import Peer from "simple-peer";
+import Peer from 'peerjs';
 import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
-import dotenv from 'dotenv'
-dotenv.config()
+//import dotenv from 'dotenv'
+//dotenv.config()
 
-let endpoint = process.env.NEXT_PUBLIC_BASEURL
+let endpoint = 'http://localhost:8080'
 var socket;
 
 const CallInterface = () => {
+
+
+
+  const [peerId, setPeerId] = useState('');
+  const [remotePeerIdValue, setRemotePeerIdValue] = useState('');
+  const [userPeerId, setUserPeerId] = useState('');
+  const remoteVideoRef = useRef(null);
+  const currentUserVideoRef = useRef(null);
+  const peerInstance = useRef(null);
+  
+
+
   const selectedUserData = useSelector(state => state.chatSlice.selectedUserData);
   const [isTyping, setIsTyping] = useState(false);
   const [videoCall, setVideoCall] = useState(false);
@@ -33,9 +46,42 @@ const CallInterface = () => {
   const { email, Contact } = useSelector(state => state.loginSlice.loginDetails);
 
 
+  const call = async (remotePeerId) => {
+    debugger
+    navigator.mediaDevices.getUserMedia({ video: true }).then(mediaStream => {
+      currentUserVideoRef.current.srcObject = mediaStream;
+      currentUserVideoRef.current.play();
+      const call = peerInstance.current.call(remotePeerId, mediaStream)
+      call.on('stream', (remoteStream) => {
+        remoteVideoRef.current.srcObject = remoteStream
+        remoteVideoRef.current.play();
+      });
+    });
+  }
+
   useEffect(() => {
+    const peer = new Peer();
+    peer.on('open', (id) => {
+      setPeerId(id)
+    });
+    peer.on('call', (call) => {
+      navigator.mediaDevices.getUserMedia({ video: true }).then(mediaStream => {
+        currentUserVideoRef.current.srcObject = mediaStream;
+        currentUserVideoRef.current.play();
+        call.answer(mediaStream)
+        call.on('stream', function (remoteStream) {
+          remoteVideoRef.current.srcObject = remoteStream
+          remoteVideoRef.current.play();
+        });
+      });
+    })
+
+    peerInstance.current = peer;
+
+
     socket = io(endpoint);
     setUserId(email || Contact)
+    localStorage.setItem("userId", email || Contact)
     socket.emit("setup", email || Contact);
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
@@ -50,22 +96,24 @@ const CallInterface = () => {
       setCaller(data.from);
       setCallerSignal(data.signal);
     });
-    socket.on("getUserSocketId", () => {
-      debugger
-      setUserSocketId(localStorage.getItem("socketId"));
-      callUser(localStorage.getItem("socketId"))
+
+
+    socket.on("getUserSocketId", (myUserId) => {
+      socket.emit('sendPeerId', {peerId: peerId, userId: myUserId})
     })
+
+    socket.on("getPeerId", async (id) => {
+      debugger
+      setUserPeerId(id)
+      await call(id)
+    })
+    
   }, [])
 
   useEffect(() => {
     if (videoCall) {
-      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-        myVideo.current.srcObject = stream;
-        myVideo.current.play();
-        setStream(stream)               
-      })
       debugger
-      socket.emit("initVideoCall", selectedUserData.Contact);
+      socket.emit("initVideoCall", {myUserId: userId, contactUserId: selectedUserData.Contact});
     }
   }, [videoCall]);
 
@@ -77,10 +125,10 @@ const CallInterface = () => {
   }, [disconnect])
 
   const callUser = async (id) => {
-    console.log(stream)
+    console.log(mySocketId)
     const peer = new Peer({ initiator: true, trickle: false, stream: stream})
     peer.on("signal", (data) => {
-      socket.emit("callUser", { userToCall: id, signalData: data, from: "9354347650", name: "Shivram" })
+      socket.emit("callUser", { userToCall: id, signalData: data, from: mySocketId, name: "Shivram" })
     })
     //
     peer.on("stream", (stream) => {
@@ -112,7 +160,7 @@ const CallInterface = () => {
       <div className="images-con">
         {
           videoCall ? <video
-            ref={myVideo}
+            ref={currentUserVideoRef}
             style={{ width: '100%', height: 'auto' }}
             autoPlay
             playsInline
@@ -125,7 +173,7 @@ const CallInterface = () => {
         }
         {
           callAccepted ? <video
-            ref={userVideo}
+            ref={remoteVideoRef}
             style={{ width: '100%', height: 'auto' }}
             autoPlay
             playsInline

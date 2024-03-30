@@ -2,7 +2,7 @@ import React from "react";
 
 import "./index.css";
 import { useDispatch } from "react-redux";
-import { setPricingAndPlans } from "../../Context/features/modalSlice";
+import { setPricingAndPlans } from "../../redux/features/modalSlice";
 
 const VibeZonePlans = () => {
   const dispatch = useDispatch()

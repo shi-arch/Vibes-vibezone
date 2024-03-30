@@ -2,19 +2,20 @@ import { useState } from "react";
 import { Input } from "../../commonComponents/commonComponents.js";
 import { useDispatch, useSelector } from "react-redux";
 import { Notification, Search, Plus } from "../../svgComponents/index.js";
-import Image from "next/image";
+import {Loader} from '../../commonComponents/commonComponents.js'
 import { recentUsers } from '../propsData';
-import { postApi } from "@/response/api.js";
-import { setSearchUserData } from "@/Context/features/chatSlice.js";
+import { postApi } from "../../../response/api.js";
+import { setSearchUserData } from "../../../redux/features/chatSlice.js";
 
 const notification = true;
 
 const Header = () => {
   const dispatch = useDispatch();
   const [searchInput, setSearchInput] = useState("");
+  const [Loader, setLoader] = useState(false);  
   const token = useSelector(state => state.loginSlice.token)
   const searchUser = async () => {
-   console.log(token)   
+    setLoader(true)   
     let col = "email"
     if(isNaN()) { 
       col = "Contact"
@@ -23,14 +24,16 @@ const Header = () => {
     if(result){
       dispatch(setSearchUserData(result.data))
     }
+    setLoader(false)
   }
 
   return (
     <div className="header-container">
+      {/* {Loader ? <Loader /> : null} */}
       <div className="recent-user-con">
         {recentUsers.map((eachUser) => (
           <div key={eachUser.id} className="recent-user">
-            <Image
+            <img
               src={eachUser.profileIcon}
               alt="recent-user-icon"
               className="user-icon"

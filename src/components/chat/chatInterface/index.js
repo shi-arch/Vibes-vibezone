@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import url7 from "../../../assets/images/chatProfile.svg";
 import Badges from "../badges/index.js";
 import ChatsList from "../chatsList/index.js";
@@ -13,7 +13,7 @@ import {
 } from "../../svgComponents/index.js";
 import { Input, Button } from "../../commonComponents/commonComponents.js";
 import { useDispatch } from "react-redux";
-import { setRightOpen } from "../../../Context/features/modalSlice.js";
+import { setRightOpen } from "../../../redux/features/modalSlice.js";
 
 const ChatInterface = () => {
   const [message, setMessage] = useState("");
@@ -56,7 +56,7 @@ const ChatInterface = () => {
     <div className="chat-container">
       <div className="chat-header">
         <div className="icon-username">
-          <Image src={url7} alt="chat-profile-icon" className="chat-icon" />
+          <img src={url7} alt="chat-profile-icon" className="chat-icon" />
           <div className="user-time">
             <p className="chat-username">Jenny Wilson</p>
             <Badges />

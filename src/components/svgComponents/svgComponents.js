@@ -354,7 +354,7 @@ export const LottoWinner = () => (
       >
         <use href="#image0_88_2026" transform="scale(0.01)" />
       </pattern>
-      <image
+      <img
         id="image0_88_2026"
         width="100"
         height="100"

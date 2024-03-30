@@ -1,4 +1,11 @@
 import styles from "../../app/page.module.css";
+import CircularProgress from '@mui/material/CircularProgress';
+
+export const Loader = () => {
+  return <div style={{position: 'absolute'}}>
+    <CircularProgress />
+  </div>
+}
 
 export const Input = (props) => {
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.css";
 import { CrossSvg } from "../../svgComponents/svgComponents";
-import { setPrivacyAndSecurityModal } from "../../../Context/features/modalSlice";
+import { setPrivacyAndSecurityModal } from "../../../redux/features/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Box, Modal } from "@mui/material";

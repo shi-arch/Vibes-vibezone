@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useRef, useState } from "react";
 import "./otpInput.css";
 const OtpInput = ({ length = 4, getOtp }) => {

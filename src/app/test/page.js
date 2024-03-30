@@ -1,4 +1,4 @@
-"use client";
+;
 
 import SideBar from "../../components/SideBar/sideBar";
 import PreferenceModal from "../../components/Modals/PreferenceModal";

@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import { MsgSeen } from "../../svgComponents";
 import url1 from "../../../assets/images/profile1.svg";
 import url2 from "../../../assets/images/profile2.svg";
@@ -87,9 +87,9 @@ const ChatsList = () => {
                     }`}
                   >
                     {chat.sender === 2 ? (
-                      <Image className="profile" src={url1} alt="profile1" />
+                      <img className="profile" src={url1} alt="profile1" />
                     ) : (
-                      <Image className="profile" src={url2} alt="profile2" />
+                      <img className="profile" src={url2} alt="profile2" />
                     )}
                     <p className="chat-name">{chat.name}</p>
                   </div>
