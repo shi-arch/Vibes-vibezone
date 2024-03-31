@@ -1,8 +1,6 @@
-import Button from "@material-ui/core/Button"
 import React, { useEffect, useRef, useState } from "react"
 import Peer from "simple-peer"
 import io from "socket.io-client"
-import { CircularProgress } from "@material-ui/core"
 
 
 const socket = io.connect(process.env.REACT_APP_BASEURL)
@@ -135,12 +133,12 @@ function Page() {
 			<h1 style={{ textAlign: "center", color: '#fff' }}>Vibe Zone</h1>
 			<div className="call-container">
 				<div style={{ display: "flex", justifyContent: "right", marginRight: "10px", alignItems: "center" }}  >
-					<Button variant="contained" onClick={callAccepted && !callEnded ? leaveCall : () => callUser(idToCall)}>
+					<button variant="contained" onClick={callAccepted && !callEnded ? leaveCall : () => callUser(idToCall)}>
 						ESC
-					</Button>
+					</button>
 				</div>
 			</div>
-			<h1>{caller} receivingCall {receivingCall ? 'true' : 'false'}, callAccepted: {callAccepted ? 'true' : 'false'}}</h1>
+			<h1>{caller} receivingCall {receivingCall ? 'true' : 'false'}, callAccepted: {callAccepted ? 'true' : 'false'}</h1>
 			<div className="container">
 				<div className="video-container">
 					<div className="video">
@@ -148,8 +146,7 @@ function Page() {
 					</div>
 					<div className="video" style={{ marginLeft: "50px" }}>
 						{callAccepted && !callEnded ?
-							<video playsInline ref={userVideo} autoPlay style={{ width: "300px" }} /> :
-							<CircularProgress sx={{ color: "#fff", margin: "50", justifyContent: "center", alignItems: "center" }} />}
+							<video playsInline ref={userVideo} autoPlay style={{ width: "300px" }} /> : ""}
 					</div>
 				</div>
 
