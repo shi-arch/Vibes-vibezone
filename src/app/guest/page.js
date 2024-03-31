@@ -154,9 +154,9 @@ function Page() {
 					{receivingCall && !callAccepted ? (
 						<div className="caller">
 							<h1 >{name} is calling...</h1>
-							<Button variant="contained" color="primary" onClick={answerCall}>
+							<button variant="contained" color="primary" onClick={answerCall}>
 								Answer
-							</Button>
+							</button>
 						</div>
 					) : null}
 				</div>
