@@ -1,27 +1,13 @@
-import { Mute, Video, EndCall } from "../../svgComponents/index.js";
-//import Peer from "simple-peer";
-import Peer from 'peerjs';
-import { useState, useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
-import io from "socket.io-client";
-//import dotenv from 'dotenv'
-//dotenv.config()
-
-let endpoint = 'http://localhost:8080'
-const socket = io.connect('http://localhost:8080')
-
-const CallInterface = () => {
-  const selectedUserData = useSelector(state => state.chatSlice.selectedUserData);
-  const [isTyping, setIsTyping] = useState(false);
-  const [videoCall, setVideoCall] = useState(false);
-  const [userSocketId, setUserSocketId] = useState("");
-  const [userId, setUserId] = useState(0)
-  const [mySocketId, setMySocketId] = useState(null)
-  const [socketConnected, setSocketConnected] = useState(null)
-  const [disconnect, setDisconnect] = useState(false)
+import Button from "@material-ui/core/Button"
+import React, { useEffect, useRef, useState } from "react"
+import Peer from "simple-peer"
+import io from "socket.io-client"
+import { CircularProgress } from "@material-ui/core"
 
 
-  const [me, setMe] = useState("")
+const socket = io.connect(process.env.REACT_APP_BASEURL)
+function Page() {
+	const [me, setMe] = useState("")
 	const [stream, setStream] = useState()
 	const [receivingCall, setReceivingCall] = useState(false)
 	const [caller, setCaller] = useState("")
@@ -72,8 +58,9 @@ const CallInterface = () => {
 
 	const callUser = (id) => {
 		navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+			debugger
 			setStream(stream)
-      myVideo.current.srcObject = stream
+			myVideo.current.srcObject = stream
 			const peer = new Peer({
 				initiator: true,
 				trickle: false,
@@ -143,59 +130,42 @@ const CallInterface = () => {
 
 
 
-  return (
-    <div className="call-container">
-      <div className="images-con">
-        {
-          stream ? <video
-            ref={myVideo}
-            style={{ width: '100%', height: 'auto' }}
-            autoPlay
-            playsInline
-            muted
-          /> : <img
-            src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222111/Rectangle_28_1_gisnki.png"
-            className="image"
-            alt="person1"
-          />
-        }
-        {
-          callAccepted ? <video
-            ref={userVideo}
-            style={{ width: '100%', height: 'auto' }}
-            autoPlay
-            playsInline
-            muted
-          /> : <img
-            src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222352/Rectangle_29_zq40pr.png"
-            className="image"
-            alt="person2"
-          />
-        }
+	return (
+		<>
+			<h1 style={{ textAlign: "center", color: '#fff' }}>Vibe Zone</h1>
+			<div className="call-container">
+				<div style={{ display: "flex", justifyContent: "right", marginRight: "10px", alignItems: "center" }}  >
+					<Button variant="contained" onClick={callAccepted && !callEnded ? leaveCall : () => callUser(idToCall)}>
+						ESC
+					</Button>
+				</div>
+			</div>
+			<h1>{caller} receivingCall {receivingCall ? 'true' : 'false'}, callAccepted: {callAccepted ? 'true' : 'false'}}</h1>
+			<div className="container">
+				<div className="video-container">
+					<div className="video">
+						{stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
+					</div>
+					<div className="video" style={{ marginLeft: "50px" }}>
+						{callAccepted && !callEnded ?
+							<video playsInline ref={userVideo} autoPlay style={{ width: "300px" }} /> :
+							<CircularProgress sx={{ color: "#fff", margin: "50", justifyContent: "center", alignItems: "center" }} />}
+					</div>
+				</div>
 
-      </div>
-      <div className="call-controllers">
-        <div className="calls">
-          <div>
-            <Mute />
-          </div>
-          <div onClick={callAccepted && !callEnded ? leaveCall : () => callUser(idToCall)}>
-            <Video />
-          </div>
-          <div onClick={() => setDisconnect(true)}>
-            <EndCall />
-          </div>
+				<div>
+					{receivingCall && !callAccepted ? (
+						<div className="caller">
+							<h1 >{name} is calling...</h1>
+							<Button variant="contained" color="primary" onClick={answerCall}>
+								Answer
+							</Button>
+						</div>
+					) : null}
+				</div>
+			</div>
+		</>
+	)
+}
 
-        </div>
-      </div>
-      {receivingCall && !callAccepted ?
-        <div className="caller">
-          <h4>{name} is calling...</h4><button type="button" onClick={answerCall} className="accept">Answer</button>          
-        </div>
-        : null}
-    </div>
-  )
-
-};
-
-export default CallInterface;
+export default Page
