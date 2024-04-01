@@ -3,7 +3,9 @@ import Peer from "simple-peer";
 import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
-const socket = io.connect(process.env.REACT_APP_BASEURL)
+const socket = io.connect(
+  "https://vibezone-backened-b061193a421b.herokuapp.com"
+);
 
 const CallInterface = () => {
 	const selectedUserData = useSelector(state => state.chatSlice.selectedUserData);
@@ -73,7 +75,7 @@ const CallInterface = () => {
 			peer.on("signal", (data) => {
 				socket.emit("callUser", {
 					signalData: data,
-					from: me,
+					from: socket.id,
 					name: name
 				})
 			})
@@ -84,7 +86,7 @@ const CallInterface = () => {
 				setCallAccepted(true)
 				console.log('data from call accepted', data)
 				setCaller(data.from)
-				peer.signal(data.signal)
+				peer.signal(data)
 			})
 			connectionRef.current = peer
 		})
@@ -99,24 +101,24 @@ const CallInterface = () => {
 			stream: stream
 		})
 		peer.on("signal", (data) => {
-			socket.emit("answerCall", { signal: data, to: caller, from: me })
+			socket.emit("answerCall", { signal: data, to: caller })
 		})
 
 		peer.on("stream", (stream) => {
-			try {
+			// try {
 				userVideo.current.srcObject = stream
-			} catch (error) {
-				console.log(error)
-			}
+			// } catch (error) {
+			// 	console.log(error)
+			// }
 
 		})
 
-		try {
+		// try {
 			peer.signal(callerSignal)
 			connectionRef.current = peer
-		} catch (error) {
-			console.log(error)
-		}
+		// } catch (error) {
+		// 	console.log(error)
+		// }
 
 	}
 
