@@ -1,27 +1,22 @@
 import { Mute, Video, EndCall } from "../../svgComponents/index.js";
-//import Peer from "simple-peer";
-import Peer from 'peerjs';
+import Peer from "simple-peer";
 import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
-//import dotenv from 'dotenv'
-//dotenv.config()
-
-let endpoint = 'http://localhost:8080'
-const socket = io.connect('http://localhost:8080')
+const socket = io.connect(process.env.REACT_APP_BASEURL)
 
 const CallInterface = () => {
-  const selectedUserData = useSelector(state => state.chatSlice.selectedUserData);
-  const [isTyping, setIsTyping] = useState(false);
-  const [videoCall, setVideoCall] = useState(false);
-  const [userSocketId, setUserSocketId] = useState("");
-  const [userId, setUserId] = useState(0)
-  const [mySocketId, setMySocketId] = useState(null)
-  const [socketConnected, setSocketConnected] = useState(null)
-  const [disconnect, setDisconnect] = useState(false)
+	const selectedUserData = useSelector(state => state.chatSlice.selectedUserData);
+	const [isTyping, setIsTyping] = useState(false);
+	const [videoCall, setVideoCall] = useState(false);
+	const [userSocketId, setUserSocketId] = useState("");
+	const [userId, setUserId] = useState(0)
+	const [mySocketId, setMySocketId] = useState(null)
+	const [socketConnected, setSocketConnected] = useState(null)
+	const [disconnect, setDisconnect] = useState(false)
 
 
-  const [me, setMe] = useState("")
+	const [me, setMe] = useState("")
 	const [stream, setStream] = useState()
 	const [receivingCall, setReceivingCall] = useState(false)
 	const [caller, setCaller] = useState("")
@@ -50,13 +45,9 @@ const CallInterface = () => {
 
 		socket.on("closeCall", () => {
 			console.log('call ended')
-			// setCallEnded(true)
-
 			setCallAccepted(false)
 			setReceivingCall(false)
 			setCaller("")
-			// reload window
-			// window.location.reload();
 		})
 	}, [])
 
@@ -70,10 +61,10 @@ const CallInterface = () => {
 
 
 
-	const callUser = (id) => {
+	const callUser = () => {
 		navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
 			setStream(stream)
-      myVideo.current.srcObject = stream
+			myVideo.current.srcObject = stream
 			const peer = new Peer({
 				initiator: true,
 				trickle: false,
@@ -81,7 +72,6 @@ const CallInterface = () => {
 			})
 			peer.on("signal", (data) => {
 				socket.emit("callUser", {
-					userToCall: id,
 					signalData: data,
 					from: me,
 					name: name
@@ -143,58 +133,56 @@ const CallInterface = () => {
 
 
 
-  return (
-    <div className="call-container">
-      <div className="images-con">
-        {
-          stream ? <video
-            ref={myVideo}
-            style={{ width: '100%', height: 'auto' }}
-            autoPlay
-            playsInline
-            muted
-          /> : <img
-            src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222111/Rectangle_28_1_gisnki.png"
-            className="image"
-            alt="person1"
-          />
-        }
-        {
-          callAccepted ? <video
-            ref={userVideo}
-            style={{ width: '100%', height: 'auto' }}
-            autoPlay
-            playsInline
-            muted
-          /> : <img
-            src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222352/Rectangle_29_zq40pr.png"
-            className="image"
-            alt="person2"
-          />
-        }
+	return (
+		<div className="call-container">
+			<div className="images-con">
+				<video
+					style={stream ? { visibility: "visible", width: '100%', height: 'auto' } : { visibility: "hidden", height: 0, width: 0 }}
+					ref={myVideo}
+					autoPlay
+					playsInline
+					muted
+				/>
+				{!stream && <img
+					src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222111/Rectangle_28_1_gisnki.png"
+					className="image"
+					alt="person1"
+				/>}
+				<video
+					style={callAccepted ? { visibility: "visible", width: '100%', height: 'auto' } : { visibility: "hidden", height: 0, width: 0 }}
+					ref={userVideo}
+					autoPlay
+					playsInline
+					muted
+				/>
+				{!callAccepted && <img
+					src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222352/Rectangle_29_zq40pr.png"
+					className="image"
+					alt="person2"
+				/>}
 
-      </div>
-      <div className="call-controllers">
-        <div className="calls">
-          <div>
-            <Mute />
-          </div>
-          <div onClick={callAccepted && !callEnded ? leaveCall : () => callUser(idToCall)}>
-            <Video />
-          </div>
-          <div onClick={() => setDisconnect(true)}>
-            <EndCall />
-          </div>
+			</div>
+			<div className="call-controllers">
+				<div className="calls">
+					<div>
+						<Mute />
+					</div>
+					<div onClick={callAccepted && !callEnded ? leaveCall : () => callUser()}>
+						<Video />
+					</div>
+					<div onClick={() => setDisconnect(true)}>
+						<EndCall />
+					</div>
 
-        </div>
-      </div>
-      {receivingCall && !callAccepted ?
-        <div className="caller">
-          <h4>{name} is calling...</h4><button type="button" onClick={answerCall} className="accept">Answer</button>          
-        </div>
-        : null}
-    </div>
-  )
+				</div>
+			</div>
+			{receivingCall && !callAccepted ?
+				<div className="caller">
+					<h4>{name} is calling...</h4><button type="button" onClick={answerCall} className="accept">Answer</button>
+				</div>
+				: null}
+		</div>
+	)
 
 };
 
