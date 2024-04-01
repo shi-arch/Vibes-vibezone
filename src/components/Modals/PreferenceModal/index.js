@@ -1,23 +1,19 @@
 "use client";
-import React, {useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
 import { CrossSvg } from "../../svgComponents/svgComponents";
 import { Button } from "../../commonComponents/commonComponents";
-
 import styles from "./index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setPreferenceModal } from "../../../Context/features/modalSlice";
 import Modal from "@mui/material/Modal";
 import { Box, Slider, Typography } from "@mui/material";
-
-import rangeThumbSvg from "../../../assets/images/rangeThumb.svg"
-
-// import rangeThumb  from "../../../assets/images/rangeThumb.svg"
-
+// import rangeThumbSvg from "../../../assets/images/rangeThumb.svg";
+import axios from "axios";
 const topicsData = [
   {
     id: 1,
-    name: "Music",
+    name: "Drawing",
   },
   {
     id: 2,
@@ -25,38 +21,37 @@ const topicsData = [
   },
   {
     id: 3,
-    name: "Music",
+    name: "Knitting",
   },
   {
     id: 4,
-    name: "Music",
+    name: "Jwellary Design",
   },
   {
     id: 5,
-    name: "Music",
+    name: "Painting",
   },
   {
     id: 6,
-    name: "Music",
+    name: "Writing",
   },
   {
     id: 7,
-    name: "Music",
+    name: "Learning",
   },
   {
     id: 8,
-    name: "Music",
+    name: "Handicraft",
   },
   {
     id: 9,
-    name: "Music",
+    name: "Digital Art",
   },
   {
     id: 10,
-    name: "Music",
+    name: "Sewing",
   },
 ];
-
 const InputComponent = (props) => {
   const handleInputChange = (e) => {
     props.onChange(e.target.value);
@@ -76,26 +71,51 @@ const InputComponent = (props) => {
     </div>
   );
 };
-
-
 function valuetext(value) {
   return `${value}°C`;
 }
-
 const PreferenceModal = () => {
-  const [open,setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const modalSelector = useSelector((state) => state.modalSlice);
   const { preferenceModal } = modalSelector;
   const dispatch = useDispatch();
+  const [selectedTopics, setSelectedTopics] = useState([]);
 
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setSelectedTopics([...selectedTopics, value]);
+    } else {
+      setSelectedTopics(selectedTopics.filter((topic) => topic !== value));
+    }
+  };
   const [gender, setGender] = useState();
   const [otherQuestions, setOtherQuestions] = useState();
   const [age, setAge] = useState(0);
 
   const handleSave = () => {
-    console.log("hello world");
-  };
+    const preferences = {
+      gender,
+      ageRange: {
+        start: value[0],
+        end: value[1],
+      },
+      topics: selectedTopics,
+      otherQuestions,
+    };
+    console.log("Updated Preferences:", preferences);
 
+    axios
+      .get("/api/preferences")
+      .then((response) => {
+        console.log("Preferences fetched successfully:", response.data);
+        // Store the fetched preferences data in local storage
+        localStorage.setItem("preferences", JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.error("Failed to fetch preferences:", error);
+      });
+  };
   const handleClose = () => {
     dispatch(setPreferenceModal());
   };
@@ -111,13 +131,25 @@ const PreferenceModal = () => {
     boxShadow: 24,
     p: 4,
   };
+  const [value, setValue] = useState([20, 37]);
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-    const [value, setValue] = useState([20, 37]);
+  useEffect(() => {
+    console.log("Selected Topics:", selectedTopics);
+  }, [selectedTopics]);
 
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
-    };
+  const handleTopicClick = (topicId) => {
+    setSelectedTopics((prevTopics) => {
+      if (prevTopics.includes(topicId)) {
+        return prevTopics.filter((id) => id !== topicId);
+      } else {
+        return [...prevTopics, topicId];
+      }
+    });
+  };
 
   return (
     <Modal
@@ -138,22 +170,12 @@ const PreferenceModal = () => {
             value={gender}
             placeholder=""
           />
-
           <div className="preference-inner-container">
             <span className="Gender">
               Age
               <span className="text-style-1">*</span>
             </span>
-
             <div className="input-range-container">
-              {/* <input
-                type="range"
-                min="0"
-                max="100"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                className="slider"
-              /> */}
               <Box sx={{ width: 300 }}>
                 <Slider
                   getAriaLabel={() => "Temperature range"}
@@ -167,18 +189,32 @@ const PreferenceModal = () => {
               {/* <p>{age}</p> */}
             </div>
           </div>
-
           <div className="preference-inner-container">
             <span className="Gender">Topics</span>
             <div className="topics-container">
               {topicsData.map((topic) => (
-                <div key={topic.id} className="topic-item-container">
-                  <span>{topic.name}</span>
-                  <CrossSvg
-                    width="15px"
-                    height="15px"
-                    color="rgba(43, 43, 43, 0.6)"
-                  />
+                <div
+                  key={topic.id}
+                  className={`topic-item-container ${
+                    selectedTopics.includes(topic.id) ? "selected" : ""
+                  }`}
+                  onClick={() => handleTopicClick(topic.id)}
+                  style={{
+                    backgroundColor: selectedTopics.includes(topic.id)
+                      ? "#8f47ff"
+                      : "",
+                    color: selectedTopics.includes(topic.id)
+                      ? "white"
+                      : "black",
+                  }}
+                >
+                  <span
+                    className={`topic-item-container ${
+                      selectedTopics.includes(topic.id) ? "selected" : ""
+                    }`}
+                  >
+                    {topic.name}
+                  </span>
                 </div>
               ))}
             </div>
@@ -189,7 +225,6 @@ const PreferenceModal = () => {
             value={otherQuestions}
             placeholder=""
           />
-
           <div className="save-btn">
             <Button
               type="submit"
@@ -203,5 +238,4 @@ const PreferenceModal = () => {
     </Modal>
   );
 };
-
 export default PreferenceModal;

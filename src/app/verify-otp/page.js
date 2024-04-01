@@ -5,20 +5,24 @@ import { useDispatch, useSelector } from "react-redux";
 import OtpInput from "../../components/otpInput/otpInput";
 import "./page.css";
 import { useRouter } from "next/navigation";
-import { setVerifyOtp } from "../../Context/features/loginSlice";
+import { setLoginDetails, setVerifyOtp } from "../../Context/features/loginSlice";
 import { postApi} from "../../response/api"
 
 const Page = (props) => {
   console.log("props", props);
+  // const [userInput, setUserInput] = useState("");
   const {email, Contact, CountryCode} = useSelector(state => state.loginSlice.loginDetails);
   const dispatch = useDispatch();
   const router = useRouter();
   const [timer, setTimer] = useState(30);
   const [disableResend, setDisableResend] = useState(false);
   const [otp, setOtp] = useState("");
+  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+  const phoneRegex = /^[6-9]\d{9}$/
 
   useEffect(() => {
     let interval;
+    setInterval(30)
     if (timer > 0 && disableResend) {
       interval = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
@@ -33,9 +37,32 @@ const Page = (props) => {
     return () => clearInterval(interval);
   }, [timer, disableResend]);
 
-  const handleResendOtp = () => {
-    setTimer(30);
-    setDisableResend(true);
+  const userSelector = useSelector(state => state.loginSlice)
+  const {loginDetails} = userSelector
+  console.log(loginDetails)
+  const userInput = loginDetails.Contact ?loginDetails.Contact : loginDetails.email
+
+  const handleResendOtp = async () => {
+    let obj = {Contact: userInput}
+    let isErr = true
+    
+
+    if(emailRegex.test(userInput)){
+      obj = {email: userInput, CountryCode: "+91"}
+      isErr = false 
+    } else if(phoneRegex.test(userInput)){
+      obj = {Contact: userInput, CountryCode: "+91"}
+      isErr = false
+    }
+    if(isErr){
+      alert("Invalid OTP")
+      return
+    }    
+    const res = await postApi('/resend-otp', obj)
+    if(res){      
+      dispatch(setLoginDetails(res));
+      router.push("/verify-otp");  
+    }    
   };
 
   return (
@@ -66,7 +93,7 @@ const Page = (props) => {
             if(res.status !== 400){
               localStorage.setItem("userData", JSON.stringify(res)); 
               dispatch(setVerifyOtp(true))
-              router.push("/chat-test");
+              router.push("/chat");
             } else {
               alert("Invalid OTP")
             }            

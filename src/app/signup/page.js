@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Navbar from "../../components/Navbar/navbar";
+import NavBar from '../../components/navbar/NavBar';
 import { setLoginDetails } from "../../Context/features/loginSlice";
 import "./page.css";
 import { useRouter } from "next/navigation";
@@ -9,10 +9,13 @@ import {getApi, postApi} from "../../response/api"
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const phoneRegex = /^[6-9]\d{9}$/
 
+
+
 const Page = () => {
   const [userInput, setUserInput] = useState("");
   const dispatch = useDispatch();
   const router = useRouter();
+
   const handleGetOtp = async () => {
     let obj = {Contact: userInput}
     let isErr = true
@@ -39,7 +42,7 @@ const Page = () => {
 
   return (
     <>
-      <Navbar />
+      <NavBar />
       <div className="Sign-Up">
         <div className="login-form">
           <h1 className="Login-or-sign-up">
