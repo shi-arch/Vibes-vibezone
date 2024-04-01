@@ -1,59 +1,59 @@
 "use client";
-import React, {useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
 import { CrossSvg } from "../../svgComponents/svgComponents";
 import { Button } from "../../commonComponents/commonComponents";
-
-import styles from "./index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setPreferenceModal } from "../../../Context/features/modalSlice";
 import Modal from "@mui/material/Modal";
-import { Box, Slider, Typography } from "@mui/material";
-
-import rangeThumbSvg from "../../../assets/images/rangeThumb.svg"
-
-// import rangeThumb  from "../../../assets/images/rangeThumb.svg"
+import { Box, Slider } from "@mui/material";
+import { postApi } from "../../../response/api";
 
 const topicsData = [
   {
     id: 1,
-    name: "Music",
+    name: "Rock",
+    active: false,
   },
   {
     id: 2,
-    name: "Music",
-  },
-  {
-    id: 3,
-    name: "Music",
+    name: "Pop",
+    active: false,
   },
   {
     id: 4,
-    name: "Music",
+    name: "Jazz",
+    active: false,
   },
   {
     id: 5,
-    name: "Music",
+    name: "Electronic",
+    active: false,
   },
   {
     id: 6,
-    name: "Music",
+    name: "R&B",
+    active: false,
   },
   {
     id: 7,
-    name: "Music",
+    name: "Reggae",
+    active: false,
   },
   {
     id: 8,
-    name: "Music",
+    name: "Salsa",
+    active: false,
   },
   {
     id: 9,
-    name: "Music",
+    name: "Ballet",
+    active: false,
   },
   {
     id: 10,
-    name: "Music",
+    name: "Tap Dance",
+    active: false,
   },
 ];
 
@@ -76,29 +76,56 @@ const InputComponent = (props) => {
     </div>
   );
 };
-
-
-function valuetext(value) {
-  return `${value}°C`;
-}
+const GenderSelection = ({ value, onChange }) => {
+  return (
+    <div className="gender-selection">
+      <span className="Gender">
+        Gender <span className="text-style-1">*</span>
+      </span>
+      <div>
+        <label>
+          <input
+            type="radio"
+            name="gender"
+            value="male"
+            checked={value === "male"}
+            onChange={(e) => onChange(e.target.value)}
+          />
+          Male
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="gender"
+            value="female"
+            checked={value === "female"}
+            onChange={(e) => onChange(e.target.value)}
+          />
+          Female
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="gender"
+            value="other"
+            checked={value === "other"}
+            onChange={(e) => onChange(e.target.value)}
+          />
+          Other
+        </label>
+      </div>
+    </div>
+  );
+};
 
 const PreferenceModal = () => {
-  const [open,setOpen] = useState(false)
-  const modalSelector = useSelector((state) => state.modalSlice);
-  const { preferenceModal } = modalSelector;
-  const dispatch = useDispatch();
-
+  const [selectedTopics, setSelectedTopics] = useState([]);
   const [gender, setGender] = useState();
   const [otherQuestions, setOtherQuestions] = useState();
-  const [age, setAge] = useState(0);
-
-  const handleSave = () => {
-    console.log("hello world");
-  };
-
-  const handleClose = () => {
-    dispatch(setPreferenceModal());
-  };
+  const [value, setValue] = useState([15, 20]);
+  const dispatch = useDispatch();
+  const modalSelector = useSelector((state) => state.modalSlice);
+  const { preferenceModal } = modalSelector;
 
   const style = {
     position: "absolute",
@@ -112,12 +139,53 @@ const PreferenceModal = () => {
     p: 4,
   };
 
+  const loginSelector = useSelector((state) => state.loginSlice);
+  const { token } = loginSelector;
 
-    const [value, setValue] = useState([20, 37]);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
+  const handleSave = () => {
+    const preferences = {
+      gender,
+      ageRange: {
+        start: value[0],
+        end: value[1],
+      },
+      topics: selectedTopics,
+      otherQuestions,
     };
+
+    // localStorage.setItem("preferences", JSON.stringify(preferences));
+
+    postApi("/preferences", preferences, token)
+      .then((response) => {
+        console.log("Preferences updated successfully:", response.data);
+        handleClose();
+      })
+      .catch((error) => {
+        console.error("Failed to update preferences:", error);
+      });
+  };
+
+  const handleClose = () => {
+    dispatch(setPreferenceModal());
+  };
+
+  const handleTopicClick = (topicId) => {
+    setSelectedTopics((prevTopics) => {
+      if (prevTopics.includes(topicId)) {
+        return prevTopics.filter((id) => id !== topicId);
+      } else {
+        return [...prevTopics, topicId];
+      }
+    });
+  };
+
+  // useEffect(() => {
+  //   console.log("Selected Topics:", selectedTopics);
+  // }, [selectedTopics]);
 
   return (
     <Modal
@@ -132,53 +200,50 @@ const PreferenceModal = () => {
             <CrossSvg />
           </button>
           <h4 className="pref-head-text">Preferences</h4>
+          <GenderSelection value={gender} onChange={setGender} />
+          {/* <h4 className="pref-head-text">Preferences</h4>
           <InputComponent
             label="Gender"
             onChange={setGender}
             value={gender}
             placeholder=""
-          />
+          /> */}
 
           <div className="preference-inner-container">
             <span className="Gender">
               Age
               <span className="text-style-1">*</span>
             </span>
-
             <div className="input-range-container">
-              {/* <input
-                type="range"
-                min="0"
-                max="100"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                className="slider"
-              /> */}
               <Box sx={{ width: 300 }}>
                 <Slider
                   getAriaLabel={() => "Temperature range"}
                   value={value}
                   onChange={handleChange}
                   valueLabelDisplay="auto"
-                  // className="slider"
                 />
               </Box>
               <span className="-to-20">15 to 20</span>
-              {/* <p>{age}</p> */}
             </div>
           </div>
-
           <div className="preference-inner-container">
             <span className="Gender">Topics</span>
             <div className="topics-container">
               {topicsData.map((topic) => (
-                <div key={topic.id} className="topic-item-container">
-                  <span>{topic.name}</span>
-                  <CrossSvg
-                    width="15px"
-                    height="15px"
-                    color="rgba(43, 43, 43, 0.6)"
-                  />
+                <div
+                  key={topic.id}
+                  className={`topic-item-container ${
+                    selectedTopics.includes(topic.id) ? "selected" : ""
+                  }`}
+                  onClick={() => handleTopicClick(topic.id)}
+                >
+                  <span
+                    className={`topic-item-container ${
+                      selectedTopics.includes(topic.id) ? "selected" : ""
+                    }`}
+                  >
+                    {topic.name}
+                  </span>
                 </div>
               ))}
             </div>
@@ -189,14 +254,8 @@ const PreferenceModal = () => {
             value={otherQuestions}
             placeholder=""
           />
-
           <div className="save-btn">
-            <Button
-              type="submit"
-              onClick={handleSave}
-              label="Save"
-              css={styles.saveButton}
-            />
+            <Button type="submit" onClick={handleSave} label="Save" />
           </div>
         </div>
       </Box>
