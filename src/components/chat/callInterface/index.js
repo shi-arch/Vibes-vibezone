@@ -3,9 +3,7 @@ import Peer from "simple-peer";
 import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
-const socket = io.connect(
-  "https://vibezone-backened-b061193a421b.herokuapp.com"
-);
+const socket = io.connect(process.env.REACT_APP_BASEURL);
 
 const CallInterface = () => {
 	const selectedUserData = useSelector(state => state.chatSlice.selectedUserData);
