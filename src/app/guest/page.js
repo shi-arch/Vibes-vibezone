@@ -15,6 +15,7 @@ function Page() {
 	const [callEnded, setCallEnded] = useState(false)
 	const [name, setName] = useState("")
 	const myVideo = useRef()
+	const test = useRef()
 	const userVideo = useRef()
 	const connectionRef = useRef()
 
@@ -56,7 +57,6 @@ function Page() {
 
 	const callUser = (id) => {
 		navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-			debugger
 			setStream(stream)
 			myVideo.current.srcObject = stream
 			const peer = new Peer({
@@ -134,7 +134,7 @@ function Page() {
 			<div className="call-container">
 				<div style={{ display: "flex", justifyContent: "right", marginRight: "10px", alignItems: "center" }}  >
 					<button variant="contained" onClick={callAccepted && !callEnded ? leaveCall : () => callUser(idToCall)}>
-						ESC
+						Start video call
 					</button>
 				</div>
 			</div>
@@ -142,11 +142,10 @@ function Page() {
 			<div className="container">
 				<div className="video-container">
 					<div className="video">
-						{stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
+					<video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />
 					</div>
 					<div className="video" style={{ marginLeft: "50px" }}>
-						{callAccepted && !callEnded ?
-							<video playsInline ref={userVideo} autoPlay style={{ width: "300px" }} /> : ""}
+					<video playsInline ref={userVideo} autoPlay style={{ width: "300px" }} />
 					</div>
 				</div>
 
