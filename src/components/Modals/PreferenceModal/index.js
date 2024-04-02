@@ -7,6 +7,7 @@ import { setPreferenceModal } from "../../../redux/features/modalSlice";
 import Modal from "@mui/material/Modal";
 import { Box, Slider } from "@mui/material";
 import { postApi } from "../../../response/api";
+import { getApi } from "../../../response/api";
 
 const topicsData = [
   {
@@ -184,6 +185,23 @@ const PreferenceModal = () => {
   // useEffect(() => {
   //   console.log("Selected Topics:", selectedTopics);
   // }, [selectedTopics]);
+
+  useEffect(() => {
+    // Fetch user preferences when the modal is opened
+    if (preferenceModal) {
+      getApi("/preferences", token)
+        .then((response) => {
+          const { gender, ageRange, topics, otherQuestions } = response.data;
+          setGender(gender);
+          setValue([ageRange.start, ageRange.end]);
+          setSelectedTopics(topics);
+          setOtherQuestions(otherQuestions);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch preferences:", error);
+        });
+    }
+  }, [preferenceModal, token]);
 
   return (
     <Modal

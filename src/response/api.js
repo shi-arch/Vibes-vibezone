@@ -1,7 +1,15 @@
 import axios from 'axios'
 
-export const getApi = async (url) => {
-    const response = await axios.get(process.env.REACT_APP_BASEURL + '/api' + url)
+export const getApi = async (url, token) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+        headers['token'] = `${token}`
+    }
+    const response = await axios.get(process.env.REACT_APP_BASEURL + '/api' + url, {headers})
     return response.data
 }
 
