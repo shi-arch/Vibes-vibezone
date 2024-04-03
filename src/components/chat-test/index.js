@@ -13,9 +13,10 @@ import io from "socket.io-client";
 import dotenv from 'dotenv'
 dotenv.config()
 
-let endpoint = "http://localhost:8080/"
+let endpoint = "http://localhost:8080/";
 
-import ChatsList from "./chatsList"
+import ChatsList from "./chatsList";
+
 import {
   Badge1,
   Badge2,

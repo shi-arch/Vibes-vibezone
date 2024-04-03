@@ -12,6 +12,7 @@ import {
   PreferenceSvg,
   PrivacySvg,
 } from "../svgComponents/svgComponents";
+import sidebarProfile from "../../assets/images/sidebarProfile.svg";
 
 import "./sidebar.css";
 import { SideBarSelections } from "../commonComponents/commonComponents";
@@ -67,7 +68,9 @@ const SideBar = () => {
       <div className={`side-con sidebar-bg-container ${leftOpen ? "" : "closed"}`}>
         <div className="side-bar-top-container">
           <div className="profile-container">
-            <div className="sidebar-profile"></div>
+            <div className="sidebar-profile">
+              <img src={sidebarProfile} alt="sidebar-profile" />
+            </div>
             <div className="img-icon-container">
               <CameraSvg />
             </div>

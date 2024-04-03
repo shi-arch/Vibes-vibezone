@@ -195,6 +195,7 @@ const PreferenceModal = () => {
           setGender(gender);
           setValue([ageRange.start, ageRange.end]);
           setSelectedTopics(topics);
+          debugger
           setOtherQuestions(otherQuestions);
         })
         .catch((error) => {
