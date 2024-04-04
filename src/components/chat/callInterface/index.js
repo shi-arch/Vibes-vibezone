@@ -1,22 +1,17 @@
 import { Mute, Video, EndCall } from "../../svgComponents/index.js";
 import Peer from "simple-peer";
+import { useSelector, useDispatch } from "react-redux";
 import { useState, useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
 import io from "socket.io-client";
+import { setMessages, setMySocketId, setUserName } from "../../../redux/features/chatSlice.js";
 const socket = io.connect(process.env.REACT_APP_BASEURL);
 
+
 const CallInterface = () => {
-	const selectedUserData = useSelector(state => state.chatSlice.selectedUserData);
-	const [isTyping, setIsTyping] = useState(false);
-	const [videoCall, setVideoCall] = useState(false);
-	const [userSocketId, setUserSocketId] = useState("");
-	const [userId, setUserId] = useState(0)
-	const [mySocketId, setMySocketId] = useState(null)
-	const [socketConnected, setSocketConnected] = useState(null)
+	const dispatch = useDispatch()
+	const { selectedUserData, messagesArr } = useSelector(state => state.chatSlice);
+	const { Contact } = useSelector(state => state.loginSlice.loginDetails)
 	const [disconnect, setDisconnect] = useState(false)
-
-
-	const [me, setMe] = useState("")
 	const [stream, setStream] = useState()
 	const [receivingCall, setReceivingCall] = useState(false)
 	const [caller, setCaller] = useState("")
@@ -30,11 +25,22 @@ const CallInterface = () => {
 	const connectionRef = useRef()
 
 	useEffect(() => {
+		socket.on("typing", (name) => {
+			dispatch(setUserName(name))	
+		});
+		socket.on("stop typing", () => {
+			dispatch(setUserName(""))	
+		});	
+		socket.on("sendMessage", (msg) => {
+			const cloneArr = [...messagesArr]
+			cloneArr[cloneArr.length] = msg
+			debugger
+			dispatch(setMessages(cloneArr))	
+		});	
+		socket.emit("setup", Contact);
 		socket.on("me", (id) => {
-			setMe(id)
-			console.log('socket id', id)
+			dispatch(setMySocketId(id))
 		})
-
 		socket.on("callUser", (data) => {
 			console.log('call user data', data)
 			setCaller(data.from)
@@ -103,21 +109,10 @@ const CallInterface = () => {
 		})
 
 		peer.on("stream", (stream) => {
-			// try {
-				userVideo.current.srcObject = stream
-			// } catch (error) {
-			// 	console.log(error)
-			// }
-
+			userVideo.current.srcObject = stream
 		})
-
-		// try {
-			peer.signal(callerSignal)
-			connectionRef.current = peer
-		// } catch (error) {
-		// 	console.log(error)
-		// }
-
+		peer.signal(callerSignal)
+		connectionRef.current = peer
 	}
 
 	const leaveCall = () => {
@@ -128,7 +123,6 @@ const CallInterface = () => {
 		setReceivingCall(false)
 		socket.emit("endCall", { to: caller })
 		connectionRef.current.destroy()
-		// window.location.reload();
 	}
 
 
@@ -164,7 +158,9 @@ const CallInterface = () => {
 			</div>
 			<div className="call-controllers">
 				<div className="calls">
-					<div>
+					<div onClick={() => {
+						//socket.emit("test", selectedUserData.Contact)
+					}}>
 						<Mute />
 					</div>
 					<div onClick={callAccepted && !callEnded ? leaveCall : () => callUser()}>

@@ -2,7 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   searchUserData: [],
-  selectedUserData: {}
+  selectedUserData: {},
+  chatData: "",
+  messagesArr: [],
+  mySocketId: "",
+  userName: ""
 };
 
 const chatSlice = createSlice({
@@ -15,13 +19,25 @@ const chatSlice = createSlice({
     setSearchUserData: (state, actions) => {
       state.searchUserData = actions.payload;
     },
-    setSelectedUserData: (state, actions) => {
-      
+    setSelectedUserData: (state, actions) => {      
       state.selectedUserData = actions.payload;
     },
+    setChatData: (state, actions) => {      
+      state.chatData = actions.payload;
+    },
+    setMessages: (state, actions) => {      
+      state.messagesArr = actions.payload;
+    },
+    setMySocketId: (state, actions) => {      
+      state.mySocketId = actions.payload;
+    },
+    setUserName: (state, actions) => {      
+      state.userName = actions.payload;
+    },
+    
   },
 });
 
-export const { addChat, setSearchUserData, setSelectedUserData } = chatSlice.actions;
+export const { addChat, setSearchUserData, setSelectedUserData, setChatData, setMySocketId, setMessages, setUserName } = chatSlice.actions;
 
 export default chatSlice.reducer;

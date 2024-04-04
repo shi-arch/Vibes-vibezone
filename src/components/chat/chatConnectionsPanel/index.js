@@ -89,17 +89,20 @@ import url3 from "../../../assets/images/profile3.svg";
 import Badges from "../badges/index.js";
 import { useSelector, useDispatch } from "react-redux";
 import { chats } from '../propsData';
-import { setSelectedUserData } from "../../../redux/features/chatSlice.js";
+import { setSelectedUserData, setChatData, setMessages } from "../../../redux/features/chatSlice.js";
 import "./index.css";
+import { postApi } from "../../../response/api.js";
 
 const ChatConnectionsPanel = () => {
+  const {_id} = useSelector(state => state.loginSlice.loginDetails);
+  const {token} = useSelector(state => state.loginSlice);
   const dispatch = useDispatch();
   const [requestsOpen, setRequestsOpen] = useState(false);
   const [friendsOpen, setFriendsOpen] = useState(false);
   const [usersOpen, setUsersOpen] = useState(false);
   const modalSelector = useSelector(state => state.modalSlice);
   const searchUserData = useSelector(state => state.chatSlice.searchUserData);
-  const {leftOpen, rightOpen} = modalSelector;
+  const { leftOpen, rightOpen } = modalSelector;
 
   const toggleRequests = () => {
     setRequestsOpen(!requestsOpen);
@@ -109,45 +112,59 @@ const ChatConnectionsPanel = () => {
     setFriendsOpen(!friendsOpen);
   };
 
+  const getUser = async (o) => {
+    dispatch(setSelectedUserData(o))
+    const obj = {
+      "isGroupChat": false,
+      "Users": [o._id, _id],
+      "chatName": "default"
+    }
+    const result = await postApi('/createChat', obj, token)
+    if (result) {
+      dispatch(setChatData(result.data))
+      debugger
+      dispatch(setMessages(result.data.messages))
+    }
+  };
+
   return (
     <div
-       className={`friends-container ${
-         !leftOpen && !rightOpen ? "left-and-right-expand" : ""
-       }  ${!rightOpen ? "expanded" : ""}`}
-     >
+      className={`friends-container ${!leftOpen && !rightOpen ? "left-and-right-expand" : ""
+        }  ${!rightOpen ? "expanded" : ""}`}
+    >
       <div className={`requests-con ${friendsOpen ? '' : 'expand-requests'}`}>
         <div className="chats-arrow">
           <p className="chat-text">Requests</p>
           <div onClick={toggleRequests} className={`${requestsOpen ? "arrow-down" : "arrow-right"}`}><ArrowDown /></div>
         </div>
         <div className={`scroll-con ${rightOpen ? '' : 'hide-scrollbar'}`}>
-        {requestsOpen && chats.map((eachUser, index) => (
-          <div key={index} className={`profile-info ${rightOpen ? '' : 'profile-info-padding'} ${eachUser.selected ? "active-user" : ""}`}>
-            <div className="profile-2">
-              <img src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
-              <div className="profile-name-desc">
-                <p className="profile-name">{eachUser.name}</p>
-                <Badges />
-              </div>
-            </div>
-            <div className="request-right-con">
-              <div className="profile-time-three-dots">
-                <p className="profile-time">{eachUser.lastTime}</p>
-                <div className="three-dots-sm">
-                  <ThreeDots />
+          {requestsOpen && chats.map((eachUser, index) => (
+            <div key={index} className={`profile-info ${rightOpen ? '' : 'profile-info-padding'} ${eachUser.selected ? "active-user" : ""}`}>
+              <div className="profile-2">
+                <img src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
+                <div className="profile-name-desc">
+                  <p className="profile-name">{eachUser.name}</p>
+                  <Badges />
                 </div>
               </div>
-              <div className="accept-reject">
-                <button type="button" className="request">
-                  Request
-                </button>
-                <button type="button" className="ignore">
-                  Ignore
-                </button>
+              <div className="request-right-con">
+                <div className="profile-time-three-dots">
+                  <p className="profile-time">{eachUser.lastTime}</p>
+                  <div className="three-dots-sm">
+                    <ThreeDots />
+                  </div>
+                </div>
+                <div className="accept-reject">
+                  <button type="button" className="request">
+                    Request
+                  </button>
+                  <button type="button" className="ignore">
+                    Ignore
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
         </div>
       </div>
 
@@ -157,18 +174,18 @@ const ChatConnectionsPanel = () => {
           <div onClick={toggleFriends} className={`${friendsOpen ? "arrow-down" : "arrow-right"}`}><ArrowDown /></div>
         </div>
         <div className={`scroll-con ${rightOpen ? '' : 'hide-scrollbar'}`}>
-        {friendsOpen && chats.map((eachUser, index) => (
-          <div key={index} className={`profile-info ${rightOpen ? '' : 'profile-info-padding-2'}`}>
-            <div className="profile-2">
-              <img src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
-              <div className="profile-name-desc">
-                <p className="profile-name">{eachUser.name}</p>
-                <p className="profile-description">{eachUser.description}</p>
+          {friendsOpen && chats.map((eachUser, index) => (
+            <div key={index} className={`profile-info ${rightOpen ? '' : 'profile-info-padding-2'}`}>
+              <div className="profile-2">
+                <img src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
+                <div className="profile-name-desc">
+                  <p className="profile-name">{eachUser.name}</p>
+                  <p className="profile-description">{eachUser.description}</p>
+                </div>
               </div>
+              <p className="profile-time">{eachUser.lastTime}</p>
             </div>
-            <p className="profile-time">{eachUser.lastTime}</p>
-          </div>
-        ))}
+          ))}
         </div>
       </div>
       <div className={`user-friends-con ${requestsOpen ? '' : 'expand-friends'}`}>
@@ -177,18 +194,18 @@ const ChatConnectionsPanel = () => {
           <div onClick={() => setUsersOpen(!usersOpen)} className={`${usersOpen ? "arrow-down" : "arrow-right"}`}><ArrowDown /></div>
         </div>
         <div className={`scroll-con ${rightOpen ? '' : 'hide-scrollbar'}`}>
-        {usersOpen && searchUserData.length && searchUserData.map((o, index) => (
-          <div key={index} className={`profile-info ${rightOpen ? '' : 'profile-info-padding-2'}`}>
-            <div onClick={() => dispatch(setSelectedUserData(o))} className="profile-2">
-              <img src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
-              <div className="profile-name-desc">
-                <p className="profile-name">{o.name || o.Contact || o.email}</p>
-                <p className="profile-description">{o.userType}</p>
+          {usersOpen && searchUserData.length && searchUserData.map((o, index) => (
+            <div key={index} className={`profile-info ${rightOpen ? '' : 'profile-info-padding-2'}`}>
+              <div onClick={() => getUser(o)} className="profile-2">
+                <img src={url3} width={rightOpen ? 45 : 55} alt="friend-profile" />
+                <div className="profile-name-desc">
+                  <p className="profile-name">{o.name || o.Contact || o.email}</p>
+                  <p className="profile-description">{o.userType}</p>
+                </div>
               </div>
+              <p className="profile-time">{o.updatedAt}</p>
             </div>
-            <p className="profile-time">{o.updatedAt}</p>
-          </div>
-        ))}
+          ))}
         </div>
       </div>
     </div>

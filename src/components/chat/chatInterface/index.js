@@ -12,15 +12,34 @@ import {
   Send,
 } from "../../svgComponents/index.js";
 import { Input, Button } from "../../commonComponents/commonComponents.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setRightOpen } from "../../../redux/features/modalSlice.js";
+import { postApi } from "../../../response/api.js";
+import { setOnEventChange, setChatData, setMessages } from "../../../redux/features/chatSlice.js";
+import io from "socket.io-client";
+const socket = io.connect(process.env.REACT_APP_BASEURL);
+
 
 const ChatInterface = () => {
+  const { chatData, selectedUserData, messagesArr, userName } = useSelector(state => state.chatSlice);
+  const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = useState("");
+  const {token} = useSelector(state => state.loginSlice);
   const [showScrollbar, setShowScrollbar] = useState(false);
   const chatContainerRef = useRef(null);
   const scrollbarTimeoutRef = useRef(null);
+  const {_id} = useSelector(state => state.loginSlice.loginDetails); 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (chatData) {
+      const data = chatData.users.find(ele => ele._id == selectedUserData._id)
+      if (data) {
+
+      }
+    }
+  }, [chatData])
+
 
   const toggleArrowSize = () => {
     dispatch(setRightOpen());
@@ -37,6 +56,8 @@ const ChatInterface = () => {
   };
 
   useEffect(() => {
+    //socket.on("stop typing", () => setIsTyping(false));
+
     chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     const chatContainer = chatContainerRef.current;
 
@@ -52,13 +73,43 @@ const ChatInterface = () => {
     };
   }, []);
 
+  const sendMessage = async () => {
+    socket.emit("stop typing", selectedUserData.Contact)
+    const o = {
+      "senderId": _id,
+      "content": message,
+      "chatId": chatData._id
+    }
+    const obj = {
+      "Users": [selectedUserData._id, _id],
+      "lastMessage": message
+    }
+    const result = await postApi('/createMessage', o, token)
+    const response = await postApi('/createChat', obj, token)
+    if(result && response){
+      debugger
+      const cloneArr = [...messagesArr]
+      cloneArr.push(o)
+      dispatch(setMessages(cloneArr))
+      socket.emit("sendMessage", {
+        id: selectedUserData.Contact,
+        msg: o
+      })
+    }
+  }
+
+  const getMessage = (value) => {
+    setMessage(value)
+    socket.emit("typing", {id: selectedUserData.Contact, name: selectedUserData.name || selectedUserData.Contact || selectedUserData.email})
+  }
+
   return (
     <div className="chat-container">
       <div className="chat-header">
         <div className="icon-username">
           <img src={url7} alt="chat-profile-icon" className="chat-icon" />
           <div className="user-time">
-            <p className="chat-username">Jenny Wilson</p>
+            <p className="chat-username">{selectedUserData.name || selectedUserData.Contact || selectedUserData.email || "Test"}</p>
             <Badges />
             <p className="minutes">Minutes Ago</p>
           </div>
@@ -94,10 +145,11 @@ const ChatInterface = () => {
               css="input-send-message"
               placeholder="Type a message"
               value={message}
-              onChange={setMessage}
+              onChange={(e) => getMessage(e)}
             />
           </div>
-          <Send />
+          <div onClick={(e) => sendMessage(e)}><Send /></div>
+          <span>{userName ? userName + " Typing..." : ""}</span>
         </div>
       </div>
     </div>
