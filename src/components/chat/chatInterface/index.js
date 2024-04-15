@@ -24,22 +24,12 @@ const ChatInterface = () => {
   const { chatData, selectedUserData, messagesArr, userName } = useSelector(state => state.chatSlice);
   const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = useState("");
-  const {token} = useSelector(state => state.loginSlice);
+  const { token } = useSelector(state => state.loginSlice);
   const [showScrollbar, setShowScrollbar] = useState(false);
   const chatContainerRef = useRef(null);
   const scrollbarTimeoutRef = useRef(null);
-  const {_id} = useSelector(state => state.loginSlice.loginDetails); 
+  const { _id } = useSelector(state => state.loginSlice.loginDetails);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (chatData) {
-      const data = chatData.users.find(ele => ele._id == selectedUserData._id)
-      if (data) {
-
-      }
-    }
-  }, [chatData])
-
 
   const toggleArrowSize = () => {
     dispatch(setRightOpen());
@@ -80,14 +70,14 @@ const ChatInterface = () => {
       "content": message,
       "chatId": chatData._id
     }
+    
     const obj = {
       "Users": [selectedUserData._id, _id],
       "lastMessage": message
     }
     const result = await postApi('/createMessage', o, token)
     const response = await postApi('/createChat', obj, token)
-    if(result && response){
-      debugger
+    if (result && response) {
       const cloneArr = [...messagesArr]
       cloneArr.push(o)
       dispatch(setMessages(cloneArr))
@@ -95,12 +85,13 @@ const ChatInterface = () => {
         id: selectedUserData.Contact,
         msg: o
       })
+      setMessage("")
     }
   }
 
   const getMessage = (value) => {
     setMessage(value)
-    socket.emit("typing", {id: selectedUserData.Contact, name: selectedUserData.name || selectedUserData.Contact || selectedUserData.email})
+    socket.emit("typing", { id: selectedUserData.Contact, name: selectedUserData.name || selectedUserData.Contact || selectedUserData.email })
   }
 
   return (

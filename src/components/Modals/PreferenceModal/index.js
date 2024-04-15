@@ -127,6 +127,7 @@ const PreferenceModal = () => {
   const modalSelector = useSelector((state) => state.modalSlice);
   const token = useSelector((state) => state.loginSlice.token);
   const { preferenceModal } = modalSelector;
+  const {data} = useSelector((state) => state.loginSlice.allPreferences);
 
   const style = {
     position: "absolute",
@@ -156,8 +157,6 @@ const PreferenceModal = () => {
       otherQuestions,
     };
 
-    // localStorage.setItem("preferences", JSON.stringify(preferences));
-
     postApi("/preferences", preferences, token)
       .then((response) => {
         console.log("Preferences updated successfully:", response.data);
@@ -172,12 +171,21 @@ const PreferenceModal = () => {
     dispatch(setPreferenceModal());
   };
 
-  const handleTopicClick = (topicId) => {
+  const handleTopicClick = (topicStr) => {
+    // const cloneData = [...selectedTopics]
+    // if(topicStr){
+       
+    // }
     setSelectedTopics((prevTopics) => {
-      if (prevTopics.includes(topicId)) {
-        return prevTopics.filter((id) => id !== topicId);
+      if (prevTopics.includes(topicStr)) {
+        return prevTopics.filter((item) => item !== topicStr);
       } else {
-        return [...prevTopics, topicId];
+        const topic = data.find((topic) => topic === topicStr);
+        if (topic) {
+          return [...prevTopics, topicStr];
+        } else {
+          return prevTopics;
+        }
       }
     });
   };
@@ -195,7 +203,6 @@ const PreferenceModal = () => {
           setGender(gender);
           setValue([ageRange.start, ageRange.end]);
           setSelectedTopics(topics);
-          debugger
           setOtherQuestions(otherQuestions);
         })
         .catch((error) => {
@@ -246,20 +253,20 @@ const PreferenceModal = () => {
           <div className="preference-inner-container">
             <span className="Gender">Topics</span>
             <div className="topics-container">
-              {topicsData.map((topic) => (
+              {data && data.map((topic) => (
                 <div
-                  key={topic.id}
+                  key={topic}
                   className={`topic-item-container ${
-                    selectedTopics.includes(topic.id) ? "selected" : ""
+                    selectedTopics.includes(topic) ? "selected" : ""
                   }`}
-                  onClick={() => handleTopicClick(topic.id)}
+                  onClick={() => handleTopicClick(topic)}
                 >
                   <span
                     className={`topic-item-container ${
-                      selectedTopics.includes(topic.id) ? "selected" : ""
+                      selectedTopics.includes(topic) ? "selected" : ""
                     }`}
                   >
-                    {topic.name}
+                    {topic}
                   </span>
                 </div>
               ))}

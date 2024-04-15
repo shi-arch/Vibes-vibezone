@@ -23,12 +23,13 @@ import {
   setPrivacyAndSecurityModal,
   setBadgesModal,
   setProfileModal,
-  setLeftOpen,
+  setLeftOpen
 } from "../../redux/features/modalSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 const SideBar = () => {
   const modalSelector = useSelector(state => state.modalSlice);
+  const {ProfileImage, Name, Contact, username, Status, Gender, DOB} = useSelector(state => state.loginSlice.userProfile);  
   const {leftOpen} = modalSelector;
   
   //redux-tool kit
@@ -69,13 +70,13 @@ const SideBar = () => {
         <div className="side-bar-top-container">
           <div className="profile-container">
             <div className="sidebar-profile">
-              <img src={sidebarProfile} alt="sidebar-profile" />
+              <img className="sidebar-profile" src={ProfileImage ? ProfileImage : sidebarProfile} alt="sidebar-profile" />
             </div>
             <div className="img-icon-container">
               <CameraSvg />
             </div>
           </div>
-          <h5 className="user-name-head">Gattu Pavan Kumar</h5>
+          <h5 className="user-name-head">{Name ? Name : "Pavan Kumar"}</h5>
           <p className="side-bar-user-prof-text">Software Developer</p>
         </div>
 
@@ -83,7 +84,7 @@ const SideBar = () => {
           <div className="side-bar-icon-text-container">
             <CallSvg />
             <div>
-              <p className="mobile-number-text">+91 9182263486</p>
+              <p className="mobile-number-text">+91 {Contact ? Contact : 1234567890}</p>
               <p className="phone-text">Phone</p>
             </div>
           </div>
@@ -92,7 +93,7 @@ const SideBar = () => {
             <AtSvg />
 
             <div>
-              <p className="mobile-number-text">pavankumar</p>
+              <p className="mobile-number-text">{username ? username : "pavan.kumar"}</p>
               <p className="phone-text">Username</p>
             </div>
           </div>
@@ -100,7 +101,7 @@ const SideBar = () => {
           <div className="side-bar-icon-text-container">
             <InfoSvg />
             <div>
-              <p className="mobile-number-text">Product Designer</p>
+              <p className="mobile-number-text">{Status ? Status : "Software engineer"}</p>
               <p className="phone-text">status</p>
             </div>
             <button

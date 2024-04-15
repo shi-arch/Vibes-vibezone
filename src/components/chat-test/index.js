@@ -287,8 +287,6 @@ const Chat = () => {
     });
     socket.on("getUserSocketId", () => {
       console.log(mySocketId)
-      
-      setUserSocketId(localStorage.getItem("socketId"));
     })
   }, [])
 
@@ -356,9 +354,9 @@ const Chat = () => {
           <div className="header-container">
             <div className="recent-user-con">
               {recentUsers.map((eachUser) => (
-                <div key={eachUser.id} className="recent-user">
+                <div key={eachUser._id} className="recent-user">
                   <img
-                    src={eachUser.profileIcon}
+                    src={eachUser.ProfileImage ? eachUser.ProfileImage : eachUser.profileIcon}
                     alt="recent-user-icon"
                     className="user-icon"
                   />
@@ -391,7 +389,7 @@ const Chat = () => {
             <div className="notification-icon-con">
               <Notification />
               {notification ? <span className="red-dot"></span> : null}
-            </div>
+            </div>            
           </div>
           <div className="bottom-con">
             <div className="call-container">

@@ -6,7 +6,8 @@ const initialState = {
   chatData: "",
   messagesArr: [],
   mySocketId: "",
-  userName: ""
+  userName: "",
+  activeUserData: []
 };
 
 const chatSlice = createSlice({
@@ -25,7 +26,7 @@ const chatSlice = createSlice({
     setChatData: (state, actions) => {      
       state.chatData = actions.payload;
     },
-    setMessages: (state, actions) => {      
+    setMessages: (state, actions) => {
       state.messagesArr = actions.payload;
     },
     setMySocketId: (state, actions) => {      
@@ -34,10 +35,12 @@ const chatSlice = createSlice({
     setUserName: (state, actions) => {      
       state.userName = actions.payload;
     },
-    
+    setActiveUserData: (state, actions) => {      
+      state.activeUserData = actions.payload;
+    },
   },
 });
 
-export const { addChat, setSearchUserData, setSelectedUserData, setChatData, setMySocketId, setMessages, setUserName } = chatSlice.actions;
+export const { addChat, setSearchUserData, setSelectedUserData, setChatData, setMySocketId, setMessages, setUserName, setActiveUserData } = chatSlice.actions;
 
 export default chatSlice.reducer;

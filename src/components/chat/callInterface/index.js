@@ -3,18 +3,23 @@ import Peer from "simple-peer";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
-import { setMessages, setMySocketId, setUserName } from "../../../redux/features/chatSlice.js";
+import { setActiveUserData, setMessages, setMySocketId, setUserName } from "../../../redux/features/chatSlice.js";
+import { getApi, postApi } from "../../../response/api.js";
+import { setAllUsers, setUserSelectedTopics } from "../../../redux/features/loginSlice.js";
 const socket = io.connect(process.env.REACT_APP_BASEURL);
 
 
 const CallInterface = () => {
 	const dispatch = useDispatch()
-	const { selectedUserData, messagesArr } = useSelector(state => state.chatSlice);
-	const { Contact } = useSelector(state => state.loginSlice.loginDetails)
+	const { selectedUserData, messagesArr, activeUserData } = useSelector(state => state.chatSlice);
+	const { Contact, _id, Name } = useSelector(state => state.loginSlice.loginDetails)
+	const { allConnections, userDetails, userSelectedTopics, token } = useSelector(state => state.loginSlice)
 	const [disconnect, setDisconnect] = useState(false)
 	const [stream, setStream] = useState()
 	const [receivingCall, setReceivingCall] = useState(false)
 	const [caller, setCaller] = useState("")
+	const [userId, setUserId] = useState("")	
+	const [updateMessage, setUpdateMessage] = useState(false)
 	const [callerSignal, setCallerSignal] = useState()
 	const [callAccepted, setCallAccepted] = useState(false)
 	const [idToCall, setIdToCall] = useState("")
@@ -23,29 +28,90 @@ const CallInterface = () => {
 	const myVideo = useRef()
 	const userVideo = useRef()
 	const connectionRef = useRef()
+	const { data } = useSelector((state) => state.loginSlice.allPreferences);
+
+	useEffect(() => {
+		if (updateMessage) {
+			setUpdateMessage(false)
+			const cloneArr = [...messagesArr]
+			cloneArr[cloneArr.length] = updateMessage
+			dispatch(setMessages(cloneArr))
+		}
+	}, [updateMessage])
+
+	useEffect(() => {
+		if (allConnections) {
+			postApi('/getAllUsers', allConnections.map(ele => ele.Contact), token).then(res => {
+				if (res) {
+					dispatch(setAllUsers(res.data))
+				}
+			})
+		}
+	}, [allConnections])
+
+	useEffect(() => {
+		getActiverUserData()
+	}, [])
+
+	const getActiverUserData = async () => {
+		getApi('/activeUsers', token).then(res => {
+			if (res) {
+				dispatch(setActiveUserData(res.data))
+			}
+		})
+	}
 
 	useEffect(() => {
 		socket.on("typing", (name) => {
-			dispatch(setUserName(name))	
+			dispatch(setUserName(name))
 		});
 		socket.on("stop typing", () => {
-			dispatch(setUserName(""))	
-		});	
+			dispatch(setUserName(""))
+		});
+		socket.on("isUserActive", () => {
+			getActiverUserData()
+		});
 		socket.on("sendMessage", (msg) => {
-			const cloneArr = [...messagesArr]
-			cloneArr[cloneArr.length] = msg
-			debugger
-			dispatch(setMessages(cloneArr))	
-		});	
-		socket.emit("setup", Contact);
+			setUpdateMessage(msg)
+		});
+		socket.on("getActiveUsers", (id) => {
+			getApi('/activeUsers?userSocketId=' + id, token).then(async res => {
+				if (res) {
+					await getActiverUserData()
+				}
+			})
+		});
+		socket.on('userDisconnected', (id) => {
+			setDisconnect(true)
+		})
+		socket.emit("setup", _id);
 		socket.on("me", (id) => {
 			dispatch(setMySocketId(id))
 		})
+		socket.on('endCall', () => {
+			setStream(null)
+			//setCallAccepted(false)
+		})
 		socket.on("callUser", (data) => {
-			console.log('call user data', data)
-			setCaller(data.from)
-			setName(data.name)
-			setCallerSignal(data.signal)
+			const { topics, from, signal, name, userId } = data
+			let topicMatch = false
+			// for(let i = 0; i < topics.length; i++){
+			// 	if(userSelectedTopics.includes(topics[i])){
+			// 		topicMatch = true
+			// 		break
+			// 	}
+			// }
+			// if(topicMatch){
+			// 	setCaller(from)
+			// 	setName(name)
+			// 	setCallerSignal(signal)
+			// 	setReceivingCall(true)
+			// }
+
+			setCaller(from)
+			setUserId(userId)
+			setName(name)
+			setCallerSignal(signal)
 			setReceivingCall(true)
 		})
 
@@ -80,7 +146,9 @@ const CallInterface = () => {
 				socket.emit("callUser", {
 					signalData: data,
 					from: socket.id,
-					name: name
+					userId: _id,
+					name: Name,
+					topics: userSelectedTopics,
 				})
 			})
 			peer.on("stream", (stream) => {
@@ -143,17 +211,17 @@ const CallInterface = () => {
 					alt="person1"
 				/>}
 				<video
-					style={callAccepted ? { visibility: "visible", width: '100%', height: 'auto' } : { visibility: "hidden", height: 0, width: 0 }}
+					style={callAccepted && stream ? { visibility: "visible", width: '100%', height: 'auto' } : { visibility: "hidden", height: 0, width: 0 }}
 					ref={userVideo}
 					autoPlay
 					playsInline
 					muted
 				/>
-				{!callAccepted && <img
+				{!callAccepted ? <img
 					src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222352/Rectangle_29_zq40pr.png"
 					className="image"
 					alt="person2"
-				/>}
+				/> : ""}
 
 			</div>
 			<div className="call-controllers">
@@ -166,7 +234,16 @@ const CallInterface = () => {
 					<div onClick={callAccepted && !callEnded ? leaveCall : () => callUser()}>
 						<Video />
 					</div>
-					<div onClick={() => setDisconnect(true)}>
+					<div onClick={() => {
+						// send another user id to this event
+						stream.getTracks().forEach(function(track) {
+							track.stop();
+						});
+						socket.emit('disconnectCall', userId);
+						setStream(null)
+						setCallAccepted(false)
+						setCallEnded(true)
+					}}>
 						<EndCall />
 					</div>
 

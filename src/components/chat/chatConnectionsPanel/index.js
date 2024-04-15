@@ -1,87 +1,3 @@
-// import { ArrowDown, ThreeDots } from "../../svgComponents/index.js";
-// 
-// import url3 from "../../../assets/images/profile3.svg";
-// import Badges from "../badges";
-// import "./index.css";
-
-// const Friends = (props) => {
-//   const { isLeftOpen, isRightOpen, chats } = props;
-//   const friends = chats;
-
-//   return (
-//     <div
-//       className={`friends-container ${
-//         !isLeftOpen && !isRightOpen ? "left-and-right-expand" : ""
-//       }  ${!isRightOpen ? "expanded" : ""}`}
-//     >
-//       <div className={`requests-con ${isRightOpen ? '' : 'hide-scrollbar'}`}>
-//         <div className="chats-arrow">
-//           <p className="chat-text">Requests</p>
-//           <ArrowDown />
-//         </div>
-//         {chats.map((eachUser, index) => (
-//           <div
-//             key={index}
-//             className={`profile-info ${eachUser.selected ? "active-user" : ""}`}
-//           >
-//             <div className="profile">
-//               <img src={url3} width={isRightOpen ? 45 : 55} alt="friend-profile" />
-//               <div className="profile-name-desc">
-//                 <p className="profile-name">{eachUser.name}</p>
-//                 <Badges />
-//               </div>
-//             </div>
-//             <div className="request-right-con">
-//             <div className="profile-time-three-dots">
-//               <p className="profile-time">{eachUser.lastTime}</p>
-//               <div className="three-dots-sm">
-//                 <ThreeDots />
-//               </div>
-//             </div>
-//             <div className="accept-reject">
-//               <button type="button" className="request">
-//                 Request
-//               </button>
-//               <button type="button" className="ignore">
-//                 Ignore
-//               </button>
-//             </div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-
-//       {/* <div className="frame"></div> */}
-
-//       <div className={`user-friends-con ${isRightOpen ? '' : 'hide-scrollbar'}`}>
-//         <div className="chats-arrow">
-//           <p className="chat-text">Friends</p>
-//           <ArrowDown />
-//         </div>
-//         {friends.map((eachUser, index) => (
-//           <div key={index} className="profile-info">
-//             <div className="profile">
-//               <img src={url3} width={50} alt="friend-profile" />
-//               <div className="profile-name-desc">
-//                 <p className="profile-name">{eachUser.name}</p>
-//                 <p className="profile-description">{eachUser.description}</p>
-//               </div>
-//             </div>
-//             <p className="profile-time">{eachUser.lastTime}</p>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Friends;
-
-
-
-
-
-
 import React, { useEffect, useState } from "react";
 import { ArrowDown, ThreeDots } from "../../svgComponents/index.js";
 
@@ -91,11 +7,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { chats } from '../propsData';
 import { setSelectedUserData, setChatData, setMessages } from "../../../redux/features/chatSlice.js";
 import "./index.css";
-import { postApi } from "../../../response/api.js";
+import { postApi, getApi } from "../../../response/api.js";
 
 const ChatConnectionsPanel = () => {
   const {_id} = useSelector(state => state.loginSlice.loginDetails);
   const {token} = useSelector(state => state.loginSlice);
+  const [requestList, setRequestList] = useState([]);
   const dispatch = useDispatch();
   const [requestsOpen, setRequestsOpen] = useState(false);
   const [friendsOpen, setFriendsOpen] = useState(false);
@@ -103,6 +20,20 @@ const ChatConnectionsPanel = () => {
   const modalSelector = useSelector(state => state.modalSlice);
   const searchUserData = useSelector(state => state.chatSlice.searchUserData);
   const { leftOpen, rightOpen } = modalSelector;
+
+  const fetchRequests = async () => {
+    try {
+      const response = await getApi("/getRequests", token);
+      // console.log("get requests..", response);
+      setRequestList(response);
+    } catch (error) {
+      console.log("Failed to log get requests", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRequests();
+  }, []);
 
   const toggleRequests = () => {
     setRequestsOpen(!requestsOpen);
@@ -122,7 +53,6 @@ const ChatConnectionsPanel = () => {
     const result = await postApi('/createChat', obj, token)
     if (result) {
       dispatch(setChatData(result.data))
-      debugger
       dispatch(setMessages(result.data.messages))
     }
   };
