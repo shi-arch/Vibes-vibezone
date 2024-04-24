@@ -18,7 +18,7 @@ const CallInterface = () => {
 	const [stream, setStream] = useState()
 	const [receivingCall, setReceivingCall] = useState(false)
 	const [caller, setCaller] = useState("")
-	const [userId, setUserId] = useState("")	
+	const [userId, setUserId] = useState("")
 	const [updateMessage, setUpdateMessage] = useState(false)
 	const [callerSignal, setCallerSignal] = useState()
 	const [callAccepted, setCallAccepted] = useState(false)
@@ -184,13 +184,17 @@ const CallInterface = () => {
 	}
 
 	const leaveCall = () => {
-		console.log('')
-		setCallEnded(false)
-		setCaller(null)
-		setCallAccepted(false)
-		setReceivingCall(false)
-		socket.emit("endCall", { to: caller })
-		connectionRef.current.destroy()
+		try {
+			setCallEnded(true)
+			setCallAccepted(true)
+			//connectionRef.current.destroy()
+			stream.getTracks().forEach(function (track) {
+				track.stop();
+				setStream(null)
+			});
+		} catch (err) {
+			console.log(err)
+		}
 	}
 
 
@@ -217,7 +221,7 @@ const CallInterface = () => {
 					playsInline
 					muted
 				/>
-				{!callAccepted ? <img
+				{!stream ? <img
 					src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222352/Rectangle_29_zq40pr.png"
 					className="image"
 					alt="person2"
@@ -231,19 +235,10 @@ const CallInterface = () => {
 					}}>
 						<Mute />
 					</div>
-					<div onClick={callAccepted && !callEnded ? leaveCall : () => callUser()}>
+					<div onClick={callUser}>
 						<Video />
 					</div>
-					<div onClick={() => {
-						// send another user id to this event
-						stream.getTracks().forEach(function(track) {
-							track.stop();
-						});
-						socket.emit('disconnectCall', userId);
-						setStream(null)
-						setCallAccepted(false)
-						setCallEnded(true)
-					}}>
+					<div onClick={leaveCall}>
 						<EndCall />
 					</div>
 
