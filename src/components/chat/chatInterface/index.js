@@ -17,11 +17,15 @@ import { setRightOpen } from "../../../redux/features/modalSlice.js";
 import { postApi } from "../../../response/api.js";
 import { setOnEventChange, setChatData, setMessages } from "../../../redux/features/chatSlice.js";
 import io from "socket.io-client";
+import { callToOtherUser } from "../../../app/test/utils/webRTC/webRTCHandler.js";
+import { setAvailableUsers } from "../../../redux/features/dashboardSlice.js";
+import { setStartCall } from "../../../redux/features/callSlice.js";
 const socket = io.connect(process.env.REACT_APP_BASEURL);
 
 
 const ChatInterface = () => {
   const { chatData, selectedUserData, messagesArr, userName } = useSelector(state => state.chatSlice);
+  const { activeUsers, availableUsers } = useSelector(state => state.dashboardSlice)
   const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = useState("");
   const { token } = useSelector(state => state.loginSlice);
@@ -47,7 +51,7 @@ const ChatInterface = () => {
 
   useEffect(() => {
     //socket.on("stop typing", () => setIsTyping(false));
-
+    dispatch(setAvailableUsers(activeUsers))
     chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     const chatContainer = chatContainerRef.current;
 
@@ -106,7 +110,10 @@ const ChatInterface = () => {
           </div>
         </div>
         <div className="accept-reject">
-          <button type="button" className="accept">
+          <button type="button" onClick={() => {
+            dispatch(setStartCall(true))
+            callToOtherUser(availableUsers[0])
+          }} className="accept">
             Accept
           </button>
           <button type="button" className="reject">

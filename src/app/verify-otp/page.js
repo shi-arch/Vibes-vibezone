@@ -6,6 +6,7 @@ import OtpInput from "../../components/otpInput/otpInput";
 import { setVerifyOtp, setLoginDetails, setToken } from "../../redux/features/loginSlice";
 import { postApi} from "../../response/api"
 import "./page.css";
+import { registerNewUser } from "../test/utils/wssConnection/wssConnection";
 const Page = (props) => {
   console.log("props", props);
   const {email, Contact, CountryCode} = useSelector(state => state.loginSlice.loginDetails);
@@ -63,6 +64,8 @@ const Page = (props) => {
             const res = await postApi('/verify-otp', userCred)
             if(res.status !== 400){
               localStorage.setItem("userData", JSON.stringify(res));
+              
+              registerNewUser(res.user.Name || "Guest")
               dispatch(setLoginDetails(res.user));
               dispatch(setToken(res.token));
               dispatch(setVerifyOtp(true))

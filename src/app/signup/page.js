@@ -5,6 +5,7 @@ import "./page.css";
 import { useNavigate } from "react-router-dom";
 import { postApi} from "../../response/api"
 import {Loader} from '../../components/commonComponents/commonComponents'
+import { connectWithWebSocket } from "../test/utils/wssConnection/wssConnection";
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const phoneRegex = /^[6-9]\d{9}$/
 
@@ -14,6 +15,9 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useNavigate();
+  useEffect(() => {
+    connectWithWebSocket()
+  }, [])
   const handleGetOtp = async () => {
     setIsLoading(true)
     let obj = {Contact: userInput}
