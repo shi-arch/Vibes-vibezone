@@ -2,7 +2,6 @@
   color:red;
   text-align: center;
   align-items: center;
-  background-image: url("./background.png");
   padding: 6rem;
   min-height: 100vh;
 }
@@ -10,7 +9,6 @@
 .App {
   min-height: 100vh;
   display: flex;
-  background-image: url("./background.png");
   background-position: center;
   background-size: cover;
 }

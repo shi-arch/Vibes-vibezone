@@ -1,11 +1,7 @@
 import { Mute, Video, EndCall } from "../../svgComponents/index.js";
-import Peer from "simple-peer";
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import io from "socket.io-client";
-import { setActiveUserData, setMessages, setMySocketId, setUserName } from "../../../redux/features/chatSlice.js";
-import { getApi, postApi } from "../../../response/api.js";
-import { setAllUsers, setUserSelectedTopics } from "../../../redux/features/loginSlice.js";
 import { hangUp, switchForScreenSharingStream } from "../../../app/test/utils/webRTC/webRTCHandler.js";
 import { setLocalCameraEnabled, setLocalMicrophoneEnabled, setHangUp } from "../../../redux/features/callSlice.js";
 const socket = io.connect(process.env.REACT_APP_BASEURL);
