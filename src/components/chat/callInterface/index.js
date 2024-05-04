@@ -66,6 +66,7 @@ const CallInterface = () => {
 					ref={myVideo}
 					autoPlay
 					playsInline
+					//muted
 				/>
 				}
 				{hangUps && <img
@@ -80,6 +81,7 @@ const CallInterface = () => {
 					ref={userVideo}
 					autoPlay
 					playsInline
+					muted
 				/>
 				}	
 				{hangUps ? <img
