@@ -6,7 +6,7 @@ import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSoc
 import { getApi } from '../../../../response/api';
 const token = store.getState().loginSlice.token || ""
 
-const SERVER = 'http://localhost:8080';
+const SERVER = 'https://vibezone-backened-b061193a421b.herokuapp.com';
 
 const broadcastEventTypes = {
   ACTIVE_USERS: 'ACTIVE_USERS',
