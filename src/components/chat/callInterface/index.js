@@ -27,7 +27,7 @@ const CallInterface = () => {
 	  useEffect(() => {
 		if (remoteStream) {
 		  const remoteVideo = userVideo.current;
-		  remoteVideo.srcObject = localStream;	
+		  remoteVideo.srcObject = remoteStream;	
 		  remoteVideo.onloadedmetadata = () => {
 			remoteVideo.play();
 			dispatch(setHangUp(false))
