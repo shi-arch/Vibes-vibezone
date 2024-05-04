@@ -1,16 +1,16 @@
 import socketClient from 'socket.io-client';
 import store from '../../../../redux/store';
-import { setActiveUsers } from '../../../../redux/features/dashboardSlice';
+import { setActiveUsers, setInActiveUsers } from '../../../../redux/features/dashboardSlice';
 import * as webRTCHandler from '../webRTC/webRTCHandler';
 import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected } from '../../../../redux/features/chatSlice';
 import { getApi } from '../../../../response/api';
 const token = store.getState().loginSlice.token || ""
 
-const SERVER = 'https://vibezone-backened-b061193a421b.herokuapp.com';
-
+const SERVER = process.env.REACT_APP_BASEURL;
 const broadcastEventTypes = {
   ACTIVE_USERS: 'ACTIVE_USERS',
-  GROUP_CALL_ROOMS: 'GROUP_CALL_ROOMS'
+  GROUP_CALL_ROOMS: 'GROUP_CALL_ROOMS',
+  INACTIVE_USERS: 'INACTIVE_USERS'
 };
 
 let socket;
@@ -27,8 +27,8 @@ export const connectWithWebSocket = async () => {
   const dispatch = store.dispatch
   socket = socketClient(SERVER);
 
-  socket.on('connection', () => {    
-    if(socket.id){
+  socket.on('connection', () => {
+    if (socket.id) {
       dispatch(setSocketConnected(true))
       console.log(socket.id)
     }
@@ -39,22 +39,22 @@ export const connectWithWebSocket = async () => {
   });
 
   // listeners related with direct call
-  socket.on('pre-offer', (data) => {    
+  socket.on('pre-offer', (data) => {
     webRTCHandler.handlePreOffer(data);
   });
 
   socket.on('pre-offer-answer', (data) => {
-    
+
     webRTCHandler.handlePreOfferAnswer(data);
   });
 
   socket.on('webRTC-offer', (data) => {
-    
+
     webRTCHandler.handleOffer(data);
   });
 
   socket.on('webRTC-answer', (data) => {
-    
+
     webRTCHandler.handleAnswer(data);
   });
 
@@ -79,7 +79,7 @@ export const connectWithWebSocket = async () => {
   socket.on("me", (id) => {
     dispatch(setMySocketId(id))
   })
-  
+
 };
 
 export const registerNewUser = (username) => {
@@ -91,22 +91,21 @@ export const registerNewUser = (username) => {
 
 // emitting events to server related with direct call
 
-export const sendPreOffer = (data) => {  
+export const sendPreOffer = (data) => {
   socket.emit('pre-offer', data);
 };
 
 export const sendPreOfferAnswer = (data) => {
-  
   socket.emit('pre-offer-answer', data);
 };
 
 export const sendWebRTCOffer = (data) => {
-  
+
   socket.emit('webRTC-offer', data);
 };
 
 export const sendWebRTCAnswer = (data) => {
-  
+
   socket.emit('webRTC-answer', data);
 };
 
@@ -141,6 +140,19 @@ const handleBroadcastEvents = (data) => {
     case broadcastEventTypes.ACTIVE_USERS:
       const activeUsers = data.activeUsers.filter(activeUser => activeUser.socketId && (activeUser.socketId !== socket.id));
       store.dispatch(setActiveUsers(activeUsers));
+      break;
+    // case broadcastEventTypes.INACTIVE_USERS:
+    //   const activeUsersData = store.getState().dashboardSlice.activeUsers
+    //   const inActiveUsersData = [...data.inActiveUsers]
+    //   for (let i = 0; i < inActiveUsersData.length; i++) {
+    //     const index = activeUsersData.findIndex(user => user.socketId === inActiveUsersData[i])
+    //     debugger
+    //     if(index !== -1){
+    //       activeUsersData[index].isActive = false
+    //     }        
+    //   }
+    //   store.dispatch(setActiveUsers(activeUsersData));
+    //   store.dispatch(setInActiveUsers(data.inActiveUsers));
       break;
     // case broadcastEventTypes.GROUP_CALL_ROOMS:
     //   const groupCallRooms = data.groupCallRooms.filter(room => room.socketId !== socket.id);

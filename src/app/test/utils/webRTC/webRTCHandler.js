@@ -82,11 +82,10 @@ export const CreatePeerConnection = async () => {
 
 };
 
-export const callToOtherUser = (calleeDetails) => {
-  
+export const callToOtherUser = (calleeDetails) => {  
   connectedUserSocketId = calleeDetails.socketId;
   store.dispatch(setCallState('CALL_IN_PROGRESS'));
-  store.dispatch(setCallingDialogVisible(true));
+  //store.dispatch(setCallingDialogVisible(true));
   wss.sendPreOffer({
     callee: calleeDetails,
     caller: {
@@ -95,11 +94,21 @@ export const callToOtherUser = (calleeDetails) => {
   });
 };
 
-export const handlePreOffer = (data) => {
+export const handlePreOffer = async (data) => {
   if (checkIfCallIsPossible()) {
   connectedUserSocketId = data.callerSocketId;
-  store.dispatch(setCallerUsername(data.callerUsername));
-  store.dispatch(setCallState('CALL_REQUESTED'));
+  // store.dispatch(setCallerUsername(data.callerUsername));
+  // store.dispatch(setCallState('CALL_REQUESTED'));
+  await getLocalStream()
+  await CreatePeerConnection();
+  setTimeout(() => {
+    wss.sendPreOfferAnswer({
+      callerSocketId: connectedUserSocketId,
+      answer: preOfferAnswers.CALL_ACCEPTED
+    });
+    store.dispatch(setCallState('CALL_IN_PROGRESS'));
+  }, 1000);
+  // shivram.......
   } else {
     wss.sendPreOfferAnswer({
       callerSocketId: data.callerSocketId,
@@ -108,8 +117,7 @@ export const handlePreOffer = (data) => {
   }
 };
 
-export const acceptIncomingCallRequest = async () => {
-  
+export const acceptIncomingCallRequest = async () => {  
   await getLocalStream()
   await CreatePeerConnection();
   wss.sendPreOfferAnswer({
@@ -219,7 +227,7 @@ export const handleUserHangedUp = () => {
   resetCallDataAfterHangUp();
 };
 
-export const hangUp = () => {
+export const hangUp = async () => {
   wss.sendUserHangedUp({
     connectedUserSocketId: connectedUserSocketId
   });
@@ -240,7 +248,7 @@ const resetCallDataAfterHangUp = () => {
 
 export const resetCallData = () => {
   connectedUserSocketId = null;
-  store.dispatch(setCallState('CALL_AVAILABLE'));
+  store.dispatch(setCallState('CALL_AVAILABLE'));  
 };
 
 export const sendMessageUsingDataChannel = (message) => {

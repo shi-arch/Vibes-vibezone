@@ -60,7 +60,7 @@ const Header = () => {
               alt="recent-user-icon"
               className="user-icon"
             />
-            {eachUser.isActive ? <span className="green-dot"></span> : null}
+            {eachUser.isActive ? <span className="green-dot"></span> : <span className="red-dot"></span>}
             <span>{eachUser.username}</span>
           </div>
         )) : ""}

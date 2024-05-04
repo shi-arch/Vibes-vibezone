@@ -2,6 +2,8 @@
 import url7 from "../../../assets/images/chatProfile.svg";
 import Badges from "../badges/index.js";
 import ChatsList from "../chatsList/index.js";
+import _ from 'lodash'
+import Swal from 'sweetalert2'
 import { useState, useEffect, useRef } from "react";
 import {
   ChatAudio,
@@ -17,15 +19,16 @@ import { setRightOpen } from "../../../redux/features/modalSlice.js";
 import { postApi } from "../../../response/api.js";
 import { setOnEventChange, setChatData, setMessages } from "../../../redux/features/chatSlice.js";
 import io from "socket.io-client";
-import { callToOtherUser } from "../../../app/test/utils/webRTC/webRTCHandler.js";
+import { CreatePeerConnection, callToOtherUser, getLocalStream, hangUp } from "../../../app/test/utils/webRTC/webRTCHandler.js";
 import { setAvailableUsers } from "../../../redux/features/dashboardSlice.js";
-import { setStartCall } from "../../../redux/features/callSlice.js";
+import { setHangUp, setStartCall } from "../../../redux/features/callSlice.js";
 const socket = io.connect(process.env.REACT_APP_BASEURL);
 
 
 const ChatInterface = () => {
   const { chatData, selectedUserData, messagesArr, userName } = useSelector(state => state.chatSlice);
   const { activeUsers, availableUsers } = useSelector(state => state.dashboardSlice)
+  const { callState } = useSelector((state) => state.callSlice);
   const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = useState("");
   const { token } = useSelector(state => state.loginSlice);
@@ -74,7 +77,7 @@ const ChatInterface = () => {
       "content": message,
       "chatId": chatData._id
     }
-    
+
     const obj = {
       "Users": [selectedUserData._id, _id],
       "lastMessage": message
@@ -98,6 +101,30 @@ const ChatInterface = () => {
     socket.emit("typing", { id: selectedUserData.Contact, name: selectedUserData.name || selectedUserData.Contact || selectedUserData.email })
   }
 
+  const startRandomCall = async () => {
+    const activeUserData = _.cloneDeep(activeUsers) 
+    if(activeUserData.length){
+      activeUserData.filter(user => user.isActive === true)
+      dispatch(setStartCall(true))
+      callToOtherUser(activeUserData[Math.floor(Math.random() * (activeUserData.length - 1))])
+      await getLocalStream()
+      await CreatePeerConnection();
+    } else {
+      Swal.fire({
+        title: "sorry...",
+        text: "No active users found!",
+        icon: "error"
+      });
+    }    
+  }
+
+  const endCall = async () => {
+    if (callState == `CALL_IN_PROGRESS`) {
+      await hangUp();
+			dispatch(setHangUp(true))
+		}
+  }
+
   return (
     <div className="chat-container">
       <div className="chat-header">
@@ -110,14 +137,11 @@ const ChatInterface = () => {
           </div>
         </div>
         <div className="accept-reject">
-          <button type="button" onClick={() => {
-            dispatch(setStartCall(true))
-            callToOtherUser(availableUsers[0])
-          }} className="accept">
-            Accept
+          <button type="button" onClick={startRandomCall} className="accept">
+            Start random call
           </button>
-          <button type="button" className="reject">
-            Regret
+          <button type="button" onClick={endCall} className="reject">
+            End random call
           </button>
         </div>
         <div className="chat-controllers">

@@ -4,7 +4,8 @@ const initialState = {
   username: '',
   activeUsers: [],
   groupCallRooms: [],
-  availableUsers: []
+  availableUsers: [],
+  inActiveUsers: []
 };
 
 const dashboardSlice = createSlice({
@@ -23,10 +24,12 @@ const dashboardSlice = createSlice({
     setAvailableUsers: (state, actions) => {      
       state.availableUsers = actions.payload;
     },
-    
+    setInActiveUsers: (state, actions) => {
+      state.inActiveUsers = actions.payload;
+    },
   },
 });
 
-export const {setActiveUsers, setGroupCallRooms, setUserName, setAvailableUsers} = dashboardSlice.actions;
+export const {setActiveUsers, setInActiveUsers, setGroupCallRooms, setUserName, setAvailableUsers} = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;
