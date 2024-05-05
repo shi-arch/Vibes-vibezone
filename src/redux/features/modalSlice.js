@@ -10,6 +10,7 @@ const initialState = {
   pricingAndPlans:false,
   leftOpen: true,
   rightOpen: true,
+  css: false
 };
 
 const modalSlice = createSlice({
@@ -37,11 +38,14 @@ const modalSlice = createSlice({
     setPricingAndPlans:(state) => {
       state.pricingAndPlans = !state.pricingAndPlans;
     },
-    setLeftOpen: (state) => {
-      state.leftOpen = !state.leftOpen;
+    setLeftOpen: (state, actions) => {
+      state.leftOpen = actions.payload;
     },
-    setRightOpen: (state) => { 
-      state.rightOpen = !state.rightOpen;
+    setRightOpen: (state, actions) => { 
+      state.rightOpen = actions.payload;
+    },
+    setCss: (state, actions) => {
+      state.css = actions.payload;
     }
   },
 });
@@ -55,7 +59,8 @@ export const {
   setBadgesModal,
   setPricingAndPlans,
   setLeftOpen,
-  setRightOpen
+  setRightOpen,
+  setCss
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

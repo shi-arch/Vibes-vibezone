@@ -23,18 +23,30 @@ import {
   setPrivacyAndSecurityModal,
   setBadgesModal,
   setProfileModal,
-  setLeftOpen
+  setLeftOpen,
+  setRightOpen,
+  setCss
 } from "../../redux/features/modalSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { result } from "../commonComponents/commonComponents";
 
 const SideBar = () => {
   const modalSelector = useSelector(state => state.modalSlice);
-  const {ProfileImage, Name, Contact, username, Status, Gender, DOB} = useSelector(state => state.loginSlice.userProfile);  
-  const {leftOpen} = modalSelector;
-  
-  //redux-tool kit
+  const { ProfileImage, Name, Contact, username, Status, Gender, DOB } = useSelector(state => state.loginSlice.userProfile);
+  const { leftOpen } = modalSelector;
+  result.onchange = () => {
+    if (result.matches) {
+      dispatch(setCss(true))
+      dispatch(setLeftOpen(false));
+      //dispatch(setRightOpen(false));
+    } else {
+      dispatch(setCss(false))
+      dispatch(setLeftOpen(true));
+      //dispatch(setRightOpen(true));
+    }
+  };
   const dispatch = useDispatch();
-
   const handlePrivacySelection = () => {
     dispatch(setPrivacyAndSecurityModal());
   };
@@ -61,7 +73,7 @@ const SideBar = () => {
   };
 
   const onClickLeftOpen = () => {
-    dispatch(setLeftOpen());
+    dispatch(setLeftOpen(!leftOpen));
   };
 
   return (
@@ -177,14 +189,12 @@ const SideBar = () => {
 
       {!leftOpen && (
         <div
-          className={`sidebar-bg-container sidebar-bg-container-2 ${
-            leftOpen ? "" : "closed-2"
-          }`}
+          className={`sidebar-bg-container sidebar-bg-container-2 ${leftOpen ? "" : "closed-2"
+            }`}
         >
           <button
-            className={`close-left-side-bar-button ${
-              !leftOpen ? "update-left-open-button" : ""
-            }`}
+            className={`close-left-side-bar-button ${!leftOpen ? "update-left-open-button" : ""
+              }`}
             onClick={onClickLeftOpen}
           >
             <LeftArrowSvg />
@@ -194,5 +204,20 @@ const SideBar = () => {
     </>
   );
 };
+
+function useMediaQuery(query) {
+  const [matches, setMatches] = useState(false);
+  useEffect(() => {
+    const matchQueryList = window.matchMedia(query);
+    function handleChange(e) {
+      setMatches(e.matches);
+    }
+    matchQueryList.addEventListener("change", handleChange);
+    return () => {
+      matchQueryList.removeEventListener("change", handleChange);
+    };
+  }, [query]);
+  return matches;
+}
 
 export default SideBar;

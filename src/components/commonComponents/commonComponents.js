@@ -107,6 +107,8 @@ export const MultipleSelectChip = () => {
   );
 }
 
+export const result = window.matchMedia("(max-width: 500px)");
+
 export const Button = (props) => {
   return (
     <button

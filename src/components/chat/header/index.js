@@ -18,6 +18,7 @@ const Header = () => {
   const { token, allUsers, userDisconnected, allConnections } = useSelector(state => state.loginSlice)
   const { activeUserData } = useSelector(state => state.chatSlice)
   const { activeUsers } = useSelector(state => state.dashboardSlice)
+  const {css} = useSelector((state) => state.modalSlice);
   useEffect(() => {
     if (userDisconnected) {
       const findId = allConnections ? allConnections.find(o => {
@@ -50,9 +51,10 @@ const Header = () => {
     await CreatePeerConnection();
   }
   return (
+    <>
     <div className="header-container">
       {/* {Loader ? <Loader /> : null} */}
-      <div className="recent-user-con">
+      <div className={css ? "displayCss" : "recent-user-con"}>
         {activeUsers.length ? activeUsers.map((eachUser) => (
           <div key={eachUser._id} onClick={() => callUser(eachUser)} className="recent-user">
             <img
@@ -65,7 +67,7 @@ const Header = () => {
           </div>
         )) : ""}
       </div>
-      <div className="search-container">
+      <div className={css ? "displayCss" : "search-container"}>
         <Input
           type="search"
           css="search-input"
@@ -75,7 +77,7 @@ const Header = () => {
         />
         <div onClick={searchUser}><Search /></div>
       </div>
-      <div className="new-chats-con">
+      <div className={css ? "displayCss" : "new-chats-con"}>
         <p className="new-chat">New Chats</p>
         <Plus />
       </div>
@@ -89,6 +91,21 @@ const Header = () => {
         window.location.href = '/signup';
       }} class="reject">Logout</button>
     </div>
+    <div className={css ? "recent-user-con-mobile" : "displayCss"}>
+        {activeUsers.length ? activeUsers.map((eachUser) => (
+          <div key={eachUser._id} onClick={() => callUser(eachUser)} className="recent-user">
+            <img
+              src={eachUser.profileImage ? eachUser.profileImage : url4}
+              alt="recent-user-icon"
+              className="user-icon"
+            />
+            {eachUser.isActive ? <span className="green-dot"></span> : <span className="red-dot"></span>}
+            <span>{eachUser.username}</span>
+          </div>
+        )) : ""}
+    </div>
+    </>
+    
   );
 };
 

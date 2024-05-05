@@ -37,6 +37,7 @@ const ChatInterface = () => {
   const scrollbarTimeoutRef = useRef(null);
   const { _id } = useSelector(state => state.loginSlice.loginDetails);
   const dispatch = useDispatch();
+  const {css} = useSelector((state) => state.modalSlice);
 
   const toggleArrowSize = () => {
     dispatch(setRightOpen());
@@ -126,8 +127,8 @@ const ChatInterface = () => {
   }
 
   return (
-    <div className="chat-container">
-      <div className="chat-header">
+    <div className={css ? "chat-container-mobile" : "chat-container"}>
+      <div className={css ? "displayCss" : "chat-header"}>
         <div className="icon-username">
           <img src={url7} alt="chat-profile-icon" className="chat-icon" />
           <div className="user-time">
@@ -152,10 +153,10 @@ const ChatInterface = () => {
           </div>
         </div>
       </div>
-      <div className="arrow-container" onClick={toggleArrowSize}>
+      <div className={css ? "displayCss" : "arrow-container"} onClick={toggleArrowSize}>
         <ArrowLeft />
       </div>
-      <div className={`chat-container-2 ${showScrollbar ? 'show-scrollbar' : ''}`} ref={chatContainerRef}>
+      <div className={css ? "displayCss" : "chat-container-2"} ref={chatContainerRef}>
         <ChatsList />
       </div>
       <div className="send-msg-con-1">

@@ -5,9 +5,7 @@ import Friends from "../chatConnectionsPanel";
 import { useSelector } from "react-redux";
 
 const RightSideContainer = () => {
-  const modalSelector = useSelector((state) => state.modalSlice);
-  const { leftOpen } = modalSelector;
-
+  const {leftOpen, css} = useSelector((state) => state.modalSlice);
   return (
     <div
       className={`right-side-con ${
@@ -15,7 +13,7 @@ const RightSideContainer = () => {
       }`}
     >
       <Header />
-      <div className="bottom-con">
+      <div className={css ? "" : "bottom-con"}>
         <CallInterface />
         <ChatInterface />
         <Friends />

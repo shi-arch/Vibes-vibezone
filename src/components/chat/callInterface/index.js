@@ -6,7 +6,7 @@ import { hangUp, switchForScreenSharingStream } from "../../../app/test/utils/we
 import { setLocalCameraEnabled, setLocalMicrophoneEnabled, setHangUp } from "../../../redux/features/callSlice.js";
 const socket = io.connect(process.env.REACT_APP_BASEURL);
 import { CreatePeerConnection, callToOtherUser, getLocalStream } from "../../../app/test/utils/webRTC/webRTCHandler.js";
-
+let containerCss = "call-container";
 
 const CallInterface = () => {
 	const dispatch = useDispatch()
@@ -15,6 +15,7 @@ const CallInterface = () => {
 	const myVideo = useRef()
 	const userVideo = useRef()
 	const { activeUsers } = useSelector(state => state.dashboardSlice)
+	const {css} = useSelector(state => state.modalSlice);
 	const { localStream, callState, remoteStream, localCameraEnabled, localMicrophoneEnabled, hangUps } = useSelector((state) => state.callSlice);
 
 	useEffect(() => {
@@ -83,7 +84,7 @@ const CallInterface = () => {
 	};
 
 	return (
-		<div className="call-container">
+		<div className={css ? "" : "call-container"}>
 			<div className="images-con">
 				{
 					<video
@@ -117,7 +118,7 @@ const CallInterface = () => {
 				/> : ""}
 
 			</div>
-			<div className="call-controllers">
+			<div className={css ? "call-controllers-mobile" : "call-controllers"}>
 				<div className="calls">
 					<div onClick={handleMicButtonPressed}>
 						{mute ? <Mute disabled={true} /> : <Unmute />}

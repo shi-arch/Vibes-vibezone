@@ -24,6 +24,13 @@
   display: flex;
 }
 
+.recent-user-con-mobile{
+  display: flex;
+  margin: 10px 0px 15px 0px;
+  width: 93%;
+  overflow-x: scroll;
+}
+
 .recent-user {
   margin-right: 20px;
   position: relative;
@@ -125,7 +132,6 @@
   padding: 5px;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 50%;
-  margin-left: 20px;
   cursor: pointer;
 }
 
@@ -169,6 +175,12 @@
   margin-top: -18px;
 }
 
+.call-controllers-mobile {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
 .calls {
   display: flex;
   align-items: center;
@@ -208,6 +220,20 @@
   position: relative;
   height: 80vh;
   flex-grow: 1;
+}
+
+.chat-container-mobile {
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  margin-left: 20px;
+  width: 100%;
+  position: relative;
+  flex-grow: 1;
+}
+
+.displayCss{
+  display: none;
 }
 
 .right-con-sidebar-close {
@@ -399,6 +425,13 @@
   height: 80vh;
   overflow-y: scroll;
   transition: width 0.5s ease 0s;
+}
+
+.friends-container-mobile {
+  width: 100%;
+  overflow-y: scroll;
+  transition: width 0.5s ease 0s;
+  margin-bottom: 15px;
 }
 
 .friends-container::-webkit-scrollbar {
