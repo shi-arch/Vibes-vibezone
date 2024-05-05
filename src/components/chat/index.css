@@ -28,7 +28,6 @@
   display: flex;
   margin: 10px 0px 15px 0px;
   width: 93%;
-  overflow-x: scroll;
 }
 
 .recent-user {
