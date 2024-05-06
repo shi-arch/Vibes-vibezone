@@ -1,0 +1,21 @@
+
+.chat-list-new-bg-container{
+    background-color: #F9F9F9;
+}
+
+
+.chatListNew-scroll-container{
+    overflow-y: scroll;
+    height: 60vh;
+    padding: 8px;
+}
+
+.guest-container{
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0px 10px 16px;
+}
+
+.guest-head{
+    margin: 0px;
+    font-size: 18px;
+}

@@ -31,6 +31,7 @@ export const getLocalStream = async () => {
   const stream = await navigator.mediaDevices.getUserMedia(defaultConstrains)
   store.dispatch(setLocalStream(stream));
   store.dispatch(setCallState('CALL_AVAILABLE'));
+  return stream
 };
 
 export const CreatePeerConnection = async () => {
@@ -89,7 +90,7 @@ export const callToOtherUser = (calleeDetails) => {
   wss.sendPreOffer({
     callee: calleeDetails,
     caller: {
-      username: store.getState().dashboardSlice.username
+      username: store.getState().chatSlice.userName
     }
   });
 };
@@ -99,7 +100,7 @@ export const handlePreOffer = async (data) => {
   connectedUserSocketId = data.callerSocketId;
   // store.dispatch(setCallerUsername(data.callerUsername));
   // store.dispatch(setCallState('CALL_REQUESTED'));
-  await getLocalStream()
+  // await getLocalStream()
   await CreatePeerConnection();
   setTimeout(() => {
     wss.sendPreOfferAnswer({
@@ -241,9 +242,11 @@ const resetCallDataAfterHangUp = () => {
   resetCallData();
   store.dispatch(setHangUp(true));
   const localStream = store.getState().callSlice.localStream;
-  localStream.getTracks().forEach(function(track) {
-    track.stop();
-  });
+  // localStream.getTracks().forEach(function(track) {
+  //   track.stop();
+  // });
+  localStream.getVideoTracks()[0].enabled = true;
+  localStream.getAudioTracks()[0].enabled = true;
 };
 
 export const resetCallData = () => {

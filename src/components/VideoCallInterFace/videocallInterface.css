@@ -1,0 +1,36 @@
+.video-call-interface-bg-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 300px;
+  /* margin-left: 3rem; */
+}
+
+.video {
+  width: 40%;
+  width: 360px;
+  height: 240px;
+  width: 100%;
+  object-fit: contain;
+  border-radius: 5px;
+}
+
+.call-icons-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+
+.logo-float{
+  position: absolute;
+  bottom: 0;
+  right: 30px;
+}
+
+
+.video-img-container{
+  position: relative;
+}

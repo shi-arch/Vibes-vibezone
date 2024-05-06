@@ -1,8 +1,8 @@
 import socketClient from 'socket.io-client';
 import store from '../../../../redux/store';
-import { setActiveUsers, setInActiveUsers } from '../../../../redux/features/dashboardSlice';
+import { setActiveUsers, setCamOffUsers, setInActiveUsers } from '../../../../redux/features/dashboardSlice';
 import * as webRTCHandler from '../webRTC/webRTCHandler';
-import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected } from '../../../../redux/features/chatSlice';
+import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData } from '../../../../redux/features/chatSlice';
 import { getApi } from '../../../../response/api';
 const token = store.getState().loginSlice.token || ""
 
@@ -10,7 +10,8 @@ const SERVER = process.env.REACT_APP_BASEURL;
 const broadcastEventTypes = {
   ACTIVE_USERS: 'ACTIVE_USERS',
   GROUP_CALL_ROOMS: 'GROUP_CALL_ROOMS',
-  INACTIVE_USERS: 'INACTIVE_USERS'
+  INACTIVE_USERS: 'INACTIVE_USERS',
+  CAMERA_OFF: 'CAMERA_OFF'
 };
 
 let socket;
@@ -40,6 +41,8 @@ export const connectWithWebSocket = async () => {
 
   // listeners related with direct call
   socket.on('pre-offer', (data) => {
+    dispatch(setSelectedUserData({socketId: data.callerSocketId}))
+    dispatch(setCalleeUserName(data.callerUsername))
     webRTCHandler.handlePreOffer(data);
   });
 
@@ -79,7 +82,16 @@ export const connectWithWebSocket = async () => {
   socket.on("me", (id) => {
     dispatch(setMySocketId(id))
   })
-
+  socket.on("send-message", (data) => {
+    let arr = _.cloneDeep(store.getState().chatSlice.messagesArr)
+    let o = {message: data.msgObj.message, sender: false}
+    if(arr.length){
+      arr[arr.length] = o 
+    } else {
+      arr.push(o)
+    }    
+    dispatch(setMessages(arr))
+  })
 };
 
 export const registerNewUser = (username) => {
@@ -89,9 +101,43 @@ export const registerNewUser = (username) => {
   });
 };
 
+export const updateName = (username) => {
+  socket.emit('update-name', {name: username, socketId: socket.id});
+};
+
+export const sendMessage = (message) => {
+  let o = {
+    socketIds: {
+      mySocketId: socket.id,
+      userSocketId: store.getState().chatSlice.selectedUserData.socketId
+    },
+    msgObj: {
+      sender: true,
+      message: message
+    }
+  }
+  socket.emit('send-message', o);
+};
+
+export const userCamOff = (username) => {
+  if(username){
+    socket.emit('register-new-user', {
+      username: username,
+      socketId: socket.id,
+      cameraOff: true
+    });
+  } else {
+    socket.emit('register-new-user', {
+      socketId: socket.id,
+      cameraOff: true
+    });
+  }  
+};
+
 // emitting events to server related with direct call
 
 export const sendPreOffer = (data) => {
+  
   socket.emit('pre-offer', data);
 };
 
@@ -141,18 +187,11 @@ const handleBroadcastEvents = (data) => {
       const activeUsers = data.activeUsers.filter(activeUser => activeUser.socketId && (activeUser.socketId !== socket.id));
       store.dispatch(setActiveUsers(activeUsers));
       break;
-    // case broadcastEventTypes.INACTIVE_USERS:
-    //   const activeUsersData = store.getState().dashboardSlice.activeUsers
-    //   const inActiveUsersData = [...data.inActiveUsers]
-    //   for (let i = 0; i < inActiveUsersData.length; i++) {
-    //     const index = activeUsersData.findIndex(user => user.socketId === inActiveUsersData[i])
-    //     debugger
-    //     if(index !== -1){
-    //       activeUsersData[index].isActive = false
-    //     }        
-    //   }
-    //   store.dispatch(setActiveUsers(activeUsersData));
-    //   store.dispatch(setInActiveUsers(data.inActiveUsers));
+    case broadcastEventTypes.CAMERA_OFF:
+      if(data.camOffUsers && data.camOffUsers.length){
+        const camOffUsers = data.camOffUsers.filter(user => user.socketId && (user.socketId !== socket.id));
+        store.dispatch(setCamOffUsers(camOffUsers));
+      }
       break;
     // case broadcastEventTypes.GROUP_CALL_ROOMS:
     //   const groupCallRooms = data.groupCallRooms.filter(room => room.socketId !== socket.id);

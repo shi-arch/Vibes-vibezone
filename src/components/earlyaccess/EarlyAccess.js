@@ -1,7 +1,13 @@
 import { Box, Typography, Button } from "@mui/material";
 import "./EarlyAccess.css";
+import { registerNewUser } from "../../app/test/utils/wssConnection/wssConnection";
+import { useNavigate } from "react-router-dom";
+import { setUserName } from "../../redux/features/chatSlice";
+import { useDispatch } from "react-redux";
 
 const EarlyAccess = () => {
+  const router = useNavigate();
+  const dispatch = useDispatch();
   return (
     <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
       <Box
@@ -31,6 +37,13 @@ const EarlyAccess = () => {
             random video chats.
           </Typography>
           <Button
+            onClick={() => {
+              const user = "Guest + " + Math.random().toString().substr(2, 8)
+              registerNewUser(user)
+              dispatch(setUserName(user))
+              router("/video-chat");
+            }}
+            variant="contained" 
             sx={{
               backgroundColor: "#8f47ff",
               color: "#ffffff",

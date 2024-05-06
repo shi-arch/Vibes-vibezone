@@ -12,6 +12,8 @@ import Chip from '@mui/material/Chip';
 import { useDispatch, useSelector } from "react-redux";
 import { setUserSelectedTopics } from '../../redux/features/loginSlice';
 
+
+
 export const Loader = () => {
   return <div style={{position: 'absolute'}}>
     <CircularProgress />
@@ -21,6 +23,7 @@ export const Loader = () => {
 export const Input = (props) => {
   return (
     <input
+      id="msg"
       type={props.type}
       className={props.css}
       placeholder={props.placeholder}

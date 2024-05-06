@@ -1,0 +1,66 @@
+.header-new-bg-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.head-input {
+  height: 40px;
+  width: 278px;
+  width: 15%;
+  height: 57px;
+  border-radius: 22px;
+  padding:0px 10px;
+  background-color: #f9f9f9;
+  outline: none;
+  border: none;
+  font-weight: 600;
+}
+
+
+.key-words-input{
+    width: 30%;
+}
+
+
+
+.connect-button{
+width: 130px;
+  height: 57px;
+  flex-grow: 0;
+  margin: 0 0 0 49px;
+  padding: 20px 30px 24px;
+  border-radius: 25px;
+  background-color: #8f47ff;
+  border: none;
+  color: #FFF;
+}
+
+.disConnect-button{
+  width: 130px;
+    height: 57px;
+    flex-grow: 0;
+    margin: 0 0 0 -32px;
+    padding: 20px 30px 24px;
+    border-radius: 25px;
+    background-color: #EC4242;
+    border: none;
+    color: #FFF;
+  }
+
+.active-status-container{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.active-icon{
+    width: 18px;
+    height: 18px;
+    background-color: #54ef0a;
+    border-radius: 50%;
+}
+
+.active-para{
+    margin: 0px;
+}

@@ -5,7 +5,8 @@ const initialState = {
   activeUsers: [],
   groupCallRooms: [],
   availableUsers: [],
-  inActiveUsers: []
+  inActiveUsers: [],
+  camOffUsers: []
 };
 
 const dashboardSlice = createSlice({
@@ -17,6 +18,9 @@ const dashboardSlice = createSlice({
     },
     setActiveUsers: (state, actions) => {
       state.activeUsers = actions.payload;
+    },
+    setCamOffUsers: (state, actions) => {
+      state.camOffUsers = actions.payload;
     },
     setGroupCallRooms: (state, actions) => {      
       state.groupCallRooms = actions.payload;
@@ -30,6 +34,6 @@ const dashboardSlice = createSlice({
   },
 });
 
-export const {setActiveUsers, setInActiveUsers, setGroupCallRooms, setUserName, setAvailableUsers} = dashboardSlice.actions;
+export const {setActiveUsers, setCamOffUsers, setInActiveUsers, setGroupCallRooms, setUserName, setAvailableUsers} = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;
