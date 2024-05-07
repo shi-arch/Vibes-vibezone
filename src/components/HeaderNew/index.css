@@ -10,22 +10,19 @@
   width: 15%;
   height: 57px;
   border-radius: 22px;
-  padding:0px 10px;
+  padding: 0px 10px;
   background-color: #f9f9f9;
   outline: none;
   border: none;
   font-weight: 600;
 }
 
-
-.key-words-input{
-    width: 30%;
+.key-words-input {
+  width: 30%;
 }
 
-
-
-.connect-button{
-width: 130px;
+.connect-button {
+  width: 130px;
   height: 57px;
   flex-grow: 0;
   margin: 0 0 0 49px;
@@ -33,34 +30,106 @@ width: 130px;
   border-radius: 25px;
   background-color: #8f47ff;
   border: none;
-  color: #FFF;
+  color: #fff;
 }
 
-.disConnect-button{
+.disConnect-button {
   width: 130px;
-    height: 57px;
-    flex-grow: 0;
-    margin: 0 0 0 -32px;
-    padding: 20px 30px 24px;
-    border-radius: 25px;
-    background-color: #EC4242;
-    border: none;
-    color: #FFF;
+  height: 57px;
+  flex-grow: 0;
+  margin: 0 0 0 -32px;
+  padding: 20px 30px 24px;
+  border-radius: 25px;
+  background-color: #ec4242;
+  border: none;
+  color: #fff;
+}
+
+@media screen and (max-width: 431px) {
+  .call-buttons {
+    max-width: 100px;
+    height: 30px;
+    padding: 2px 2px;
+    font-size: 12px;
+    margin: 0px;
   }
 
-.active-status-container{
+
+
+  .logo-lg-visible{
+    display: none;
+  }
+
+
+  .header-active-users{
+    display: none;
+  }
+  
+
+}
+
+.active-status-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.active-para {
+  margin: 0px;
+
+}
+
+.active-icon {
+  width: 18px;
+  height: 18px;
+  background-color: #54ef0a;
+  border-radius: 50%;
+}
+
+@media screen and (max-width:431px) {
+  .active-icon{
+    width: 14px;
+    height: 14px;
+  }
+  .active-status-container{
+    flex-direction: column;
+    
+  }
+  .active-para{
+    writing-mode: vertical-rl
+  }
+  .active-users-bg-container{
     display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-self: flex-start;
+  }
+
+  .sm-lg-icons-rotate{
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 8px;
+    transform: rotate(90deg);
+    margin-top: 10px;
+    max-width: 20px;
+  }
+
+  .active-status-container{
+    gap: 2px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .active-para{
+    font-size: 18px;
+  }
+
+  .head-input{
+    height: 34px;
+
+  }
 }
 
-.active-icon{
-    width: 18px;
-    height: 18px;
-    background-color: #54ef0a;
-    border-radius: 50%;
-}
 
-.active-para{
-    margin: 0px;
-}
+
+

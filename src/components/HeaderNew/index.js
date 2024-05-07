@@ -10,6 +10,7 @@ import { setHangUp, setStartCall } from "../../redux/features/callSlice";
 import { callToOtherUser, hangUp } from "../../app/test/utils/webRTC/webRTCHandler";
 import { setUserName, setCalleeUserName, setSelectedUserData } from "../../redux/features/chatSlice";
 import { updateName } from "../../app/test/utils/wssConnection/wssConnection";
+import ActiveUsers from "../ActiveUsers";
 
 const HeaderNew = () => {
   const dispatch = useDispatch();
@@ -50,16 +51,18 @@ const HeaderNew = () => {
   }
   return (
     <div className="header-new-bg-container">
-      <LogoSvg />
+      <div className="logo-lg-visible">
+        <LogoSvg />
+      </div>
 
       <input
         type="text"
         className="head-input"
         placeholder="Enter Name"
-        onChange={ e=>dispatch(setUserName(e.target.value))}
-        onBlur={e=>{
-          const {value} = e.target          
-          updateName(value)
+        onChange={(e) => dispatch(setUserName(e.target.value))}
+        onBlur={(e) => {
+          const { value } = e.target;
+          updateName(value);
         }}
         value={userName}
       />
@@ -68,27 +71,36 @@ const HeaderNew = () => {
         type="text"
         className="head-input key-words-input"
         placeholder="Key Words"
-        onChange={ e=>setKeyWords(e.target.value)}
+        onChange={(e) => setKeyWords(e.target.value)}
         value={keyWords}
       />
 
-      <button className="connect-button" onClick={startRandomCall}>Connect</button>
-      <button className="disConnect-button" onClick={endCall}>Disconnect</button>
+      <button className="connect-button call-buttons" onClick={startRandomCall}>
+        Connect
+      </button>
+      <button className="disConnect-button call-buttons" onClick={endCall}>
+        Disconnect
+      </button>
 
-      <div>
+      <div className="header-active-users">
+        <ActiveUsers activeUsers={activeUsers} camOffUsers={camOffUsers} />
+      </div>
+      {/* <div className="active-users-bg-container">
         <div className="active-status-container">
           <div className="active-icon"></div>
           <p className="active-para">{activeUsers.length}</p>
         </div>
         <div className="active-status-container">
           <VideoIcon />
-          <p className="active-para">{activeUsers.length - camOffUsers.length}</p>
+          <p className="active-para">
+            {activeUsers.length - camOffUsers.length}
+          </p>
         </div>
         <div className="active-status-container">
           <EyeOffline />
           <p className="active-para">{camOffUsers.length}</p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

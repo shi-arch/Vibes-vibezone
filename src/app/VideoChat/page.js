@@ -14,6 +14,9 @@ import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocalCameraEnabled } from '../../redux/features/callSlice';
 import { userCamOff } from '../test/utils/wssConnection/wssConnection';
+import { EndCall, LogoSvg, Mute, Video } from '../../components/svgComponents';
+import CallIcons from '../../components/CallIcons';
+import ActiveUsers from '../../components/ActiveUsers';
 
 const VideoChat = () => {
   const dispatch = useDispatch()
@@ -45,10 +48,20 @@ const VideoChat = () => {
     <div className="video-chat-bg-container">
       <SideBarNew />
       <div className="video-right-container">
+        <LogoSvg />
         <HeaderNew />
-        <div className='video-chat-new-container'>
-          <VideoCallInterFace />
-          <ChatInterfaceNew />
+        <div className="sm-lg-icons-container">
+          <div className="video-chat-new-container">
+            <VideoCallInterFace />
+            <ChatInterfaceNew />
+          </div>
+
+          <div>
+            <ActiveUsers />
+            <div className="call-icons-container-sm-lg">
+              <CallIcons />
+            </div>
+          </div>
         </div>
       </div>
     </div>

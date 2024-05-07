@@ -1,6 +1,7 @@
 
 .chat-list-new-bg-container{
     background-color: #F9F9F9;
+    flex-grow: 1;
 }
 
 
@@ -8,6 +9,20 @@
     overflow-y: scroll;
     height: 60vh;
     padding: 8px;
+}
+
+
+@media screen and (max-width:431px) {
+    .chatListNew-scroll-container{
+        height: 40px;
+        flex-grow: 1;
+    }
+
+    .chat-list-new-bg-container{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
 }
 
 .guest-container{
