@@ -48,7 +48,10 @@ const VideoChat = () => {
     <div className="video-chat-bg-container">
       <SideBarNew />
       <div className="video-right-container">
-        <LogoSvg />
+        <div className='logo-sm-lg-container'>
+          <LogoSvg />
+        </div>
+
         <HeaderNew />
         <div className="sm-lg-icons-container">
           <div className="video-chat-new-container">
@@ -57,7 +60,10 @@ const VideoChat = () => {
           </div>
 
           <div>
-            <ActiveUsers />
+            <div className="active-sm-lg-container">
+              <ActiveUsers />
+            </div>
+
             <div className="call-icons-container-sm-lg">
               <CallIcons />
             </div>
