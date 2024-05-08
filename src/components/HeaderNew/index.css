@@ -132,4 +132,11 @@
 
 
 
+@media screen and (min-width:431px) and ( max-width:769px) {
+    .active-users-bg-container {
+        display: none;
+      }
+}
+
+
 

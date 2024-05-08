@@ -1,0 +1,18 @@
+
+
+
+@media screen and (max-width:426px) {
+    .partners-img {
+        width: calc(100%);
+       
+    }
+    .partners-text{
+        font-size: 20px;
+
+    }
+
+    .partner-container{
+        padding: 0;
+        margin-top: 14px;
+    }
+}

@@ -58,7 +58,6 @@ const VideoChat = () => {
             <VideoCallInterFace />
             <ChatInterfaceNew />
           </div>
-
           <div>
             <div className="active-sm-lg-container">
               <ActiveUsers />

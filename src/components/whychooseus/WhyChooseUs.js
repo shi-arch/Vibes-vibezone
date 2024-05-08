@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Typography, IconButton, Card } from "@mui/material";
 
+
 const WhyChooseUs = () => {
   return (
     <Box
@@ -18,9 +19,21 @@ const WhyChooseUs = () => {
           marginBottom: "50px",
           justifyContent: "center",
           alignItems: "center",
+          "@media (max-width:426px)": {
+            flexDirection: "column",
+          },
         }}
       >
-        <Box sx={{ padding: "30px", width: "40%" }}>
+        <Box
+          sx={{
+            padding: "30px",
+            width: "40%",
+            "@media (max-width:426px)": {
+              width: "100%",
+              order:2
+            },
+          }}
+        >
           <Box
             component="img"
             src="https://res.cloudinary.com/dhczdaczx/image/upload/v1710911014/zxhcte2czeuqw71v2atk.png"
@@ -28,7 +41,17 @@ const WhyChooseUs = () => {
             width="300px"
           />
         </Box>
-        <Box sx={{ padding: "10px", width: "60%", width: "60%" }}>
+        <Box
+          sx={{
+            padding: "10px",
+            width: "60%",
+            width: "60%",
+            "@media (max-width:426px)": {
+              width: "100%",
+              order:1
+            },
+          }}
+        >
           <Typography
             variant="h6"
             sx={{
@@ -36,6 +59,10 @@ const WhyChooseUs = () => {
               fontWeight: "bold",
               marginBottom: "20px",
               color: "#2b2b2b",
+              "@media (max-width:426px)": {
+                fontSize: "24px",
+                marginBottom: "14px",
+              },
             }}
           >
             Why Choose Us?
@@ -57,7 +84,7 @@ const WhyChooseUs = () => {
           </Typography>
           <Box sx={{ marginTop: "20px" }}>
             <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-            <Box
+              <Box
                 sx={{
                   backgroundColor: "#E4D4FD",
                   borderRadius: "50%",
@@ -66,6 +93,9 @@ const WhyChooseUs = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  "@media (max-width:426px)": {
+                    width: "100px",
+                  },
                 }}
               >
                 <Box
@@ -109,6 +139,9 @@ const WhyChooseUs = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  "@media (max-width:426px)": {
+                    width: "100px",
+                  },
                 }}
               >
                 <Box
@@ -117,11 +150,15 @@ const WhyChooseUs = () => {
                   alt="Badge of Honor"
                   sx={{ width: "20px" }}
                 />
-                </Box>
+              </Box>
               <Box sx={{ ml: 2 }}>
                 <Typography
                   variant="p"
-                  sx={{ fontWeight: "bold", fontFamily: "Poppins, Arial", fontSize:'14px'}}
+                  sx={{
+                    fontWeight: "bold",
+                    fontFamily: "Poppins, Arial",
+                    fontSize: "14px",
+                  }}
                 >
                   Badge of Honor
                 </Typography>
@@ -139,7 +176,7 @@ const WhyChooseUs = () => {
               </Box>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-            <Box
+              <Box
                 sx={{
                   backgroundColor: "#E4D4FD",
                   borderRadius: "50%",
@@ -148,6 +185,9 @@ const WhyChooseUs = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  "@media (max-width:426px)": {
+                    width: "100px",
+                  },
                 }}
               >
                 <Box
@@ -157,27 +197,31 @@ const WhyChooseUs = () => {
                   sx={{ width: "20px" }}
                 />
               </Box>
-                <Box sx={{ ml: 2 }}>
-                  <Typography
-                    variant="p"
-                    sx={{ fontWeight: "bold", fontFamily: "Poppins, Arial", fontSize:'14px'}}
-                  >
-                    Purposeful Connectivity
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      fontSize: "12px",
-                      fontFamily: "Poppins, Arial",
-                      color: "rgba(37, 37, 37, 0.7)",
-                    }}
-                  >
-                    Enroll now and experience comprehensive learning with exams
-                    included, paving the way for your success and mastery of the
-                    subject.
-                  </Typography>
-                </Box>
+              <Box sx={{ ml: 2 }}>
+                <Typography
+                  variant="p"
+                  sx={{
+                    fontWeight: "bold",
+                    fontFamily: "Poppins, Arial",
+                    fontSize: "14px",
+                  }}
+                >
+                  Purposeful Connectivity
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontSize: "12px",
+                    fontFamily: "Poppins, Arial",
+                    color: "rgba(37, 37, 37, 0.7)",
+                  }}
+                >
+                  Enroll now and experience comprehensive learning with exams
+                  included, paving the way for your success and mastery of the
+                  subject.
+                </Typography>
               </Box>
+            </Box>
           </Box>
         </Box>
       </Card>
