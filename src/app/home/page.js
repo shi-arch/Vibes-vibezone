@@ -54,7 +54,7 @@ const LandingPage = () => {
                   dispatch(setLoginDetails(res.user));
                   dispatch(setToken(res.token));
                   dispatch(setVerifyOtp(true))
-                  router("/chat");
+                  router("/video-chat");
                 }}
                 style={{ marginTop: '-36px', float: 'right' }}
                 sx={{
