@@ -1,22 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  earlyBardAccessModal: false,
   preferenceModal: false,
   profileModal: false,
   notificationModal: false,
   privacyAndSecurityModal: false,
   billingModal: false,
   badgesModal: false,
-  pricingAndPlans:false,
+  pricingAndPlans: false,
   leftOpen: true,
   rightOpen: true,
-  css: false
+  css: false,
 };
 
 const modalSlice = createSlice({
   name: "modalSlice",
   initialState: initialState,
   reducers: {
+    setEarlyAccessBardModal: (state) => {
+      state.earlyBardAccessModal = !state.earlyBardAccessModal;
+    },
     setPreferenceModal: (state) => {
       state.preferenceModal = !state.preferenceModal;
     },
@@ -35,22 +39,23 @@ const modalSlice = createSlice({
     setBadgesModal: (state) => {
       state.badgesModal = !state.badgesModal;
     },
-    setPricingAndPlans:(state) => {
+    setPricingAndPlans: (state) => {
       state.pricingAndPlans = !state.pricingAndPlans;
     },
     setLeftOpen: (state, actions) => {
       state.leftOpen = actions.payload;
     },
-    setRightOpen: (state, actions) => { 
+    setRightOpen: (state, actions) => {
       state.rightOpen = actions.payload;
     },
     setCss: (state, actions) => {
       state.css = actions.payload;
-    }
+    },
   },
 });
 
 export const {
+  setEarlyAccessBardModal,
   setPreferenceModal,
   setProfileModal,
   setNotificationModal,
@@ -60,7 +65,7 @@ export const {
   setPricingAndPlans,
   setLeftOpen,
   setRightOpen,
-  setCss
+  setCss,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;
