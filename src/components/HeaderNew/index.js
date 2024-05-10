@@ -3,58 +3,69 @@ import _ from 'lodash'
 import Swal from 'sweetalert2'
 import { EyeOffline, LogoSvg, VideoIcon } from "../svgComponents";
 import { Input } from "../commonComponents/commonComponents";
-
 import "./index.css"
 import { useSelector, useDispatch } from "react-redux";
-import { setHangUp, setStartCall } from "../../redux/features/callSlice";
-import { callToOtherUser, hangUp } from "../../app/test/utils/webRTC/webRTCHandler";
-import { setUserName, setCalleeUserName, setSelectedUserData } from "../../redux/features/chatSlice";
-import { updateName } from "../../app/test/utils/wssConnection/wssConnection";
+import { setHangUp, setStartCall, setButtonLabel, setIsActive } from "../../redux/features/callSlice";
+import { callToOtherUser, hangUp, hangUpAutomateCall } from "../../app/test/utils/webRTC/webRTCHandler";
+import { setUserName, setCalleeUserName, setSelectedUserData, setLoader } from "../../redux/features/chatSlice";
+import { handleMeOnlineOffline, updateName } from "../../app/test/utils/wssConnection/wssConnection";
 import ActiveUsers from "../ActiveUsers";
 
 const HeaderNew = () => {
   const dispatch = useDispatch();
   const { userName } = useSelector(state => state.chatSlice)
-  const [keyWords,setKeyWords] = useState("")
-  const { callState } = useSelector((state) => state.callSlice);
+  const [keyWords, setKeyWords] = useState("")
+  const { callState, buttonLabel, isActive } = useSelector((state) => state.callSlice);
   const { activeUsers, camOffUsers } = useSelector(state => state.dashboardSlice)
+
   const startRandomCall = async () => {
-    const activeUserData = _.cloneDeep(activeUsers) 
-    if(activeUserData.length){
+    const activeUserData = _.cloneDeep(activeUsers)
+    if (activeUserData.length) {
       const filterData = activeUserData.filter(user => user.isActive === true)
-      if(filterData.length){
+      if (filterData.length) {
         dispatch(setStartCall(true))
         const calleeUserData = filterData[Math.floor(Math.random() * (filterData.length - 1))]
         dispatch(setCalleeUserName(calleeUserData.username))
         dispatch(setSelectedUserData(calleeUserData))
         callToOtherUser(calleeUserData)
+        dispatch(setLoader(false))
       } else {
         Swal.fire({
           title: "sorry...",
           text: "No active users found!",
           icon: "error"
+        }).then(() => {
+          dispatch(setLoader(true))
         });
-      }      
-    } else {
+      }
+    } else {      
       Swal.fire({
         title: "sorry...",
         text: "No active users found!",
         icon: "error"
-      });
-    }    
+      }).then(() => {
+        dispatch(setLoader(true))
+      })
+    }
   }
-  const endCall = async () => {
+  const skipCall = async () => {
     if (callState == `CALL_IN_PROGRESS`) {
-      await hangUp();
-			dispatch(setHangUp(true))
-		}
+      hangUpAutomateCall()
+    }
+    // if (callState == `CALL_IN_PROGRESS`) {
+    //   dispatch(setIsActive(false))
+    //   dispatch(setButtonLabel('Connect'))
+    //   await hangUp();
+    //   dispatch(setHangUp(true))
+    //   handleMeOnlineOffline(false)
+    // }
   }
   return (
     <div className="header-new-bg-container">
       <div className="logo-lg-visible">
         <LogoSvg />
       </div>
-
+      {isActive ? <span className="green-dots"></span> : <span className="red-dots"></span>}
       <input
         type="text"
         className="head-input"
@@ -75,32 +86,15 @@ const HeaderNew = () => {
         value={keyWords}
       />
 
-      <button className="connect-button call-buttons" onClick={startRandomCall}>
-        Connect
-      </button>
-      <button className="disConnect-button call-buttons" onClick={endCall}>
-        Disconnect
+      <button className={buttonLabel == 'Connect' ? "connect-button call-buttons" : 'disConnect-button call-buttons'} onClick={() => {
+        buttonLabel == 'Connect' ? startRandomCall() : skipCall()
+      }}>
+        {buttonLabel}
       </button>
 
       <div className="header-active-users">
-        <ActiveUsers activeUsers={activeUsers} camOffUsers={camOffUsers} />
+        <ActiveUsers />
       </div>
-      {/* <div className="active-users-bg-container">
-        <div className="active-status-container">
-          <div className="active-icon"></div>
-          <p className="active-para">{activeUsers.length}</p>
-        </div>
-        <div className="active-status-container">
-          <VideoIcon />
-          <p className="active-para">
-            {activeUsers.length - camOffUsers.length}
-          </p>
-        </div>
-        <div className="active-status-container">
-          <EyeOffline />
-          <p className="active-para">{camOffUsers.length}</p>
-        </div>
-      </div> */}
     </div>
   );
 };

@@ -22,7 +22,7 @@ const VideoChat = () => {
   const dispatch = useDispatch()
   const { userName } = useSelector(state => state.chatSlice)
   const { localStream, callState, remoteStream, localCameraEnabled, localMicrophoneEnabled, hangUps } = useSelector((state) => state.callSlice);
-  useEffect(async () => {    
+  useEffect(async () => {
     const streamObj = await getLocalStream()
     await CreatePeerConnection();
     Swal.fire({
@@ -34,14 +34,13 @@ const VideoChat = () => {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, enable it!'
     }).then(function (res) {
-      const cameraEnabled = localCameraEnabled;
-      if (res && res.dismiss == 'cancel') {        
-        streamObj.getVideoTracks()[0].enabled = false;
-        dispatch(setLocalCameraEnabled(!cameraEnabled))
-        userCamOff(userName)
-      } else {
-        userCamOff()
+      let enableCam = true
+      if(res.dismiss == 'cancel'){
+        enableCam = false
       }
+      streamObj.getVideoTracks()[0].enabled = enableCam;
+      dispatch(setLocalCameraEnabled(enableCam))
+      userCamOff(userName, enableCam)
     })
   }, [])
   return (

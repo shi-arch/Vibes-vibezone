@@ -1,7 +1,9 @@
 import store from '../../../../redux/store';
-import { setLocalStream, setCallState, setCallingDialogVisible, setCallerUsername, setCallRejected, setRemoteStream, setScreenSharingActive, setMessage, setHangUp } from '../../../../redux/features/callSlice';
+import { setLocalStream, setCallState, setCallingDialogVisible, setCallerUsername, setCallRejected, setRemoteStream, setScreenSharingActive, setMessage, setHangUp, setStartCall, setButtonLabel } from '../../../../redux/features/callSlice';
 import * as wss from '../wssConnection/wssConnection';
 import { useSelector } from 'react-redux';
+import { setCalleeUserData, setCalleeUserName, setLoader } from '../../../../redux/features/chatSlice';
+import Swal from 'sweetalert2';
 
 const preOfferAnswers = {
   CALL_ACCEPTED: 'CALL_ACCEPTED',
@@ -83,10 +85,10 @@ export const CreatePeerConnection = async () => {
 
 };
 
-export const callToOtherUser = (calleeDetails) => {  
+export const callToOtherUser = (calleeDetails) => {
+  
   connectedUserSocketId = calleeDetails.socketId;
   store.dispatch(setCallState('CALL_IN_PROGRESS'));
-  //store.dispatch(setCallingDialogVisible(true));
   wss.sendPreOffer({
     callee: calleeDetails,
     caller: {
@@ -97,19 +99,15 @@ export const callToOtherUser = (calleeDetails) => {
 
 export const handlePreOffer = async (data) => {
   if (checkIfCallIsPossible()) {
-  connectedUserSocketId = data.callerSocketId;
-  // store.dispatch(setCallerUsername(data.callerUsername));
-  // store.dispatch(setCallState('CALL_REQUESTED'));
-  // await getLocalStream()
-  await CreatePeerConnection();
-  setTimeout(() => {
-    wss.sendPreOfferAnswer({
-      callerSocketId: connectedUserSocketId,
-      answer: preOfferAnswers.CALL_ACCEPTED
-    });
-    store.dispatch(setCallState('CALL_IN_PROGRESS'));
-  }, 1000);
-  // shivram.......
+    connectedUserSocketId = data.callerSocketId;
+    await CreatePeerConnection();
+    setTimeout(() => {
+      wss.sendPreOfferAnswer({
+        callerSocketId: connectedUserSocketId,
+        answer: preOfferAnswers.CALL_ACCEPTED
+      });
+      store.dispatch(setCallState('CALL_IN_PROGRESS'));
+    }, 1000);
   } else {
     wss.sendPreOfferAnswer({
       callerSocketId: data.callerSocketId,
@@ -118,7 +116,7 @@ export const handlePreOffer = async (data) => {
   }
 };
 
-export const acceptIncomingCallRequest = async () => {  
+export const acceptIncomingCallRequest = async () => {
   await getLocalStream()
   await CreatePeerConnection();
   wss.sendPreOfferAnswer({
@@ -137,9 +135,7 @@ export const rejectIncomingCallRequest = () => {
 };
 
 export const handlePreOfferAnswer = (data) => {
-  
   store.dispatch(setCallingDialogVisible(false));
-
   if (data.answer === preOfferAnswers.CALL_ACCEPTED) {
     sendOffer();
   } else {
@@ -158,7 +154,6 @@ export const handlePreOfferAnswer = (data) => {
 };
 
 const sendOffer = async () => {
-  
   const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
   wss.sendWebRTCOffer({
@@ -168,7 +163,6 @@ const sendOffer = async () => {
 };
 
 export const handleOffer = async (data) => {
-
   await peerConnection.setRemoteDescription(data.offer);
   const answer = await peerConnection.createAnswer();
   await peerConnection.setLocalDescription(answer);
@@ -180,7 +174,7 @@ export const handleOffer = async (data) => {
 
 export const handleAnswer = async (data) => {
   store.dispatch(setCallState('CALL_IN_PROGRESS'));
-  
+  store.dispatch(setButtonLabel('Skip'))
   await peerConnection.setRemoteDescription(data.answer);
 };
 
@@ -192,8 +186,8 @@ export const handleCandidate = async (data) => {
     console.error('error occured when trying to add received ice candidate', err);
   }
 };
-
 export const checkIfCallIsPossible = () => {
+  
   if (store.getState().callSlice.callState !== 'CALL_AVAILABLE') {
     return false;
   } else {
@@ -224,9 +218,66 @@ export const switchForScreenSharingStream = async () => {
   }
 };
 
-export const handleUserHangedUp = () => {
-  resetCallDataAfterHangUp();
+export const handleUserHangedUp = async () => { 
+  await wss.getActiveUsers()
+  await resetCallDataAfterHangUp();
+  
+  setTimeout(async () => {
+    await hangUpAutomateCall(true)
+  }, 5000)  
 };
+
+export const hangUpAutomateCall = async (time) => {
+  const dispatch = store.dispatch
+  let { activeUsers } = store.getState().dashboardSlice
+  const { isActive } = store.getState().callSlice
+  const { calleeUserData, selectedUserData } = store.getState().chatSlice
+  await hangUp();
+  dispatch(setHangUp(true));
+  const activeUserData = _.cloneDeep(activeUsers);
+  if (activeUserData.length) {
+    const filterData = activeUserData.filter(
+      (user) => {
+        if (selectedUserData) {
+          if (user.isActive === true && user.socketId !== selectedUserData.socketId) {
+            return user
+          }
+        } else {
+          if (user.isActive === true) {
+            return user
+          }
+        }
+      }
+    );
+    dispatch(setStartCall(true));
+    if (filterData.length) {
+      const calleeUserDetails =
+        filterData[Math.floor(Math.random() * (filterData.length - 1))];
+      dispatch(setCalleeUserName(calleeUserDetails.username));
+      dispatch(setCalleeUserData(calleeUserDetails));
+      callToOtherUser(calleeUserDetails);
+      await CreatePeerConnection();
+    } else {
+      
+      Swal.fire({
+        title: "sorry...",
+        text: "No active users found!",
+        icon: "error",
+      }).then(() => {
+        
+        dispatch(setLoader(true))
+      })
+    }
+  } else {
+    
+    Swal.fire({
+      title: "sorry...",
+      text: "No active users found!",
+      icon: "error",
+    });
+  }
+
+}
 
 export const hangUp = async () => {
   wss.sendUserHangedUp({
@@ -235,23 +286,23 @@ export const hangUp = async () => {
   resetCallDataAfterHangUp();
 };
 
-const resetCallDataAfterHangUp = () => {
+const resetCallDataAfterHangUp = async () => {
   peerConnection.close();
   peerConnection = null;
-  //CreatePeerConnection();
+  CreatePeerConnection();
   resetCallData();
   store.dispatch(setHangUp(true));
   const localStream = store.getState().callSlice.localStream;
   // localStream.getTracks().forEach(function(track) {
   //   track.stop();
   // });
-  localStream.getVideoTracks()[0].enabled = true;
-  localStream.getAudioTracks()[0].enabled = true;
+  // localStream.getVideoTracks()[0].enabled = true;
+  // localStream.getAudioTracks()[0].enabled = true;
 };
 
 export const resetCallData = () => {
   connectedUserSocketId = null;
-  store.dispatch(setCallState('CALL_AVAILABLE'));  
+  store.dispatch(setCallState('CALL_AVAILABLE'));
 };
 
 export const sendMessageUsingDataChannel = (message) => {

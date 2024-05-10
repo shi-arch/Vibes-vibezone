@@ -14,8 +14,8 @@ import { setUserSelectedTopics } from '../../redux/features/loginSlice';
 
 
 
-export const Loader = () => {
-  return <div style={{position: 'absolute'}}>
+export const Loader = (style) => {
+  return <div style={style.style}>
     <CircularProgress />
   </div>
 }

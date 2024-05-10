@@ -19,8 +19,6 @@ const ChatsListNew = () => {
     }
   };
 
-  const arr = [{sender: true, message: 'hi'}, {sender: false, message: 'hello'}, {sender: true, message: 'hi'}, {sender: false, message: 'hello'}]
-
   return (
     <div className="chat-list-new-bg-container">
       <div className="guest-container">

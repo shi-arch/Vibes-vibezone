@@ -2,8 +2,9 @@ import socketClient from 'socket.io-client';
 import store from '../../../../redux/store';
 import { setActiveUsers, setCamOffUsers, setInActiveUsers } from '../../../../redux/features/dashboardSlice';
 import * as webRTCHandler from '../webRTC/webRTCHandler';
-import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData } from '../../../../redux/features/chatSlice';
+import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData, setIsTyping } from '../../../../redux/features/chatSlice';
 import { getApi } from '../../../../response/api';
+import { setButtonLabel, setIsActive } from '../../../../redux/features/callSlice';
 const token = store.getState().loginSlice.token || ""
 
 const SERVER = process.env.REACT_APP_BASEURL;
@@ -41,23 +42,30 @@ export const connectWithWebSocket = async () => {
 
   // listeners related with direct call
   socket.on('pre-offer', (data) => {
+    dispatch(setButtonLabel('Skip'))
     dispatch(setSelectedUserData({socketId: data.callerSocketId}))
     dispatch(setCalleeUserName(data.callerUsername))
     webRTCHandler.handlePreOffer(data);
   });
 
   socket.on('pre-offer-answer', (data) => {
-
     webRTCHandler.handlePreOfferAnswer(data);
   });
 
   socket.on('webRTC-offer', (data) => {
-
     webRTCHandler.handleOffer(data);
   });
 
-  socket.on('webRTC-answer', (data) => {
+  socket.on('get-active-users', (data) => {
+    const obj = {
+      event:broadcastEventTypes.ACTIVE_USERS,
+      activeUsers: data
+    }   
+     
+    handleBroadcastEvents(obj)   
+  });
 
+  socket.on('webRTC-answer', (data) => {
     webRTCHandler.handleAnswer(data);
   });
 
@@ -65,13 +73,20 @@ export const connectWithWebSocket = async () => {
     webRTCHandler.handleCandidate(data);
   });
 
+  // socket.on('set-me-offline-and-online', (data) => {
+  //   //webRTCHandler.handleMeOnlineOffline(data);
+  // });
+
   socket.on('user-hanged-up', () => {
     webRTCHandler.handleUserHangedUp();
   });
   socket.on("typing", (name) => {
+    dispatch(setIsTyping(true))
     dispatch(setUserName(name))
   });
   socket.on("stop typing", () => {
+    debugger
+    dispatch(setIsTyping(false))
     dispatch(setUserName(""))
   });
   socket.on("sendMessage", (msg) => {
@@ -101,6 +116,15 @@ export const registerNewUser = (username) => {
   });
 };
 
+export const getActiveUsers = async () => {
+  socket.emit('get-active-users', socket.id);
+};
+
+export const handleMeOnlineOffline = async (isOnline) => {
+  
+  socket.emit('set-me-offline-and-online', {id: socket.id, isOnline: isOnline});
+};
+
 export const updateName = (username) => {
   socket.emit('update-name', {name: username, socketId: socket.id});
 };
@@ -118,26 +142,29 @@ export const sendMessage = (message) => {
   }
   socket.emit('send-message', o);
 };
-
-export const userCamOff = (username) => {
-  if(username){
-    socket.emit('register-new-user', {
-      username: username,
-      socketId: socket.id,
-      cameraOff: true
-    });
-  } else {
-    socket.emit('register-new-user', {
-      socketId: socket.id,
-      cameraOff: true
-    });
-  }  
+export const typingMethod = () => {
+  socket.emit('typing', {
+    id: store.getState().chatSlice.selectedUserData.socketId
+  });
 };
+export const stopTypingMethod = () => {
+  socket.emit('stop typing', {
+    id: store.getState().chatSlice.selectedUserData.socketId
+  });
+};
+export const userCamOff = (username, enableCam) => {
+  socket.emit('user-cam-off', {
+    username: username,
+    socketId: socket.id,
+    enableCam: enableCam
+  });
+};
+
+
 
 // emitting events to server related with direct call
 
-export const sendPreOffer = (data) => {
-  
+export const sendPreOffer = (data) => {  
   socket.emit('pre-offer', data);
 };
 
@@ -151,7 +178,6 @@ export const sendWebRTCOffer = (data) => {
 };
 
 export const sendWebRTCAnswer = (data) => {
-
   socket.emit('webRTC-answer', data);
 };
 
@@ -184,7 +210,11 @@ export const groupCallClosedByHost = (data) => {
 const handleBroadcastEvents = (data) => {
   switch (data.event) {
     case broadcastEventTypes.ACTIVE_USERS:
-      const activeUsers = data.activeUsers.filter(activeUser => activeUser.socketId && (activeUser.socketId !== socket.id));
+      const meActive = data.activeUsers.find(activeUser => activeUser.socketId === socket.id);
+      if(meActive){
+        store.dispatch(setIsActive(meActive.isActive))
+      }      
+      const activeUsers = data.activeUsers.filter(activeUser => activeUser.socketId !== socket.id);
       store.dispatch(setActiveUsers(activeUsers));
       break;
     case broadcastEventTypes.CAMERA_OFF:

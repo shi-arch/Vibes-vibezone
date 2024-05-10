@@ -6,19 +6,24 @@ import { Input } from "../commonComponents/commonComponents";
 import ChatsListNew from "../chat/ChatListNew";
 import _, { cloneDeep } from 'lodash'
 import "./index.css";
-import { sendMessage } from "../../app/test/utils/wssConnection/wssConnection";
+import { sendMessage, stopTypingMethod, typingMethod } from "../../app/test/utils/wssConnection/wssConnection";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessages } from "../../redux/features/chatSlice";
+import Swal from "sweetalert2";
 
 
 
 const ChatInterfaceNew = () => {
   const dispatch = useDispatch()
   const [message, setMessage] = useState("")
-  const { messagesArr } = useSelector(state => state.chatSlice)
+  const { callState } = useSelector(state => state.callSlice)
+  const { calleeUserName, isTyping, messagesArr } = useSelector(state => state.chatSlice)
 
   var input = document.getElementById("msg");
-  
+  const sendMsgFun = (val) => {    
+    setMessage(val)
+    typingMethod()
+  }
 
   useEffect(() => {
     if(input){
@@ -34,16 +39,25 @@ const ChatInterfaceNew = () => {
   }, [input])
 
   const sendMsg = () => {
-    let arr = _.cloneDeep(messagesArr)
-    let o = { message: message, sender: true }
-    if (arr.length) {
-      arr[arr.length] = o
+    if(message.trim() && callState == "CALL_IN_PROGRESS") {
+      stopTypingMethod()
+      let arr = _.cloneDeep(messagesArr)
+      let o = { message: message, sender: true }
+      if (arr.length) {
+        arr[arr.length] = o
+      } else {
+        arr.push(o)
+      }
+      dispatch(setMessages(arr))
+      sendMessage(message);
+      setMessage("")
     } else {
-      arr.push(o)
-    }
-    dispatch(setMessages(arr))
-    sendMessage(message);
-    setMessage("")
+      Swal.fire({
+        title: "sorry...",
+        text: "You can't send message without calling or message should not be empty!",
+        icon: "error",
+      })
+    }    
   }
   return (
     <div className="chatInterFaceNew-bg-container">
@@ -59,13 +73,13 @@ const ChatInterfaceNew = () => {
               css="input-send-message"
               placeholder="Type a message"
               value={message}
-              onChange={setMessage}
+              onChange={sendMsgFun}
             />
           </div>
-          <div id="sendButton" onClick={() => sendMsg()}>
-            <Send />
-          </div>
-          {/* <span>{userName ? userName + " Typing..." : ""}</span> */}
+          <button style={{border: 'none', background: 'transparent'}} onClick={() => sendMsg()}><Send /></button>
+          {/* {
+            isTyping ? <span>{calleeUserName ? calleeUserName + " Typing..." : " Typing..."}</span> : ""
+          }           */}
         </div>
       </div>
     </div>

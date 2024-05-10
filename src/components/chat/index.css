@@ -55,7 +55,25 @@
   justify-content: center;
   align-items: center;
 }
+.green-dots {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: green;
+  bottom: 0px; 
+  right: 0;
+  text-align: right;
+}
 
+.red-dots {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: red;
+  bottom: 0px; 
+  right: 0;
+  text-align: right;
+}
 .green-dot {
   position: absolute;
   width: 13px;
