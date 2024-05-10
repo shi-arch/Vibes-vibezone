@@ -4,7 +4,7 @@ import { Box, Typography, IconButton, Card} from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import './Review.css';
-import ReviewCarousel from '../ReviewCarousel';
+//import ReviewCarousel from '../ReviewCarousel';
 
 const data = [
   {
@@ -149,7 +149,7 @@ const Review = () => {
             </Box>
           ))}
         </Box> */}
-        <ReviewCarousel />
+        {/* <ReviewCarousel /> */}
       </Box>
       {/* <Box
         sx={{
