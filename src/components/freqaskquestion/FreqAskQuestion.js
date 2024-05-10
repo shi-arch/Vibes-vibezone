@@ -52,26 +52,78 @@ export default function FaqSection() {
   ];
 
   return (
-    <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', marginBottom:'40px'}}>
-        <Box>
-        <Typography variant='h6' sx={{fontSize:'30px', color:'#2b2b2b', marginBottom:'20px', fontWeight:'bold'}}>Frequently Asked Questions</Typography>
-        <Box sx={{width:600}}>
-            {faqs.map((faq, index) => (
-                <Accordion key={index}>
-                <AccordionSummary
-                    expandIcon={<ArrowDropDownIcon sx={{ fontWeight: 'bold', color: 'black' }}/>}
-                    aria-controls="panel1a-content"
-                    id={`panel1a-header-${index}`}
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: "40px",
+      }}
+    >
+      <Box>
+        <Typography
+          variant="h6"
+          sx={{
+            fontSize: "30px",
+            color: "#2b2b2b",
+            marginBottom: "20px",
+            fontWeight: "bold",
+            textAlign:"center",
+            "@media (max-width:426px)": {
+              fontSize:"24px",
+              marginTop:"24px"
+            },
+          }}
+        >
+          Faq
+        </Typography>
+        <Box
+          sx={{
+            width: 600,
+            "@media (max-width:426px)": {
+              width: "100%",
+            },
+          }}
+        >
+          {faqs.map((faq, index) => (
+            <Accordion key={index}>
+              <AccordionSummary
+                expandIcon={
+                  <ArrowDropDownIcon
+                    sx={{ fontWeight: "bold", color: "black" }}
+                  />
+                }
+                aria-controls="panel1a-content"
+                id={`panel1a-header-${index}`}
+              >
+                <Typography
+                  variant="p"
+                  sx={{
+                    fontSize: "13px",
+                    color: "#2b2b2b",
+                    fontWeight: "bold",
+                    fontFamily: "Poppins, Arial",
+                  }}
                 >
-                    <Typography variant='p'sx={{fontSize:'13px', color:'#2b2b2b',fontWeight:'bold', fontFamily:'Poppins, Arial'}}>{faq.question}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Typography variant='p'sx={{fontSize:'13px', color:'#2b2b2b', fontFamily:'Poppins, Arial'}}>{faq.answer}</Typography>
-                </AccordionDetails>
-                </Accordion>
-            ))}
+                  {faq.question}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography
+                  variant="p"
+                  sx={{
+                    fontSize: "13px",
+                    color: "#2b2b2b",
+                    fontFamily: "Poppins, Arial",
+                  }}
+                >
+                  {faq.answer}
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          ))}
         </Box>
-        </Box>
+      </Box>
     </Box>
   );
 }

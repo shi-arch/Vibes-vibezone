@@ -61,3 +61,8 @@
     }
 }
 
+@media screen and (max-width:769px) {
+    .active-sm-lg-container {
+            display: flex;
+        }
+}

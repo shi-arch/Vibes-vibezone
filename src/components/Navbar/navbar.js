@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Hamburger from "../../assets/images/Hamburger.svg"
+
 import "./navbar.css";
 
 const Navbar = () => {
@@ -8,25 +10,32 @@ const Navbar = () => {
       <div className="VibeZone">
         Vibe<span className="text-style-1">Zone</span>
       </div>
-      <div className="LinksContainer">
-        <Link to="/home" className="nav-link">
-          <span>Home</span>
-        </Link>
-        <Link to="/about" className="nav-link">
-          <span>About</span>
-        </Link>
-        <Link to="/early-access" className="nav-link">
-          <span>Early Access</span>
-        </Link>
-        <Link to="/pricing" className="nav-link">
-          <span>Pricing</span>
-        </Link>
-        <Link to="/contact" className="nav-link">
-          <span>Contact</span>
-        </Link>
-        <Link to="/signup" className="nav-link">
-          <button style={{cursor: "pointer"}} className="sign-up">Sign Up</button>
-        </Link>
+      <div className="cont">
+        <div className="LinksContainer">
+          <Link to="/home" className="nav-link sm-lg-nav-links">
+            <span>Home</span>
+          </Link>
+          <Link to="/about" className="nav-link sm-lg-nav-links">
+            <span>About</span>
+          </Link>
+          <Link to="/early-access" className="nav-link sm-lg-nav-links">
+            <span>Early Access</span>
+          </Link>
+          <Link to="/pricing" className="nav-link sm-lg-nav-links">
+            <span>Pricing</span>
+          </Link>
+          <Link to="/contact" className="nav-link sm-lg-nav-links">
+            <span>Contact</span>
+          </Link>
+          <Link to="/signup" className="nav-link">
+            <button style={{ cursor: "pointer" }} className="sign-up">
+              Sign Up
+            </button>
+          </Link>
+        </div>
+        <button className="hamburger-button"> 
+          <img src={Hamburger} alt="Hamburger-icon" className="hamburger-icon" />
+        </button>
       </div>
     </nav>
   );
