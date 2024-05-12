@@ -5,7 +5,7 @@ import { EyeOffline, LogoSvg, VideoIcon } from "../svgComponents";
 import { Input, Loader } from "../commonComponents/commonComponents";
 import "./index.css"
 import { useSelector, useDispatch } from "react-redux";
-import { setHangUp, setDisableButton, setStartCall, setButtonLabel, setIsActive, setCallState } from "../../redux/features/callSlice";
+import { setHangUp, setDisableButton, setStartCall, setButtonLabel, setIsActive, setCallState, setTriggerCall } from "../../redux/features/callSlice";
 import { callToOtherUser, hangUp, hangUpAutomateCall } from "../../app/test/utils/webRTC/webRTCHandler";
 import { setUserName, setCalleeUserName, setSelectedUserData, setLoader } from "../../redux/features/chatSlice";
 import { getActiveUser, handleMeOnlineOffline, setMeActive, startCall, updateName } from "../../app/test/utils/wssConnection/wssConnection";
@@ -20,6 +20,7 @@ const HeaderNew = () => {
   useEffect(() => {
     if(userToCall && triggerCall) {      
       callToOtherUser(userToCall)
+      dispatch(setTriggerCall(false))
     }    
   }, [userToCall, triggerCall])
 
@@ -40,7 +41,7 @@ const HeaderNew = () => {
   }
   const skipCall = async () => {
     if (callState == `CALL_IN_PROGRESS`) {
-      hangUpAutomateCall()
+      hangUpAutomateCall()      
     }
   }
   return (
