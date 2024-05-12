@@ -86,6 +86,7 @@ export const connectWithWebSocket = async () => {
 
   socket.on('user-hanged-up', () => {
     dispatch(setUserToCall(""))
+    dispatch(setMessages([]))
     webRTCHandler.handleUserHangedUp();
   });
   socket.on("typing", (name) => {
@@ -175,7 +176,7 @@ export const sendMessage = (message) => {
   let o = {
     socketIds: {
       mySocketId: socket.id,
-      userSocketId: store.getState().chatSlice.selectedUserData.socketId
+      userSocketId: store.getState().callSlice.userToCall.socketId
     },
     msgObj: {
       sender: true,

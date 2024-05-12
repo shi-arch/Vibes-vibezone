@@ -7,7 +7,7 @@ import "./index.css"
 import { useSelector, useDispatch } from "react-redux";
 import { setHangUp, setDisableButton, setStartCall, setButtonLabel, setIsActive, setCallState, setTriggerCall } from "../../redux/features/callSlice";
 import { callToOtherUser, hangUp, hangUpAutomateCall } from "../../app/test/utils/webRTC/webRTCHandler";
-import { setUserName, setCalleeUserName, setSelectedUserData, setLoader } from "../../redux/features/chatSlice";
+import { setUserName, setCalleeUserName, setSelectedUserData, setLoader, setMessages } from "../../redux/features/chatSlice";
 import { getActiveUser, handleMeOnlineOffline, setMeActive, startCall, updateName } from "../../app/test/utils/wssConnection/wssConnection";
 import ActiveUsers from "../ActiveUsers";
 
@@ -41,6 +41,7 @@ const HeaderNew = () => {
   }
   const skipCall = async () => {
     if (callState == `CALL_IN_PROGRESS`) {
+      dispatch(setMessages([]))
       hangUpAutomateCall()      
     }
   }

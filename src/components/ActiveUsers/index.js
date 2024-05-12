@@ -6,9 +6,6 @@ import { useSelector } from 'react-redux';
 const ActiveUsers = () => {
   const { totalUsers } = useSelector(state => state.loginSlice)
   const { enableCam, disableCam, totalUserCount, activeUsersCount } = totalUsers
-  useEffect(() => {
-    console.log(totalUsers,'uuuuuuuuuuuuuu')
-  }, [totalUsers])
   return (
     <div className="active-users-bg-container">
       <div className="active-status-container">
@@ -30,7 +27,7 @@ const ActiveUsers = () => {
         <p className="active-para">{disableCam}</p>
       </div>
       <div className="active-status-container">
-        <div className="active-icon"></div>
+        <div style={{background: '#8f47ff'}} className="active-icon"></div>
         <p className="active-para">{activeUsersCount}</p>
       </div>
     </div>

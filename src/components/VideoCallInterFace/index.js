@@ -48,15 +48,6 @@ const VideoCallInterFace = () => {
     buttonLabel,
   } = useSelector((state) => state.callSlice);
 
-  // useEffect(() => {
-  //   if (callState == 'CALL_AVAILABLE' && userAvailable) {
-  //     
-  //     dispatch(setCalleeUserName(userAvailable.username))
-  //     dispatch(setSelectedUserData(userAvailable))
-  //     callToOtherUser(userAvailable)
-  //   }
-  // }, [userAvailable]);
-
   useEffect(() => {
     if (localStream) {
       const localVideo = myVideo.current;
@@ -86,7 +77,7 @@ const VideoCallInterFace = () => {
             id="myVideo"
             style={
               localStream
-                ? { width: "100%", height: "auto" }
+                ? { width: "100%", height: "100%" }
                 : { width: 0, height: 0, visibility: "hidden" }
             }
             ref={myVideo}
@@ -112,7 +103,7 @@ const VideoCallInterFace = () => {
         {remoteStream && callState === "CALL_IN_PROGRESS" && (
           <video
             id="userVideo"
-            style={{ width: "100%", height: "auto" }}
+            style={{ width: "100%", height: "100%" }}
             ref={userVideo}
             autoPlay
             playsInline

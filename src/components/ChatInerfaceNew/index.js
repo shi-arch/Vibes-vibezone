@@ -20,26 +20,26 @@ const ChatInterfaceNew = () => {
   const { calleeUserName, isTyping, messagesArr } = useSelector(state => state.chatSlice)
 
   var input = document.getElementById("msg");
-  const sendMsgFun = (val) => {    
+  const sendMsgFun = (val) => {
     setMessage(val)
     typingMethod()
   }
 
   useEffect(() => {
-    if(input){
+    if (input) {
       input.addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
           event.preventDefault();
-          if(message){
-            document.getElementById("sendButton").click();
-          }          
+          if (message) {
+            document.getElementById("msg").onclick = sendMsg();
+          }
         }
       });
     }
   }, [input])
 
   const sendMsg = () => {
-    if(message.trim() && callState == "CALL_IN_PROGRESS") {
+    if (message.trim() && callState == "CALL_IN_PROGRESS") {
       stopTypingMethod()
       let arr = _.cloneDeep(messagesArr)
       let o = { message: message, sender: true }
@@ -57,7 +57,7 @@ const ChatInterfaceNew = () => {
         text: "You can't send message without calling or message should not be empty!",
         icon: "error",
       })
-    }    
+    }
   }
   return (
     <div className="chatInterFaceNew-bg-container">
@@ -76,7 +76,7 @@ const ChatInterfaceNew = () => {
               onChange={sendMsgFun}
             />
           </div>
-          <button style={{border: 'none', background: 'transparent'}} onClick={() => sendMsg()}><Send /></button>
+          <button id="sendMessage" style={{ border: 'none', background: 'transparent' }} onClick={() => sendMsg()}><Send /></button>
           {/* {
             isTyping ? <span>{calleeUserName ? calleeUserName + " Typing..." : " Typing..."}</span> : ""
           }           */}
