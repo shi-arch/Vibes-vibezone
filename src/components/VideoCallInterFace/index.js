@@ -1,6 +1,6 @@
 import React from "react";
 import Swal from "sweetalert2";
-import {Loader} from '../../components/commonComponents/commonComponents'
+import { Loader } from '../../components/commonComponents/commonComponents'
 import "./videocallInterface.css";
 import {
   EndCall,
@@ -28,8 +28,7 @@ import {
   callToOtherUser,
   getLocalStream,
 } from "../../app/test/utils/webRTC/webRTCHandler.js";
-import { setCalleeUserName, setLoader } from "../../redux/features/chatSlice.js";
-import { userCamOff } from "../../app/test/utils/wssConnection/wssConnection.js";
+import { setCalleeUserName, setLoader, setSelectedUserData } from "../../redux/features/chatSlice.js";
 import CallIcons from "../CallIcons/index.js";
 
 const VideoCallInterFace = () => {
@@ -37,7 +36,7 @@ const VideoCallInterFace = () => {
   const [mute, setMute] = useState(false);
   const myVideo = useRef();
   const userVideo = useRef();
-  const { userName, loader } = useSelector((state) => state.chatSlice);
+  const { userName, loader, userAvailable } = useSelector((state) => state.chatSlice);
   const { activeUsers } = useSelector((state) => state.dashboardSlice);
   const {
     localStream,
@@ -49,15 +48,14 @@ const VideoCallInterFace = () => {
     buttonLabel,
   } = useSelector((state) => state.callSlice);
 
-  useEffect(() => {
-    if (callState == 'CALL_AVAILABLE' && loader) {          
-      const isActive = activeUsers.find(ele => ele.isActive)
-      if(isActive){
-        dispatch(setLoader(false))
-        hangUpAutomateCall()
-      }      
-    }
-  }, [activeUsers]);
+  // useEffect(() => {
+  //   if (callState == 'CALL_AVAILABLE' && userAvailable) {
+  //     
+  //     dispatch(setCalleeUserName(userAvailable.username))
+  //     dispatch(setSelectedUserData(userAvailable))
+  //     callToOtherUser(userAvailable)
+  //   }
+  // }, [userAvailable]);
 
   useEffect(() => {
     if (localStream) {
@@ -118,10 +116,10 @@ const VideoCallInterFace = () => {
             ref={userVideo}
             autoPlay
             playsInline
-            //muted
+          //muted
           />
-        )}    
-        {loader ? <Loader style={{position: 'absolute', left: '125px', top: '104px'}} /> : null}   
+        )}
+        {loader ? <Loader style={{ position: 'absolute', left: '125px', top: '104px' }} /> : null}
         {!remoteStream ? (
           <>
             <img
@@ -138,7 +136,7 @@ const VideoCallInterFace = () => {
         )}
       </div>
       <div className="sm-lg-icon-video-call-container">
-        <CallIcons/>
+        <CallIcons />
       </div>
 
       {/* <div className="call-icons-container">

@@ -2,9 +2,10 @@ import socketClient from 'socket.io-client';
 import store from '../../../../redux/store';
 import { setActiveUsers, setCamOffUsers, setInActiveUsers } from '../../../../redux/features/dashboardSlice';
 import * as webRTCHandler from '../webRTC/webRTCHandler';
-import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData, setIsTyping } from '../../../../redux/features/chatSlice';
+import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData, setIsTyping, setUserAvailable } from '../../../../redux/features/chatSlice';
 import { getApi } from '../../../../response/api';
-import { setButtonLabel, setIsActive } from '../../../../redux/features/callSlice';
+import { setButtonLabel, setDisableButton, setIsActive, setTriggerCall, setUserToCall } from '../../../../redux/features/callSlice';
+import { setTotalUsers } from '../../../../redux/features/loginSlice';
 const token = store.getState().loginSlice.token || ""
 
 const SERVER = process.env.REACT_APP_BASEURL;
@@ -37,8 +38,12 @@ export const connectWithWebSocket = async () => {
   });
 
   socket.on('broadcast', (data) => {
-    handleBroadcastEvents(data);
+    handleBroadcastEvents(data);    
   });
+
+  socket.on('new-caller-found', (calleeUserData) => {
+    dispatch(setSelectedUserData(calleeUserData))
+  })
 
   // listeners related with direct call
   socket.on('pre-offer', (data) => {
@@ -53,6 +58,7 @@ export const connectWithWebSocket = async () => {
   });
 
   socket.on('webRTC-offer', (data) => {
+    
     webRTCHandler.handleOffer(data);
   });
 
@@ -66,6 +72,7 @@ export const connectWithWebSocket = async () => {
   });
 
   socket.on('webRTC-answer', (data) => {
+    
     webRTCHandler.handleAnswer(data);
   });
 
@@ -78,14 +85,23 @@ export const connectWithWebSocket = async () => {
   // });
 
   socket.on('user-hanged-up', () => {
+    dispatch(setUserToCall(""))
     webRTCHandler.handleUserHangedUp();
   });
   socket.on("typing", (name) => {
     dispatch(setIsTyping(true))
     dispatch(setUserName(name))
   });
+  socket.on("get-active-user-test", (user) => {
+    let userData = user
+    if(user.findActiveUser){
+      userData = user.findActiveUser
+    } else {
+      dispatch(setTriggerCall(true))
+    } 
+    dispatch(setUserToCall(userData))
+  });  
   socket.on("stop typing", () => {
-    debugger
     dispatch(setIsTyping(false))
     dispatch(setUserName(""))
   });
@@ -93,6 +109,9 @@ export const connectWithWebSocket = async () => {
     setUpdateMessage(msg)
     //setUpdateMessage(msg)
   });
+  socket.on("isUser-available", (data) => {
+    dispatch(setUserAvailable(data))
+  });  
   socket.emit("setup", store.getState().loginSlice.loginDetails._id);
   socket.on("me", (id) => {
     dispatch(setMySocketId(id))
@@ -107,17 +126,40 @@ export const connectWithWebSocket = async () => {
     }    
     dispatch(setMessages(arr))
   })
+  socket.on("get-active-user", (user) => {
+    dispatch(setUserToCall(user))
+  })  
 };
 
-export const registerNewUser = (username) => {
-  socket.emit('register-new-user', {
+export const registerNewUser = (username, enableCam) => {
+  
+  socket.emit('register-new-user-test', {
     username: username,
-    socketId: socket.id
+    socketId: socket.id,
+    enableCam: enableCam,
+    isActive: false
   });
 };
 
-export const getActiveUsers = async () => {
-  socket.emit('get-active-users', socket.id);
+export const getActiverUser = () => {
+  socket.emit('get-active-user');
+};
+
+export const startCall = () => {  
+  const myObj = {
+    username: store.getState().chatSlice.userName,
+    calleeUserSocketId: store.getState().callSlice.userToCall.socketId,
+  }
+  
+  socket.emit('start-random-call', myObj);
+};
+
+export const getAvailableUser = async () => {
+  socket.emit('isUser-available');
+};
+
+export const getActiveUser = async (flag) => {
+  socket.emit('get-active-user-test', {flag: flag, prevUser: store.getState().callSlice.userToCall});
 };
 
 export const handleMeOnlineOffline = async (isOnline) => {
@@ -152,20 +194,14 @@ export const stopTypingMethod = () => {
     id: store.getState().chatSlice.selectedUserData.socketId
   });
 };
-export const userCamOff = (username, enableCam) => {
-  socket.emit('user-cam-off', {
-    username: username,
-    socketId: socket.id,
-    enableCam: enableCam
-  });
-};
-
-
 
 // emitting events to server related with direct call
 
 export const sendPreOffer = (data) => {  
   socket.emit('pre-offer', data);
+};
+export const turnConnectedCuserInActive = (data) => {  
+  socket.emit('inactive-connected-users');
 };
 
 export const sendPreOfferAnswer = (data) => {
@@ -173,11 +209,12 @@ export const sendPreOfferAnswer = (data) => {
 };
 
 export const sendWebRTCOffer = (data) => {
-
+  
   socket.emit('webRTC-offer', data);
 };
 
 export const sendWebRTCAnswer = (data) => {
+  store.dispatch(setDisableButton(false))
   socket.emit('webRTC-answer', data);
 };
 
@@ -209,19 +246,8 @@ export const groupCallClosedByHost = (data) => {
 
 const handleBroadcastEvents = (data) => {
   switch (data.event) {
-    case broadcastEventTypes.ACTIVE_USERS:
-      const meActive = data.activeUsers.find(activeUser => activeUser.socketId === socket.id);
-      if(meActive){
-        store.dispatch(setIsActive(meActive.isActive))
-      }      
-      const activeUsers = data.activeUsers.filter(activeUser => activeUser.socketId !== socket.id);
-      store.dispatch(setActiveUsers(activeUsers));
-      break;
-    case broadcastEventTypes.CAMERA_OFF:
-      if(data.camOffUsers && data.camOffUsers.length){
-        const camOffUsers = data.camOffUsers.filter(user => user.socketId && (user.socketId !== socket.id));
-        store.dispatch(setCamOffUsers(camOffUsers));
-      }
+    case 'REGISTER_NEW_USER':
+      store.dispatch(setTotalUsers(data.totalUsers));
       break;
     // case broadcastEventTypes.GROUP_CALL_ROOMS:
     //   const groupCallRooms = data.groupCallRooms.filter(room => room.socketId !== socket.id);

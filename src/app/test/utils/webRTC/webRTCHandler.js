@@ -1,5 +1,5 @@
 import store from '../../../../redux/store';
-import { setLocalStream, setCallState, setCallingDialogVisible, setCallerUsername, setCallRejected, setRemoteStream, setScreenSharingActive, setMessage, setHangUp, setStartCall, setButtonLabel } from '../../../../redux/features/callSlice';
+import { setLocalStream, setCallState, setCallingDialogVisible, setCallerUsername, setCallRejected, setRemoteStream, setScreenSharingActive, setMessage, setHangUp, setStartCall, setButtonLabel, setUserToCall, setDisableButton } from '../../../../redux/features/callSlice';
 import * as wss from '../wssConnection/wssConnection';
 import { useSelector } from 'react-redux';
 import { setCalleeUserData, setCalleeUserName, setLoader } from '../../../../redux/features/chatSlice';
@@ -85,8 +85,7 @@ export const CreatePeerConnection = async () => {
 
 };
 
-export const callToOtherUser = (calleeDetails) => {
-  
+export const callToOtherUser = (calleeDetails) => {  
   connectedUserSocketId = calleeDetails.socketId;
   store.dispatch(setCallState('CALL_IN_PROGRESS'));
   wss.sendPreOffer({
@@ -97,17 +96,16 @@ export const callToOtherUser = (calleeDetails) => {
   });
 };
 
-export const handlePreOffer = async (data) => {
+export const handlePreOffer = async (data) => {  
   if (checkIfCallIsPossible()) {
+    
     connectedUserSocketId = data.callerSocketId;
     await CreatePeerConnection();
-    setTimeout(() => {
-      wss.sendPreOfferAnswer({
-        callerSocketId: connectedUserSocketId,
-        answer: preOfferAnswers.CALL_ACCEPTED
-      });
-      store.dispatch(setCallState('CALL_IN_PROGRESS'));
-    }, 1000);
+    wss.sendPreOfferAnswer({
+      callerSocketId: connectedUserSocketId,
+      answer: preOfferAnswers.CALL_ACCEPTED
+    });
+    store.dispatch(setCallState('CALL_IN_PROGRESS'));
   } else {
     wss.sendPreOfferAnswer({
       callerSocketId: data.callerSocketId,
@@ -135,6 +133,7 @@ export const rejectIncomingCallRequest = () => {
 };
 
 export const handlePreOfferAnswer = (data) => {
+  
   store.dispatch(setCallingDialogVisible(false));
   if (data.answer === preOfferAnswers.CALL_ACCEPTED) {
     sendOffer();
@@ -154,6 +153,7 @@ export const handlePreOfferAnswer = (data) => {
 };
 
 const sendOffer = async () => {
+  
   const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
   wss.sendWebRTCOffer({
@@ -162,7 +162,7 @@ const sendOffer = async () => {
   });
 };
 
-export const handleOffer = async (data) => {
+export const handleOffer = async (data) => {  
   await peerConnection.setRemoteDescription(data.offer);
   const answer = await peerConnection.createAnswer();
   await peerConnection.setLocalDescription(answer);
@@ -172,9 +172,11 @@ export const handleOffer = async (data) => {
   });
 };
 
-export const handleAnswer = async (data) => {
+export const handleAnswer = async (data) => {  
   store.dispatch(setCallState('CALL_IN_PROGRESS'));
   store.dispatch(setButtonLabel('Skip'))
+  store.dispatch(setDisableButton(false))
+  wss.turnConnectedCuserInActive()
   await peerConnection.setRemoteDescription(data.answer);
 };
 
@@ -186,8 +188,7 @@ export const handleCandidate = async (data) => {
     console.error('error occured when trying to add received ice candidate', err);
   }
 };
-export const checkIfCallIsPossible = () => {
-  
+export const checkIfCallIsPossible = () => {  
   if (store.getState().callSlice.callState !== 'CALL_AVAILABLE') {
     return false;
   } else {
@@ -219,64 +220,16 @@ export const switchForScreenSharingStream = async () => {
 };
 
 export const handleUserHangedUp = async () => { 
-  await wss.getActiveUsers()
   await resetCallDataAfterHangUp();
-  
-  setTimeout(async () => {
-    await hangUpAutomateCall(true)
-  }, 5000)  
 };
 
 export const hangUpAutomateCall = async (time) => {
   const dispatch = store.dispatch
-  let { activeUsers } = store.getState().dashboardSlice
-  const { isActive } = store.getState().callSlice
-  const { calleeUserData, selectedUserData } = store.getState().chatSlice
   await hangUp();
   dispatch(setHangUp(true));
-  const activeUserData = _.cloneDeep(activeUsers);
-  if (activeUserData.length) {
-    const filterData = activeUserData.filter(
-      (user) => {
-        if (selectedUserData) {
-          if (user.isActive === true && user.socketId !== selectedUserData.socketId) {
-            return user
-          }
-        } else {
-          if (user.isActive === true) {
-            return user
-          }
-        }
-      }
-    );
-    dispatch(setStartCall(true));
-    if (filterData.length) {
-      const calleeUserDetails =
-        filterData[Math.floor(Math.random() * (filterData.length - 1))];
-      dispatch(setCalleeUserName(calleeUserDetails.username));
-      dispatch(setCalleeUserData(calleeUserDetails));
-      callToOtherUser(calleeUserDetails);
-      await CreatePeerConnection();
-    } else {
-      
-      Swal.fire({
-        title: "sorry...",
-        text: "No active users found!",
-        icon: "error",
-      }).then(() => {
-        
-        dispatch(setLoader(true))
-      })
-    }
-  } else {
-    
-    Swal.fire({
-      title: "sorry...",
-      text: "No active users found!",
-      icon: "error",
-    });
-  }
-
+  wss.getActiveUser('skip')
+  dispatch(setLoader(true))
+  dispatch(setUserToCall(""))
 }
 
 export const hangUp = async () => {

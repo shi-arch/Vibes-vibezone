@@ -51,7 +51,7 @@ const EarlyAccess = () => {
           <Button
             onClick={() => {
               const user = "Guest + " + Math.random().toString().substr(2, 8);
-              registerNewUser(user);
+              console.log(user, 'user logging in');
               dispatch(setUserName(user));
               router("/video-chat");
             }}

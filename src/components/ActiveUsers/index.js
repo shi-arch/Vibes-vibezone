@@ -4,57 +4,35 @@ import _ from 'lodash';
 import { useSelector } from 'react-redux';
 
 const ActiveUsers = () => {
-  const { activeUsers, camOffUsers } = useSelector(state => state.dashboardSlice)
-  const [camOnUsers, setCamOnUsers] = useState([])
-  const [camOffUsersArr, setCamOffUsersArr] = useState([])
-  const [activeUser, setActiveUser] = useState([])
+  const { totalUsers } = useSelector(state => state.loginSlice)
+  const { enableCam, disableCam, totalUserCount, activeUsersCount } = totalUsers
   useEffect(() => {
-    if (camOffUsers.length) {
-      const arr = _.cloneDeep(camOffUsers)
-      let arr1 = []
-      let arr2 = []
-      let arr3 = []
-      for (let i = 0; i < arr.length; i++) {
-        let o = arr[i]
-        if(o.isActive){
-          arr3.push(o)
-        }
-        if (o.camOff) {
-          arr1.push(o)
-        } else {
-          arr2.push(o)
-        }
-      }
-      setActiveUser(arr3)
-      setCamOffUsersArr(arr1)
-      setCamOnUsers(arr2)
-    }
-  }, [camOffUsers])
+    console.log(totalUsers,'uuuuuuuuuuuuuu')
+  }, [totalUsers])
   return (
     <div className="active-users-bg-container">
       <div className="active-status-container">
         <div className="active-icon"></div>
-        <p className="active-para">{activeUser.length}</p>
+        <p className="active-para">{totalUserCount}</p>
       </div>
       <div className="active-status-container">
-
         <span className="sm-lg-icons-rotate">
           <VideoIcon />
         </span>
-
         <p className="active-para">
-          {camOnUsers.length}
+          {enableCam}
         </p>
       </div>
       <div className="active-status-container">
         <span className="sm-lg-icons-rotate">
           <EyeOffline />
         </span>
-        <p className="active-para">{camOffUsersArr.length}</p>
+        <p className="active-para">{disableCam}</p>
       </div>
-      {/* <span style={{ padding: '10px' }} className="green-dots">
-        <span style={{ color: 'white' }}>{activeUsers.length}</span>
-      </span> */}
+      <div className="active-status-container">
+        <div className="active-icon"></div>
+        <p className="active-para">{activeUsersCount}</p>
+      </div>
     </div>
   );
 };

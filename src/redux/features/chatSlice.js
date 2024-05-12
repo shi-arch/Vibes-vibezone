@@ -13,7 +13,8 @@ const initialState = {
   socketConnected: false,
   loader: false,
   calleeUserData: "",
-  isTyping: false
+  isTyping: false,
+  userAvailable: ""
 };
 
 const chatSlice = createSlice({
@@ -61,10 +62,13 @@ const chatSlice = createSlice({
     },
     setIsTyping: (state, actions) => {
       state.isTyping = actions.payload;
+    },
+    setUserAvailable: (state, actions) => {
+      state.userAvailable = actions.payload;
     }
   },
 });
 
-export const { addChat, setCalleeUserData, setLoader, setSearchUserData, setSelectedUserData, setChatData, setMySocketId, setMessages, setUserName, setCalleeUserName, setActiveUserData, setUpdateMessage, setSocketConnected, setIsTyping } = chatSlice.actions;
+export const { addChat, setUserAvailable, setCalleeUserData, setLoader, setSearchUserData, setSelectedUserData, setChatData, setMySocketId, setMessages, setUserName, setCalleeUserName, setActiveUserData, setUpdateMessage, setSocketConnected, setIsTyping } = chatSlice.actions;
 
 export default chatSlice.reducer;

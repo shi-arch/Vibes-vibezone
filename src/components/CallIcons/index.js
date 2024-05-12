@@ -8,7 +8,6 @@ import {
 import {
   hangUpAutomateCall
 } from "../../app/test/utils/webRTC/webRTCHandler.js";
-import { userCamOff } from '../../app/test/utils/wssConnection/wssConnection';
 
 const CallIcons = () => {
   const dispatch = useDispatch();
@@ -32,7 +31,6 @@ const CallIcons = () => {
 
   const handleCameraButtonPressed = () => {
     localStream.getVideoTracks()[0].enabled = !localCameraEnabled;
-    userCamOff(userName, !localCameraEnabled);
     dispatch(setLocalCameraEnabled(!localCameraEnabled));
   };
 

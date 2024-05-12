@@ -13,7 +13,7 @@ import { CreatePeerConnection, getLocalStream } from '../test/utils/webRTC/webRT
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocalCameraEnabled } from '../../redux/features/callSlice';
-import { userCamOff } from '../test/utils/wssConnection/wssConnection';
+import { getAvailableUser, registerNewUser } from '../test/utils/wssConnection/wssConnection';
 import { EndCall, LogoSvg, Mute, Video } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
 import ActiveUsers from '../../components/ActiveUsers';
@@ -33,14 +33,15 @@ const VideoChat = () => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, enable it!'
-    }).then(function (res) {
+    }).then(async (res) => {      
+      await getAvailableUser()
       let enableCam = true
       if(res.dismiss == 'cancel'){
         enableCam = false
       }
+      registerNewUser(userName, enableCam);
       streamObj.getVideoTracks()[0].enabled = enableCam;
       dispatch(setLocalCameraEnabled(enableCam))
-      userCamOff(userName, enableCam)
     })
   }, [])
   return (

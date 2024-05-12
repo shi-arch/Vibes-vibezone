@@ -8,6 +8,12 @@ const initialState = {
   allUsers: "",
   allPreferences: [],
   userSelectedTopics: [],
+  totalUsers: {
+    enableCam: 0,
+    disableCam: 0,
+    totalUserCount: 0,
+    activeUsersCount: 0
+  }
 };
 
 const loginSlice = createSlice({
@@ -20,7 +26,7 @@ const loginSlice = createSlice({
     setVerifyOtp: (state, actions) => {
       state.verifyOtp = actions.payload;
     },
-    setToken: (state, actions) => {      
+    setToken: (state, actions) => {
       state.token = actions.payload;
     },
     setUserProfile: (state, actions) => {
@@ -35,9 +41,12 @@ const loginSlice = createSlice({
     setUserSelectedTopics: (state, actions) => {
       state.userSelectedTopics = actions.payload;
     },
+    setTotalUsers: (state, actions) => {
+      state.totalUsers = actions.payload;
+    },
   },
 });
 
-export const { setLoginDetails, setVerifyOtp, setToken, setUserProfile, setAllUsers,  setAllPreferences, setUserSelectedTopics} = loginSlice.actions;
+export const { setLoginDetails, setTotalUsers, setVerifyOtp, setToken, setUserProfile, setAllUsers, setAllPreferences, setUserSelectedTopics } = loginSlice.actions;
 
 export default loginSlice.reducer;
