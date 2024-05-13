@@ -77,8 +77,9 @@ const VideoCallInterFace = () => {
             id="myVideo"
             style={
               localStream
-                ? { width: "100%", height: "269px" }
+                ? { width: "100%", height: "229px",objectFit:"cover" }
                 : { width: 0, height: 0, visibility: "hidden" }
+
             }
             ref={myVideo}
             autoPlay
@@ -103,7 +104,7 @@ const VideoCallInterFace = () => {
         {remoteStream && callState === "CALL_IN_PROGRESS" && (
           <video
             id="userVideo"
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: "100%", height: "229px" }}
             ref={userVideo}
             autoPlay
             playsInline

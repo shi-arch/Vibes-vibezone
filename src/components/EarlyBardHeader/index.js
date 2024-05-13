@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Typography,Box } from "@mui/material";
 import React, { useState } from "react";
 import EarlyBardAccessModal from "../Modals/EarlyAccessBardModal";
 import { useDispatch } from "react-redux";
@@ -12,15 +12,23 @@ const EarlybardHeader = () => {
   };
 
   return (
-    <>
-      <div
+    <Box>
+      <Box
         style={{
           marginTop: "-44px",
-          // position: "fixed",
-          top: 0,
           backgroundColor: "#010101",
           height: "56px",
-          width: "100%",
+          width: "calc(100% - 48px)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0px 24px",
+        }}
+        sx={{
+          "@media (max-width:426px)": {
+            flexDirection: "column",
+            padding:"2px 0px"
+          },
         }}
       >
         <Typography
@@ -31,35 +39,35 @@ const EarlybardHeader = () => {
             fontWeight: "500",
             textAlign: "center",
             color: "#fff",
-            paddingTop: "20px",
+            // paddingTop: "20px",
           }}
         >
           Early Bard access is 6 months free for first 100 users...
         </Typography>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            style={{
-              width: "130px",
-              height: "23px",
-              backgroundColor: "#ffa64d",
-              borderRadius: "10px",
-              color: "#000",
-              fontSize: "10px",
-              textAlign: "left",
-              fontFamily: "Poppins,Arial",
-              fontWeight: "bold",
-              marginRight: "40px",
-              right: "15px",
-              bottom: "15px",
-            }}
-            onClick={handleOpenModal}
-          >
-            Early Bard Access
-          </Button>
-        </div>
-      </div>
+        <Button
+          style={{
+            // width: "130px",
+            // height: "23px",
+            backgroundColor: "#ffa64d",
+            borderRadius: "10px",
+            color: "#000",
+            fontSize: "10px",
+            textAlign: "left",
+            fontFamily: "Poppins,Arial",
+            fontWeight: "bold",
+            height: "30px",
+            // marginRight: "40px",
+            // right: "15px",
+            // bottom: "15px",
+          }}
+          onClick={handleOpenModal}
+        >
+          Early Bard Access
+        </Button>
+        {/* <div style={{ display: "flex", justifyContent: "flex-end" }}></div> */}
+      </Box>
       <EarlyBardAccessModal />
-    </>
+    </Box>
   );
 };
 

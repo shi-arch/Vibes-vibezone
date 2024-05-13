@@ -172,7 +172,9 @@ const EarlyBardAccessModal = () => {
                 placeholder="Enter your name"
                 value={name}
               />
-              <span style={errorStyle}>{error.type == "name" ? error.message : ""}</span>
+              <span style={errorStyle}>
+                {error.type == "name" ? error.message : ""}
+              </span>
               <Typography
                 className="heading-text"
                 style={{ fontWeight: "bold", fontSize: "20px" }}
@@ -186,7 +188,9 @@ const EarlyBardAccessModal = () => {
                 placeholder="DD/MM/YYYY"
                 value={DOB}
               />
-              <span style={errorStyle}>{error.type == "dob" ? error.message : ""}</span>
+              <span style={errorStyle}>
+                {error.type == "dob" ? error.message : ""}
+              </span>
               <Typography
                 style={{ fontWeight: "bold", fontSize: "20px" }}
                 className="heading-text"
@@ -201,7 +205,9 @@ const EarlyBardAccessModal = () => {
                 placeholder="Enter your number"
                 value={number}
               />
-              <span style={errorStyle}>{error.type == "number" ? error.message : ""}</span>
+              <span style={errorStyle}>
+                {error.type == "number" ? error.message : ""}
+              </span>
             </div>
 
             <div className="right-content">
@@ -218,7 +224,9 @@ const EarlyBardAccessModal = () => {
                 placeholder="Enter your Email"
                 value={email}
               />
-              <span style={errorStyle}>{error.type == "email" ? error.message : ""}</span>
+              <span style={errorStyle}>
+                {error.type == "email" ? error.message : ""}
+              </span>
               <Typography
                 style={{ fontWeight: "bold", fontSize: "20px" }}
                 className="heading-text"
@@ -232,26 +240,19 @@ const EarlyBardAccessModal = () => {
                 placeholder="Enter your gender. Eg. Male, Female"
                 value={gender}
               />
-              <span style={errorStyle}>{error.type == "gender" ? error.message : ""}</span>
+              <span style={errorStyle}>
+                {error.type == "gender" ? error.message : ""}
+              </span>
             </div>
           </div>
 
-          <Button
-            className="submit-button"
-            style={{
-              color: "#fff",
-              backgroundColor: "#8f47ff",
-              textTransform: "capitalize",
-              borderRadius: "18px",
-              fontSize: "24px",
-              height: "60px",
-              width: "164px",
-            }}
+          <button
             type="button"
             onClick={handleSubmit}
+            className="submit-button"
           >
             Submit
-          </Button>
+          </button>
         </div>
       </Box>
     </Modal>
