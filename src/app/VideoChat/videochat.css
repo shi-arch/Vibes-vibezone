@@ -1,6 +1,7 @@
 .video-chat-bg-container{
     height: calc(100vh - 84px);
     padding:42px 0px;
+    position: relative;
 }
 
 .video-right-container{

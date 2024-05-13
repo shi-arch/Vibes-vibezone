@@ -9,7 +9,11 @@ import { postApi } from "../../../response/api.js";
 import { setSearchUserData } from "../../../redux/features/chatSlice.js";
 import { setAllUsers } from "../../../redux/features/loginSlice.js";
 import { CreatePeerConnection, callToOtherUser, getLocalStream } from "../../../app/test/utils/webRTC/webRTCHandler.js";
+import { closeTab } from "../../../app/test/utils/wssConnection/wssConnection.js";
 const notification = true;
+window.onbeforeunload = (event) => {
+  closeTab()  
+};
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -50,6 +54,13 @@ const Header = () => {
     await getLocalStream()
     await CreatePeerConnection();
   }
+  useEffect(() => {
+    window.onbeforeunload = (event) => {
+      debugger
+      // Show prompt based on state
+      
+    };
+  }, [])
   return (
     <>
     <div className="header-container">

@@ -209,6 +209,10 @@ export const sendPreOfferAnswer = (data) => {
   socket.emit('pre-offer-answer', data);
 };
 
+export const closeTab = (data) => {
+  socket.emit('disconnect-current-user', socket.id);
+};
+
 export const sendWebRTCOffer = (data) => {
   
   socket.emit('webRTC-offer', data);

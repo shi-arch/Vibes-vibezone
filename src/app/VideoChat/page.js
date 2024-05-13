@@ -1,9 +1,5 @@
-import React, { useEffect } from 'react'
-
-import SideBarNew from '../../components/SideBarNew';
-
-
-
+import React, { useEffect } from "react";
+import SideBarNew from "../../components/SideBarNew";
 import "./videochat.css"
 import HeaderNew from '../../components/HeaderNew';
 import CallInterface from '../../components/chat/callInterface';
@@ -17,6 +13,8 @@ import { getAvailableUser, registerNewUser } from '../test/utils/wssConnection/w
 import { EndCall, LogoSvg, Mute, Video } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
 import ActiveUsers from '../../components/ActiveUsers';
+import EarlyBoardAccessModal from "../../components/Modals/EarlyAccessBardModal";
+import EarlybardHeader from "../../components/EarlyBardHeader";
 
 const VideoChat = () => {
   const dispatch = useDispatch()
@@ -26,9 +24,9 @@ const VideoChat = () => {
     const streamObj = await getLocalStream()
     await CreatePeerConnection();
     Swal.fire({
-      title: 'Want to enable the camera?',
+      title: "Want to enable the camera?",
       text: "Enabling camera will better help you to communicate with strangers!",
-      type: 'warning',
+      type: "warning",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -46,6 +44,8 @@ const VideoChat = () => {
   }, [])
   return (
     <div className="video-chat-bg-container">
+      <EarlybardHeader />
+      <EarlyBoardAccessModal />
       <SideBarNew />
       <div className="video-right-container">
         <div className='logo-sm-lg-container'>
@@ -71,6 +71,6 @@ const VideoChat = () => {
       </div>
     </div>
   );
-}
+};
 
-export default VideoChat
+export default VideoChat;
