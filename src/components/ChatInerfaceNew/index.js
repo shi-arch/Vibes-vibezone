@@ -25,18 +25,25 @@ const ChatInterfaceNew = () => {
     typingMethod()
   }
 
-  useEffect(() => {
-    if (input) {
-      input.addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          if (message) {
-            document.getElementById("msg").onclick = sendMsg();
-          }
-        }
-      });
+  // useEffect(() => {
+  //   if (input) {
+  //     input.addEventListener("keypress", function (event) {
+  //       if (event.key === "Enter") {
+  //         event.preventDefault();
+  //         if (message) {
+  //           document.getElementById("msg").onclick = sendMsg();
+  //         }
+  //       }
+  //     });
+  //   }
+  // }, [input])
+
+
+  const handleKeyDown = (e)=>{
+    if (e.key==='Enter'){
+      sendMsg()
     }
-  }, [input])
+  }
 
   const sendMsg = () => {
     if (message.trim() && callState == "CALL_IN_PROGRESS") {
@@ -74,6 +81,7 @@ const ChatInterfaceNew = () => {
               placeholder="Type a message"
               value={message}
               onChange={sendMsgFun}
+              onKeyDown={handleKeyDown}
             />
           </div>
           <button id="sendMessage" style={{ border: 'none', background: 'transparent' }} onClick={() => sendMsg()}><Send /></button>

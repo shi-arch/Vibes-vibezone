@@ -77,7 +77,7 @@ const VideoCallInterFace = () => {
             id="myVideo"
             style={
               localStream
-                ? { width: "100%", height: "100%" }
+                ? { width: "100%", height: "269px" }
                 : { width: 0, height: 0, visibility: "hidden" }
             }
             ref={myVideo}

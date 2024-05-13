@@ -26,7 +26,7 @@ const HomeComponent = () => {
     const parsedData = JSON.parse(userData)
     dispatch(setLoginDetails(parsedData.user));
     dispatch(setToken(parsedData.token));
-    router("/chat")
+    // router("/chat")
   }  
   }, []);
   return (

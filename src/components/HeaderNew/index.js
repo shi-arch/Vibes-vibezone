@@ -50,7 +50,11 @@ const HeaderNew = () => {
       <div className="logo-lg-visible">
         <LogoSvg />
       </div>
-      {isActive ? <span className="green-dots"></span> : <span className="red-dots"></span>}
+      {isActive ? (
+        <span className="green-dots"></span>
+      ) : (
+        <span className="red-dots"></span>
+      )}
       <input
         type="text"
         className="head-input"
@@ -71,9 +75,18 @@ const HeaderNew = () => {
         value={keyWords}
       />
 
-      <button disabled={disableButton} style={disableButton ? { backgroundColor: '#dc9c26' } : {}} className={buttonLabel == 'Connect' ? "connect-button call-buttons" : 'disConnect-button call-buttons'} onClick={() => {
-        buttonLabel == 'Connect' ? startRandomCall() : skipCall()
-      }}>
+      <button
+        disabled={disableButton}
+        style={disableButton ? { backgroundColor: "#dc9c26" } : {}}
+        className={
+          buttonLabel == "Connect"
+            ? "connect-button call-buttons"
+            : "disConnect-button call-buttons"
+        }
+        onClick={() => {
+          buttonLabel == "Connect" ? startRandomCall() : skipCall();
+        }}
+      >
         {buttonLabel}
       </button>
 

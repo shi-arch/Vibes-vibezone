@@ -98,6 +98,7 @@ const ChatInterface = () => {
   }
 
   const getMessage = (value) => {
+    console.log(value)
     setMessage(value)
     socket.emit("typing", { id: selectedUserData.Contact, name: selectedUserData.name || selectedUserData.Contact || selectedUserData.email })
   }
@@ -126,13 +127,26 @@ const ChatInterface = () => {
 		}
   }
 
+
+  const handleKeyDown =(e)=>{
+    if (e.key === 'Enter'){
+      sendMessage()
+    }
+    
+  }
+
   return (
     <div className={css ? "chat-container-mobile" : "chat-container"}>
       <div className={css ? "displayCss" : "chat-header"}>
         <div className="icon-username">
           <img src={url7} alt="chat-profile-icon" className="chat-icon" />
           <div className="user-time">
-            <p className="chat-username">{selectedUserData.name || selectedUserData.Contact || selectedUserData.email || "Test"}</p>
+            <p className="chat-username">
+              {selectedUserData.name ||
+                selectedUserData.Contact ||
+                selectedUserData.email ||
+                "Test"}
+            </p>
             <Badges />
             <p className="minutes">Minutes Ago</p>
           </div>
@@ -153,25 +167,34 @@ const ChatInterface = () => {
           </div>
         </div>
       </div>
-      <div className={css ? "displayCss" : "arrow-container"} onClick={toggleArrowSize}>
+      <div
+        className={css ? "displayCss" : "arrow-container"}
+        onClick={toggleArrowSize}
+      >
         <ArrowLeft />
       </div>
-      <div className={css ? "displayCss" : "chat-container-2"} ref={chatContainerRef}>
+      <div
+        className={css ? "displayCss" : "chat-container-2"}
+        ref={chatContainerRef}
+      >
         <ChatsList />
       </div>
       <div className="send-msg-con-1">
         <div className="send-msg-con-2">
           <div className="attach-type-con">
             <Attachment />
-            <Input
+            <input
               type="text"
               css="input-send-message"
               placeholder="Type a message"
               value={message}
               onChange={(e) => getMessage(e)}
+              onKeyDown={handleKeyDown}
             />
           </div>
-          <div onClick={(e) => sendMessage(e)}><Send /></div>
+          <div onClick={(e) => sendMessage(e)}>
+            <Send />
+          </div>
           <span>{userName ? userName + " Typing..." : ""}</span>
         </div>
       </div>

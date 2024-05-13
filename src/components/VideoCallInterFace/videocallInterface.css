@@ -8,7 +8,9 @@
 
 .video {
   width: 100%;
-  object-fit: contain;
+  /* width: 391px; */
+  height: 229px;
+  /* object-fit: contain; */
   border-radius: 5px;
 }
 

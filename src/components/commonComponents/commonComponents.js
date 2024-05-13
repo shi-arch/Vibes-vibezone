@@ -28,6 +28,7 @@ export const Input = (props) => {
       className={props.css}
       placeholder={props.placeholder}
       onChange={(e) => props.onChange(e.target.value)}
+      onKeyDown={(e) => props.onKeyDown(e)}
       value={props.value}
     />
   );
