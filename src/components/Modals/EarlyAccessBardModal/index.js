@@ -9,6 +9,7 @@ import { set } from "lodash";
 import { postApi } from "../../../response/api";
 import { setUserName } from "../../../redux/features/chatSlice";
 import Swal from "sweetalert2";
+import { validateEmail } from "../../commonComponents/commonComponents";
 
 const input = ({ type, label, onChange, placeholder, value }) => {
   return (
@@ -25,28 +26,9 @@ const input = ({ type, label, onChange, placeholder, value }) => {
     </div>
   );
 };
-// useEffect(() => {
-//   const fetchData = async () => {
-//     try {
-//       // Example API call to fetch user data
-//       const data = await response.json();
-//       // The response structure is { name, dob, number, email, gender }
-//       setName(data.name);
-//       setDOB(data.dob);
-//       setNumber(data.number);
-//       setEmail(data.email);
-//       setGender(data.gender);
-//     } catch (error) {
-//       console.error("Error fetching user data:", error);
-//     }
-//   };
-
-//   fetchData();
-// }, []);
 
 const EarlyBardAccessModal = () => {
   const contactPattern = /^\d{10}$/;
-  const emailPattern = /^\w+([\.-]?\w+)*[@gmail.com]*(\.\w{2,3})+$/;
   const { Gender, Name, ProfileImage, Status, username, dob, Contact } = useSelector((state) => state.loginSlice.userProfile);
   const userProfile = useSelector((state) => state.loginSlice.userProfile);
   const { token } = useSelector((state) => state.loginSlice);
@@ -86,7 +68,7 @@ const EarlyBardAccessModal = () => {
     } else if(!email) {
       errorObj.type = "email"
       errorObj.message = "Email is required!"
-    } else if(email && !emailPattern.test(email)) {
+    } else if(email && validateEmail(email) !== null) {
       errorObj.type = "email"
       errorObj.message = "Email is incorrect!"      
     } else if(!gender) {
