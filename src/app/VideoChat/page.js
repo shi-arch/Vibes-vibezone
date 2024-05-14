@@ -20,6 +20,8 @@ const VideoChat = () => {
   const dispatch = useDispatch()
   const { userName } = useSelector(state => state.chatSlice)
   const { localStream, callState, remoteStream, localCameraEnabled, localMicrophoneEnabled, hangUps } = useSelector((state) => state.callSlice);
+  
+
   useEffect(async () => {
     const streamObj = await getLocalStream()
     await CreatePeerConnection();

@@ -33,6 +33,25 @@
   color: #fff;
 }
 
+@media screen and (max-width: 380px) {
+  .hideCss {
+    display: none;
+  } 
+  .displayCss {
+    display: block;
+  } 
+}
+
+
+/* @media screen and (min-width: 380px) {
+  .displayCss {
+    display: block;
+  }
+   .hideCss {
+    display: none;
+  }
+} */
+
 .disConnect-button {
   width: 130px;
   height: 57px;

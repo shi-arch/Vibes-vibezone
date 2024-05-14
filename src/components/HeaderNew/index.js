@@ -18,38 +18,38 @@ const HeaderNew = () => {
   const { callState, buttonLabel, isActive, userToCall, triggerCall, disableButton } = useSelector((state) => state.callSlice);
   const { activeUsers, camOffUsers } = useSelector(state => state.dashboardSlice)
   useEffect(() => {
-    if(userToCall && triggerCall) {      
+    if (userToCall && triggerCall) {
       callToOtherUser(userToCall)
       dispatch(setTriggerCall(false))
-    }    
+    }
   }, [userToCall, triggerCall])
 
   useEffect(() => {
-    if(buttonLabel == 'Skip' && callState == 'CALL_AVAILABLE') {      
+    if (buttonLabel == 'Skip' && callState == 'CALL_AVAILABLE') {
       dispatch(setDisableButton(true))
       dispatch(setLoader(true))
-    } 
-    if(callState == "CALL_IN_PROGRESS") {      
+    }
+    if (callState == "CALL_IN_PROGRESS") {
       dispatch(setLoader(false))
     }
   }, [callState, buttonLabel])
 
-  const startRandomCall = async () => {   
-    getActiveUser() 
-    dispatch(setDisableButton(true))   
+  const startRandomCall = async () => {
+    getActiveUser()
+    dispatch(setDisableButton(true))
     dispatch(setLoader(true))
   }
   const skipCall = async () => {
     if (callState == `CALL_IN_PROGRESS`) {
       dispatch(setMessages([]))
-      hangUpAutomateCall()      
+      hangUpAutomateCall()
     }
   }
   return (
     <div className="header-new-bg-container">
       <div className="logo-lg-visible">
         <LogoSvg />
-      </div>
+      </div>      
       {isActive ? (
         <span className="green-dots"></span>
       ) : (
@@ -66,6 +66,8 @@ const HeaderNew = () => {
         }}
         value={userName}
       />
+
+
 
       <input
         type="text"

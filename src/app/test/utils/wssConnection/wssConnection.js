@@ -5,7 +5,9 @@ import * as webRTCHandler from '../webRTC/webRTCHandler';
 import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData, setIsTyping, setUserAvailable } from '../../../../redux/features/chatSlice';
 import { getApi } from '../../../../response/api';
 import { setButtonLabel, setDisableButton, setIsActive, setTriggerCall, setUserToCall } from '../../../../redux/features/callSlice';
-import { setTotalUsers } from '../../../../redux/features/loginSlice';
+import { setRedirectToHome, setTotalUsers } from '../../../../redux/features/loginSlice';
+import { Router } from 'react-router-dom';
+import { useEffect } from 'react';
 const token = store.getState().loginSlice.token || ""
 
 const SERVER = process.env.REACT_APP_BASEURL;

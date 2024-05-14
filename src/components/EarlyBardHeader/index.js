@@ -22,7 +22,8 @@ const EarlybardHeader = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "0px 24px",
+          padding: "0px 24px 10px 24px",
+          marginBottom: "15px"          
         }}
         sx={{
           "@media (max-width:426px)": {

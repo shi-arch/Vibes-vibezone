@@ -12,8 +12,21 @@ import { CreatePeerConnection, callToOtherUser, getLocalStream } from "../../../
 import { closeTab } from "../../../app/test/utils/wssConnection/wssConnection.js";
 const notification = true;
 window.onbeforeunload = (event) => {
+  save()
   closeTab()  
 };
+
+function save(){	 
+  debugger  
+  var userPreference;
+  if (confirm("Do you want to save changes?") == true) {
+    userPreference = "Data saved successfully!";
+  } else {
+    userPreference = "Save Canceled!";
+  }
+
+  console.log(userPreference)
+}
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -54,13 +67,6 @@ const Header = () => {
     await getLocalStream()
     await CreatePeerConnection();
   }
-  useEffect(() => {
-    window.onbeforeunload = (event) => {
-      debugger
-      // Show prompt based on state
-      
-    };
-  }, [])
   return (
     <>
     <div className="header-container">

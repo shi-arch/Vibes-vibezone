@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import Hamburger from "../../assets/images/Hamburger.svg"
 
 import "./navbar.css";
+import { LogoSvg } from "../svgComponents";
 
 const Navbar = () => {
   return (
     <nav className="Rectangle-156">
       <div className="VibeZone">
-        Vibe<span className="text-style-1">Zone</span>
+        <LogoSvg />
       </div>
       <div className="cont">
         <div className="LinksContainer">
