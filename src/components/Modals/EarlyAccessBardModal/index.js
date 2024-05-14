@@ -68,7 +68,7 @@ const EarlyBardAccessModal = () => {
     } else if(!email) {
       errorObj.type = "email"
       errorObj.message = "Email is required!"
-    } else if(email && validateEmail(email) !== null) {
+    } else if(email && validateEmail(email) == null) {
       errorObj.type = "email"
       errorObj.message = "Email is incorrect!"      
     } else if(!gender) {
