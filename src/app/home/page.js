@@ -20,6 +20,7 @@ import JoinUs from '../../components/joinus/JoinUs';
 import Footer from '../../components/footer/Footer';
 import FreqAskQuestion from "../../components/freqaskquestion/FreqAskQuestion"
 import Navbar from '../../components/Navbar/navbar';
+import { setUserName } from '../../redux/features/chatSlice';
 //result
 const LandingPage = () => {
   const router = useNavigate();
@@ -45,39 +46,9 @@ const LandingPage = () => {
 
               <Button
                 onClick={() => {
-                  let res = {
-                    user: {
-                      _id: "6610319768329cd6aeb44a59",
-                      UserType: "USER",
-                      Contact: "9898989898",
-                      CountryCode: "+91",
-                      email: "",
-                      isBlocked: false,
-                      isBlockedBy: [],
-                      otp: "1641",
-                      otpExpire: "2024-05-05T02:41:55.915Z",
-                      createdAt: "2024-04-05T17:15:03.366Z",
-                      updatedAt: "2024-05-05T02:31:55.918Z",
-                      __v: 0,
-                      DOB: "2024-04-23T00:00:00.000Z",
-                      Gender: "Male",
-                      Name: "Guest + " + Math.random().toString().substr(2, 8),
-                      ProfileImage:
-                        "http://localhost:3000/static/media/recentUser1.9b30cee02225456b0e93448c98a354fd.svg",
-                      Status: "guest",
-                      username: "gasjg_dd",
-                    },
-                    token:
-                      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MTAzMTk3NjgzMjljZDZhZWI0NGE1OSIsImlhdCI6MTcxNDg3NjMzMX0.CjGaboLBOQLG9MQsuqWrQ2GSOYhfKMQ1luIR2wR0YSk",
-                    status: true,
-                  };
-                  localStorage.setItem("userData", JSON.stringify(res));
-                  registerNewUser(
-                    "Guest + " + Math.random().toString().substr(2, 8)
-                  );
-                  dispatch(setLoginDetails(res.user));
-                  dispatch(setToken(res.token));
-                  dispatch(setVerifyOtp(true));
+                  const user = "Guest + " + Math.random().toString().substr(2, 8);
+                  registerNewUser(user);
+                  dispatch(setUserName(user));
                   router("/video-chat");
                 }}
                 sx={{
