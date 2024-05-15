@@ -145,7 +145,8 @@
 
   .head-input{
     height: 34px;
-
+    font-size: 8px;
+    width: 20%;
   }
 }
 

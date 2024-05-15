@@ -4,10 +4,17 @@ import EarlyBardAccessModal from "../Modals/EarlyAccessBardModal";
 import { useDispatch } from "react-redux";
 import { setEarlyAccessBardModal } from "../../redux/features/modalSlice";
 
+import ReactGA from "react-ga4"
+
 const EarlybardHeader = () => {
   const dispatch = useDispatch();
 
   const handleOpenModal = () => {
+    ReactGA.event({
+      category: "Early Bard Access Button Modal",
+      action:"Button",
+      label:"Early Bard Access Button Modal"
+    });
     dispatch(setEarlyAccessBardModal());
   };
 

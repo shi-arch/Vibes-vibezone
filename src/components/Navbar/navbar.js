@@ -13,21 +13,21 @@ const Navbar = () => {
       </div>
       <div className="cont">
         <div className="LinksContainer">
-          <Link to="/home" className="nav-link sm-lg-nav-links">
+          <a href="#home" className="nav-link sm-lg-nav-links">
             <span>Home</span>
-          </Link>
-          <Link to="/about" className="nav-link sm-lg-nav-links">
+          </a>
+          <a href="#about" className="nav-link sm-lg-nav-links">
             <span>About</span>
-          </Link>
-          <Link to="/early-access" className="nav-link sm-lg-nav-links">
+          </a>
+          <div href="#early-access" className="nav-link sm-lg-nav-links">
             <span>Early Access</span>
-          </Link>
-          <Link to="/pricing" className="nav-link sm-lg-nav-links">
+          </div>
+          <div href="#pricing" className="nav-link sm-lg-nav-links">
             <span>Pricing</span>
-          </Link>
-          <Link to="/contact" className="nav-link sm-lg-nav-links">
+          </div>
+          <div href="#contact" className="nav-link sm-lg-nav-links">
             <span>Contact</span>
-          </Link>
+          </div>
           {/* <Link to="/signup" className="nav-link">
             <button style={{ cursor: "pointer" }} className="sign-up">
               Sign Up

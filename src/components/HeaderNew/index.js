@@ -11,6 +11,8 @@ import { setUserName, setCalleeUserName, setSelectedUserData, setLoader, setMess
 import { getActiveUser, handleMeOnlineOffline, setMeActive, startCall, updateName } from "../../app/test/utils/wssConnection/wssConnection";
 import ActiveUsers from "../ActiveUsers";
 
+import ReactGA from "react-ga4"
+
 const HeaderNew = () => {
   const dispatch = useDispatch();
   const { userName, loader } = useSelector(state => state.chatSlice)
@@ -86,6 +88,11 @@ const HeaderNew = () => {
             : "disConnect-button call-buttons"
         }
         onClick={() => {
+          ReactGA.event({
+            category: "Connect",
+            action: "connect button",
+            label: "Connect", // optional
+          });
           buttonLabel == "Connect" ? startRandomCall() : skipCall();
         }}
       >

@@ -9,6 +9,9 @@ import {
   hangUpAutomateCall
 } from "../../app/test/utils/webRTC/webRTCHandler.js";
 
+
+import ReactGA from "react-ga4"
+
 const CallIcons = () => {
   const dispatch = useDispatch();
   const [mute, setMute] = useState(false);
@@ -23,15 +26,27 @@ const CallIcons = () => {
     hangUps,
   } = useSelector((state) => state.callSlice);
   const handleMicButtonPressed = () => {
+      ReactGA.event({
+      category: "Mute Button",
+      action: "Mute Button Pressed",
+      label: `${userName} turned mic ${mute ? "ON" : "OFF"}`,
+        });
     const micEnabled = localMicrophoneEnabled;
     localStream.getAudioTracks()[0].enabled = !micEnabled;
     dispatch(setLocalMicrophoneEnabled(!micEnabled));
     setMute(!mute);
+
+
   };
 
   const handleCameraButtonPressed = () => {
     localStream.getVideoTracks()[0].enabled = !localCameraEnabled;
     dispatch(setLocalCameraEnabled(!localCameraEnabled));
+    ReactGA.event({
+      category: "Camera Button",
+      action: "Camera Button Pressed",
+      label: `${userName} turned camera ${!localCameraEnabled ? "ON":"OFF"}`,
+    });
   };
 
   const handleHangUpButtonPressed = async () => {

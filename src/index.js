@@ -1,17 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import { Provider } from 'react-redux';
-import reportWebVitals from './reportWebVitals';
-import store from './redux/store'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import { Provider } from "react-redux";
+import reportWebVitals from "./reportWebVitals";
+import store from "./redux/store";
+import ReactGA from "react-ga4";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+//google analytics setup
+ReactGA.initialize("G-4N8FWXLCBY");
+
+ReactGA.send({
+   hitType: "pageview",
+  page: window.location.pathname 
+});
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -15,6 +15,7 @@ import FreqAskQuestion from '../freqaskquestion/FreqAskQuestion';
 import { useNavigate } from "react-router-dom";
 import { setLoginDetails, setToken } from "../../redux/features/loginSlice";
 import { useDispatch } from "react-redux";
+import AnimatedSection from '../AnimatedSection'
 
 const HomeComponent = () => {
   const router = useNavigate();
@@ -29,23 +30,54 @@ const HomeComponent = () => {
     // router("/chat")
   }  
   }, []);
+
+
+
+
+
+
   return (
     <Box>
-        <NavBar/>
-        <Box sx={{display:'flex', flexDirection:'column', alignItem:'center', justifyContent:'center', width:'100%'}}  >
-          <EarlyAccess/>
-          <About/>
-          <TodayTask/>
-          <Partners/>
-          <WhyChooseUs/>
-          <Features/>
-          <Review/>
-          <JoinUs/>
-          <FreqAskQuestion/>
-          <Footer/>
-        </Box>
+      <NavBar />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItem: "center",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
+        <EarlyAccess />
+        <AnimatedSection>
+          <About />
+        </AnimatedSection>
+        <AnimatedSection>
+          <TodayTask />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <Partners />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <WhyChooseUs />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <Features />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <Review />
+        </AnimatedSection>
+
+        <JoinUs />
+        <FreqAskQuestion />
+        <Footer />
+      </Box>
     </Box>
-  )
+  );
 }
 
 export default HomeComponent

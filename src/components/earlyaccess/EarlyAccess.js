@@ -4,7 +4,7 @@ import { registerNewUser } from "../../app/test/utils/wssConnection/wssConnectio
 import { useNavigate } from "react-router-dom";
 import { setUserName } from "../../redux/features/chatSlice";
 import { useDispatch } from "react-redux";
-
+import ReactGA from "react-ga4";
 
 import "./EarlyAccess.css";
 
@@ -13,6 +13,7 @@ const EarlyAccess = () => {
   const dispatch = useDispatch();
   return (
     <Box
+    id="home"
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
     >
       <Box
@@ -53,6 +54,14 @@ const EarlyAccess = () => {
               const user = "Guest + " + Math.random().toString().substr(2, 8);
               registerNewUser(user);
               dispatch(setUserName(user));
+              ReactGA.event({
+                category: "Early Access",
+                action: "Early Access Button",
+                label: "Button", // optional
+                // value: 99, // optional, must be a number
+                // nonInteraction: true, // optional, true/false
+                // transport: "xhr", // optional, beacon/xhr/image
+              });
               router("/video-chat");
             }}
             variant="contained"

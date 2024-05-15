@@ -8,6 +8,8 @@ import { registerNewUser } from '../test/utils/wssConnection/wssConnection';
 import { setLoginDetails, setToken, setVerifyOtp } from '../../redux/features/loginSlice';
 import { useNavigate } from 'react-router-dom';
 
+import ReactGA from "react-ga4"
+
 import WhatIWantToday from "../../assets/images/WhatIWantToday.svg"
 
 
@@ -49,6 +51,14 @@ const LandingPage = () => {
                   const user = "Guest + " + Math.random().toString().substr(2, 8);
                   registerNewUser(user);
                   dispatch(setUserName(user));
+                  ReactGA.event({
+                    category: "Early Access",
+                    action: "Early Access Button",
+                    label: "Button", // optional
+                    // value: 99, // optional, must be a number
+                    // nonInteraction: true, // optional, true/false
+                    // transport: "xhr", // optional, beacon/xhr/image
+                  });
                   router("/video-chat");
                 }}
                 sx={{

@@ -25,10 +25,14 @@
 
 .logo-float{
   position: absolute;
-  bottom: 0;
-  right: 30px;
+  bottom: 15px;
+  right: 15px;
 }
 
+
+.vibe-logo-float{
+  width: 80px;
+}
 
 .video-img-container{
   position: relative;

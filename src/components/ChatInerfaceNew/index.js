@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMessages } from "../../redux/features/chatSlice";
 import Swal from "sweetalert2";
 
+import ReactGA from "react-ga4"
 
 
 const ChatInterfaceNew = () => {
@@ -57,14 +58,21 @@ const ChatInterfaceNew = () => {
       }
       dispatch(setMessages(arr))
       sendMessage(message);
-      setMessage("")
-    } else {
-      Swal.fire({
-        title: "sorry...",
-        text: "You can't send message without calling or message should not be empty!",
-        icon: "error",
+
+      ReactGA.event({
+        category: 'send Message',
+        action: 'send Message Button',
+        label: 'send Message Button'
       })
-    }
+      setMessage("")
+    } 
+    // else {
+    //   Swal.fire({
+    //     title: "sorry...",
+    //     text: "You can't send message without calling or message should not be empty!",
+    //     icon: "error",
+    //   })
+    // }
   }
   return (
     <div className="chatInterFaceNew-bg-container">

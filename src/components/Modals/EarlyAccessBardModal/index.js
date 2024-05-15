@@ -11,6 +11,8 @@ import { setUserName } from "../../../redux/features/chatSlice";
 import Swal from "sweetalert2";
 import { validateEmail } from "../../commonComponents/commonComponents";
 
+import ReactGA from "react-ga4"
+
 const input = ({ type, label, onChange, placeholder, value }) => {
   return (
     <div className="label-input-container">
@@ -84,6 +86,11 @@ const EarlyBardAccessModal = () => {
 
   const handleSubmit = async (e) => {
     if(handleValidation().type !== "") return ;
+      ReactGA.event({
+      category: "Early Bard Access Modal Submit Button",
+      action: "Submit",
+      label: "Early Bard Access Button Modal Submit Button",
+    });
     handleModalClose();
     const o = {
       Name: name,
@@ -96,8 +103,8 @@ const EarlyBardAccessModal = () => {
     dispatch(setUserName(name))
     postApi("/saveUser", o);
     Swal.fire({
-      title: "Awesome!",
-      text: "Your profile updated successfully!",
+      title: "Congratulations!",
+      text: "Your application submitted successfully!",
       icon: "success",
     });
   };

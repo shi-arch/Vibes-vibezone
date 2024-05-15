@@ -1,6 +1,9 @@
 import React from "react";
 import Swal from "sweetalert2";
 import { Loader } from '../../components/commonComponents/commonComponents'
+
+import VibeZoneLogo from "../../assets/images/VibeZoneLogo.svg"
+
 import "./videocallInterface.css";
 import {
   EndCall,
@@ -72,14 +75,59 @@ const VideoCallInterFace = () => {
   return (
     <div className="video-call-interface-bg-container">
       <div className="video-img-container">
+        {remoteStream && callState === "CALL_IN_PROGRESS" && (
+          <video
+            id="userVideo"
+            style={{ width: "100%", height: "229px", objectFit: "cover" }}
+            ref={userVideo}
+            autoPlay
+            playsInline
+            //muted
+          />
+        )}
+        {loader ? (
+          <div
+            style={{
+              width: "100%",
+              height: "229px",
+              border: "1px solid #f1f1f1",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#f1f1f1",
+            }}
+          >
+            <Loader />
+          </div>
+        ) : null}
+
+        {!remoteStream && !loader ? (
+          <>
+            <img
+              src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222111/Rectangle_28_1_gisnki.png"
+              className="video"
+              alt="person2"
+            />
+            {/* <div className="logo-float">
+              <LogoSvg width={60} height={20} />
+            </div> */}
+          </>
+        ) : (
+          ""
+        )}
+        <div className="logo-float">
+          <img src={VibeZoneLogo} alt="logo" className="vibe-logo-float" />
+        </div>
+      </div>
+
+      <div className="video-img-container">
         {
           <video
             id="myVideo"
             style={
               localStream
-                ? { width: "100%", height: "229px",objectFit:"cover" }
+                ? { width: "100%", height: "229px", objectFit: "cover" }
                 : { width: 0, height: 0, visibility: "hidden" }
-
             }
             ref={myVideo}
             autoPlay
@@ -94,39 +142,16 @@ const VideoCallInterFace = () => {
               className="video"
               alt="person1"
             />
-            <div className="logo-float">
+            {/* <div className="logo-float">
               <LogoSvg width={60} height={20} />
-            </div>
+            </div> */}
           </>
         )}
+        <div className="logo-float">
+          <img src={VibeZoneLogo} alt="logo" className="vibe-logo-float" />
+        </div>
       </div>
-      <div className="video-img-container">
-        {remoteStream && callState === "CALL_IN_PROGRESS" && (
-          <video
-            id="userVideo"
-            style={{ width: "100%", height: "229px" }}
-            ref={userVideo}
-            autoPlay
-            playsInline
-          //muted
-          />
-        )}
-        {loader ? <Loader style={{ position: 'absolute', left: '125px', top: '104px' }} /> : null}
-        {!remoteStream ? (
-          <>
-            <img
-              src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222111/Rectangle_28_1_gisnki.png"
-              className="video"
-              alt="person2"
-            />
-            <div className="logo-float">
-              <LogoSvg width={60} height={20} />
-            </div>
-          </>
-        ) : (
-          ""
-        )}
-      </div>
+
       <div className="sm-lg-icon-video-call-container">
         <CallIcons />
       </div>
