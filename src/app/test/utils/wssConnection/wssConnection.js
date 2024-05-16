@@ -73,8 +73,7 @@ export const connectWithWebSocket = async () => {
     handleBroadcastEvents(obj)   
   });
 
-  socket.on('webRTC-answer', (data) => {
-    
+  socket.on('webRTC-answer', (data) => {    
     webRTCHandler.handleAnswer(data);
   });
 
@@ -95,7 +94,7 @@ export const connectWithWebSocket = async () => {
     dispatch(setIsTyping(true))
     dispatch(setUserName(name))
   });
-  socket.on("get-active-user-test", (user) => {
+  socket.on("get-active-user", (user) => {
     let userData = user
     if(user.findActiveUser){
       userData = user.findActiveUser
@@ -134,18 +133,13 @@ export const connectWithWebSocket = async () => {
   })  
 };
 
-export const registerNewUser = (username, enableCam) => {
-  
-  socket.emit('register-new-user-test', {
+export const registerNewUser = (username, enableCam) => {  
+  socket.emit('register-new-user', {
     username: username,
     socketId: socket.id,
     enableCam: enableCam,
     isActive: false
   });
-};
-
-export const getActiverUser = () => {
-  socket.emit('get-active-user');
 };
 
 export const startCall = () => {  
@@ -162,7 +156,7 @@ export const getAvailableUser = async () => {
 };
 
 export const getActiveUser = async (flag) => {
-  socket.emit('get-active-user-test', {flag: flag, prevUser: store.getState().callSlice.userToCall});
+  socket.emit('get-active-user', {flag: flag, prevUser: store.getState().callSlice.userToCall});
 };
 
 export const handleMeOnlineOffline = async (isOnline) => {
@@ -201,10 +195,11 @@ export const stopTypingMethod = () => {
 // emitting events to server related with direct call
 
 export const sendPreOffer = (data) => {  
+  //stp 1, my system
   socket.emit('pre-offer', data);
 };
-export const turnConnectedCuserInActive = (data) => {  
-  socket.emit('inactive-connected-users');
+export const enableDisableCam = (enable) => {  
+  socket.emit('enableDisableCam', enable);
 };
 
 export const sendPreOfferAnswer = (data) => {
@@ -212,7 +207,7 @@ export const sendPreOfferAnswer = (data) => {
 };
 
 export const closeTab = (data) => {
-  socket.emit('disconnect-current-user', socket.id);
+  socket.emit('disconnect-current-user', store.getState().callSlice.userToCall.socketId);
 };
 
 export const sendWebRTCOffer = (data) => {
@@ -221,6 +216,7 @@ export const sendWebRTCOffer = (data) => {
 };
 
 export const sendWebRTCAnswer = (data) => {
+  store.dispatch(setButtonLabel('Skip'))
   store.dispatch(setDisableButton(false))
   socket.emit('webRTC-answer', data);
 };

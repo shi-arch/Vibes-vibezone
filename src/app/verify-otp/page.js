@@ -65,7 +65,7 @@ const Page = (props) => {
             if(res.status !== 400){
               localStorage.setItem("userData", JSON.stringify(res));
               
-              registerNewUser(res.user.Name || "Guest")
+              //registerNewUser(res.user.Name || "Guest")
               dispatch(setLoginDetails(res.user));
               dispatch(setToken(res.token));
               dispatch(setVerifyOtp(true))

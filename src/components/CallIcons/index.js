@@ -11,6 +11,7 @@ import {
 
 
 import ReactGA from "react-ga4"
+import { enableDisableCam } from '../../app/test/utils/wssConnection/wssConnection.js';
 
 const CallIcons = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ const CallIcons = () => {
   const handleCameraButtonPressed = () => {
     localStream.getVideoTracks()[0].enabled = !localCameraEnabled;
     dispatch(setLocalCameraEnabled(!localCameraEnabled));
+    enableDisableCam(!localCameraEnabled)
     ReactGA.event({
       category: "Camera Button",
       action: "Camera Button Pressed",

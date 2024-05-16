@@ -52,7 +52,7 @@ const EarlyAccess = () => {
           <Button
             onClick={() => {
               const user = "Guest + " + Math.random().toString().substr(2, 8);
-              registerNewUser(user);
+              //registerNewUser(user);
               dispatch(setUserName(user));
               ReactGA.event({
                 category: "Early Access",

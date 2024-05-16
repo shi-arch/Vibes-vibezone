@@ -85,7 +85,7 @@ export const CreatePeerConnection = async () => {
 
 };
 
-export const callToOtherUser = (calleeDetails) => {  
+export const callToOtherUser = (calleeDetails) => {
   connectedUserSocketId = calleeDetails.socketId;
   store.dispatch(setCallState('CALL_IN_PROGRESS'));
   wss.sendPreOffer({
@@ -96,21 +96,17 @@ export const callToOtherUser = (calleeDetails) => {
   });
 };
 
-export const handlePreOffer = async (data) => {  
+export const handlePreOffer = async (data) => {
   if (checkIfCallIsPossible()) {
-    
     connectedUserSocketId = data.callerSocketId;
     await CreatePeerConnection();
-    wss.sendPreOfferAnswer({
-      callerSocketId: connectedUserSocketId,
-      answer: preOfferAnswers.CALL_ACCEPTED
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+    wss.sendWebRTCOffer({
+      calleeSocketId: connectedUserSocketId,
+      offer: offer
     });
     store.dispatch(setCallState('CALL_IN_PROGRESS'));
-  } else {
-    wss.sendPreOfferAnswer({
-      callerSocketId: data.callerSocketId,
-      answer: preOfferAnswers.CALL_NOT_AVAILABLE
-    });
   }
 };
 
@@ -133,7 +129,6 @@ export const rejectIncomingCallRequest = () => {
 };
 
 export const handlePreOfferAnswer = (data) => {
-  
   store.dispatch(setCallingDialogVisible(false));
   if (data.answer === preOfferAnswers.CALL_ACCEPTED) {
     sendOffer();
@@ -153,7 +148,6 @@ export const handlePreOfferAnswer = (data) => {
 };
 
 const sendOffer = async () => {
-  
   const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
   wss.sendWebRTCOffer({
@@ -162,7 +156,7 @@ const sendOffer = async () => {
   });
 };
 
-export const handleOffer = async (data) => {  
+export const handleOffer = async (data) => {
   await peerConnection.setRemoteDescription(data.offer);
   const answer = await peerConnection.createAnswer();
   await peerConnection.setLocalDescription(answer);
@@ -172,11 +166,10 @@ export const handleOffer = async (data) => {
   });
 };
 
-export const handleAnswer = async (data) => {  
+export const handleAnswer = async (data) => {
   store.dispatch(setCallState('CALL_IN_PROGRESS'));
   store.dispatch(setButtonLabel('Skip'))
   store.dispatch(setDisableButton(false))
-  wss.turnConnectedCuserInActive()
   await peerConnection.setRemoteDescription(data.answer);
 };
 
@@ -188,7 +181,7 @@ export const handleCandidate = async (data) => {
     console.error('error occured when trying to add received ice candidate', err);
   }
 };
-export const checkIfCallIsPossible = () => {  
+export const checkIfCallIsPossible = () => {
   if (store.getState().callSlice.callState !== 'CALL_AVAILABLE') {
     return false;
   } else {
@@ -219,7 +212,7 @@ export const switchForScreenSharingStream = async () => {
   }
 };
 
-export const handleUserHangedUp = async () => { 
+export const handleUserHangedUp = async () => {
   await resetCallDataAfterHangUp();
 };
 
