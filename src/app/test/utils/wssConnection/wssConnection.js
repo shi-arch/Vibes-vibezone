@@ -40,7 +40,7 @@ export const connectWithWebSocket = async () => {
   });
 
   socket.on('broadcast', (data) => {
-    handleBroadcastEvents(data);    
+    handleBroadcastEvents(data);
   });
 
   socket.on('new-caller-found', (calleeUserData) => {
@@ -50,7 +50,7 @@ export const connectWithWebSocket = async () => {
   // listeners related with direct call
   socket.on('pre-offer', (data) => {
     dispatch(setButtonLabel('Skip'))
-    dispatch(setSelectedUserData({socketId: data.callerSocketId}))
+    dispatch(setSelectedUserData({ socketId: data.callerSocketId }))
     dispatch(setCalleeUserName(data.callerUsername))
     webRTCHandler.handlePreOffer(data);
   });
@@ -60,20 +60,20 @@ export const connectWithWebSocket = async () => {
   });
 
   socket.on('webRTC-offer', (data) => {
-    
+
     webRTCHandler.handleOffer(data);
   });
 
   socket.on('get-active-users', (data) => {
     const obj = {
-      event:broadcastEventTypes.ACTIVE_USERS,
+      event: broadcastEventTypes.ACTIVE_USERS,
       activeUsers: data
-    }   
-     
-    handleBroadcastEvents(obj)   
+    }
+
+    handleBroadcastEvents(obj)
   });
 
-  socket.on('webRTC-answer', (data) => {    
+  socket.on('webRTC-answer', (data) => {
     webRTCHandler.handleAnswer(data);
   });
 
@@ -96,13 +96,14 @@ export const connectWithWebSocket = async () => {
   });
   socket.on("get-active-user", (user) => {
     let userData = user
-    if(user.findActiveUser){
-      userData = user.findActiveUser
+    if (user.findActiveUser) {
+      userData = user.findActiveUser      
     } else {
       dispatch(setTriggerCall(true))
-    } 
+    }
     dispatch(setUserToCall(userData))
-  });  
+
+  });
   socket.on("stop typing", () => {
     dispatch(setIsTyping(false))
     dispatch(setUserName(""))
@@ -113,27 +114,24 @@ export const connectWithWebSocket = async () => {
   });
   socket.on("isUser-available", (data) => {
     dispatch(setUserAvailable(data))
-  });  
+  });
   socket.emit("setup", store.getState().loginSlice.loginDetails._id);
   socket.on("me", (id) => {
     dispatch(setMySocketId(id))
   })
   socket.on("send-message", (data) => {
     let arr = _.cloneDeep(store.getState().chatSlice.messagesArr)
-    let o = {message: data.msgObj.message, sender: false}
-    if(arr.length){
-      arr[arr.length] = o 
+    let o = { message: data.msgObj.message, sender: false }
+    if (arr.length) {
+      arr[arr.length] = o
     } else {
       arr.push(o)
-    }    
+    }
     dispatch(setMessages(arr))
   })
-  socket.on("get-active-user", (user) => {
-    dispatch(setUserToCall(user))
-  })  
 };
 
-export const registerNewUser = (username, enableCam) => {  
+export const registerNewUser = (username, enableCam) => {
   socket.emit('register-new-user', {
     username: username,
     socketId: socket.id,
@@ -142,12 +140,16 @@ export const registerNewUser = (username, enableCam) => {
   });
 };
 
-export const startCall = () => {  
+export const checkLastUsers = (username, enableCam) => {
+  socket.emit('last-users');
+};
+
+export const startCall = () => {
   const myObj = {
     username: store.getState().chatSlice.userName,
     calleeUserSocketId: store.getState().callSlice.userToCall.socketId,
   }
-  
+
   socket.emit('start-random-call', myObj);
 };
 
@@ -156,16 +158,16 @@ export const getAvailableUser = async () => {
 };
 
 export const getActiveUser = async (flag) => {
-  socket.emit('get-active-user', {flag: flag || '', prevUser: store.getState().callSlice.userToCall || ''});
+  socket.emit('get-active-user', { flag: flag || '', prevUser: store.getState().callSlice.userToCall || '' });
 };
 
 export const handleMeOnlineOffline = async (isOnline) => {
-  
-  socket.emit('set-me-offline-and-online', {id: socket.id, isOnline: isOnline});
+
+  socket.emit('set-me-offline-and-online', { id: socket.id, isOnline: isOnline });
 };
 
 export const updateName = (username) => {
-  socket.emit('update-name', {name: username, socketId: socket.id});
+  socket.emit('update-name', { name: username, socketId: socket.id });
 };
 
 export const sendMessage = (message) => {
@@ -194,11 +196,11 @@ export const stopTypingMethod = () => {
 
 // emitting events to server related with direct call
 
-export const sendPreOffer = (data) => {  
+export const sendPreOffer = (data) => {
   //stp 1, my system
   socket.emit('pre-offer', data);
 };
-export const enableDisableCam = (enable) => {  
+export const enableDisableCam = (enable) => {
   socket.emit('enableDisableCam', enable);
 };
 
@@ -207,11 +209,11 @@ export const sendPreOfferAnswer = (data) => {
 };
 
 export const closeTab = (data) => {
-  socket.emit('disconnect-current-user', store.getState().callSlice.userToCall.socketId);
+  socket.emit('disconnect-current-user', {userSocketId: store.getState().callSlice.userToCall.socketId, mySocketId: socket.id});
 };
 
 export const sendWebRTCOffer = (data) => {
-  
+
   socket.emit('webRTC-offer', data);
 };
 

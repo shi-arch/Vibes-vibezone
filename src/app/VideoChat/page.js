@@ -15,35 +15,44 @@ import CallIcons from '../../components/CallIcons';
 import ActiveUsers from '../../components/ActiveUsers';
 import EarlyBoardAccessModal from "../../components/Modals/EarlyAccessBardModal";
 import EarlybardHeader from "../../components/EarlyBardHeader";
+import { useNavigate } from "react-router-dom";
 
 const VideoChat = () => {
   const dispatch = useDispatch()
+  const router = useNavigate();
   const { userName } = useSelector(state => state.chatSlice)
   const { localStream, callState, remoteStream, localCameraEnabled, localMicrophoneEnabled, hangUps } = useSelector((state) => state.callSlice);
-  
+
 
   useEffect(async () => {
     const streamObj = await getLocalStream()
     await CreatePeerConnection();
-    Swal.fire({
-      title: "Want to enable the camera?",
-      text: "Enabling camera will better help you to communicate with strangers!",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, enable it!'
-    }).then(async (res) => {      
-      await getAvailableUser()
-      let enableCam = true
-      if(res.dismiss == 'cancel'){
-        enableCam = false
-      }
-      registerNewUser(userName, enableCam);
-      streamObj.getVideoTracks()[0].enabled = enableCam;
-      dispatch(setLocalCameraEnabled(enableCam))
-    })
+    if (userName) {
+      Swal.fire({
+        title: "Want to enable the camera?",
+        text: "Enabling camera will better help you to communicate with strangers!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, enable it!'
+      }).then(async (res) => {
+        await getAvailableUser()
+        let enableCam = true
+        if (res.dismiss == 'cancel') {
+          enableCam = false
+        }
+        registerNewUser(userName, enableCam);
+        streamObj.getVideoTracks()[0].enabled = enableCam;
+        dispatch(setLocalCameraEnabled(enableCam))
+      })
+    }
   }, [])
+  useEffect(() => {
+    if(!userName){
+      window.location.href = window.location.origin
+    }
+  }, [userName])
   return (
     <div className="video-chat-bg-container">
       <EarlybardHeader />

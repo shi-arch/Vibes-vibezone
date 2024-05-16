@@ -171,6 +171,7 @@ export const handleAnswer = async (data) => {
   store.dispatch(setButtonLabel('Skip'))
   store.dispatch(setDisableButton(false))
   await peerConnection.setRemoteDescription(data.answer);
+  wss.checkLastUsers();
 };
 
 export const handleCandidate = async (data) => {
