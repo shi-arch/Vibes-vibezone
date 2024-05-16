@@ -156,7 +156,7 @@ export const getAvailableUser = async () => {
 };
 
 export const getActiveUser = async (flag) => {
-  socket.emit('get-active-user', {flag: flag, prevUser: store.getState().callSlice.userToCall});
+  socket.emit('get-active-user', {flag: flag || '', prevUser: store.getState().callSlice.userToCall || ''});
 };
 
 export const handleMeOnlineOffline = async (isOnline) => {
