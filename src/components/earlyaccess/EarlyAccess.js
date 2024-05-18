@@ -2,7 +2,7 @@ import { Box, Typography, Button } from "@mui/material";
 
 import { registerNewUser } from "../../app/test/utils/wssConnection/wssConnection";
 import { useNavigate } from "react-router-dom";
-import { setUserName } from "../../redux/features/chatSlice";
+import { setUserLoggedIn, setUserName } from "../../redux/features/chatSlice";
 import { useDispatch } from "react-redux";
 import ReactGA from "react-ga4";
 
@@ -52,8 +52,8 @@ const EarlyAccess = () => {
           <Button
             onClick={() => {
               const user = "Guest + " + Math.random().toString().substr(2, 8);
-              //registerNewUser(user);
               dispatch(setUserName(user));
+              dispatch(setUserLoggedIn(user));
               ReactGA.event({
                 category: "Early Access",
                 action: "Early Access Button",

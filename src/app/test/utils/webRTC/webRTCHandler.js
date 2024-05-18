@@ -151,7 +151,7 @@ export const handleOffer = async (data) => {
 export const handleAnswer = async (data) => {
   store.dispatch(setCallState('CALL_IN_PROGRESS'));
   store.dispatch(setButtonLabel('Skip'))
-  store.dispatch(setDisableButton(false))
+  store.dispatch(setDisableButton(true))
   await peerConnection.setRemoteDescription(data.answer);
   wss.checkLastUsers();
 };

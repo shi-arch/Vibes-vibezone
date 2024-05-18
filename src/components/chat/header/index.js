@@ -12,6 +12,7 @@ import { CreatePeerConnection, callToOtherUser, getLocalStream } from "../../../
 import { closeTab } from "../../../app/test/utils/wssConnection/wssConnection.js";
 const notification = true;
 window.onbeforeunload = (event) => {
+  window.location.href = window.location.origin
   closeTab()  
 };
 
