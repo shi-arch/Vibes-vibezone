@@ -49,7 +49,6 @@ export const connectWithWebSocket = async () => {
 
   // listeners related with direct call
   socket.on('pre-offer', (data) => {
-    debugger
     dispatch(setButtonLabel('Skip'))
     dispatch(setSelectedUserData({ socketId: data.callerSocketId }))
     dispatch(setCalleeUserName(data.callerUsername))
@@ -63,15 +62,6 @@ export const connectWithWebSocket = async () => {
   socket.on('webRTC-offer', (data) => {
 
     webRTCHandler.handleOffer(data);
-  });
-
-  socket.on('get-active-users', (data) => {
-    const obj = {
-      event: broadcastEventTypes.ACTIVE_USERS,
-      activeUsers: data
-    }
-
-    handleBroadcastEvents(obj)
   });
 
   socket.on('webRTC-answer', (data) => {
@@ -103,7 +93,6 @@ export const connectWithWebSocket = async () => {
       dispatch(setTriggerCall(true))
     }
     dispatch(setUserToCall(userData))
-
   });
   socket.on("stop typing", () => {
     dispatch(setIsTyping(false))
