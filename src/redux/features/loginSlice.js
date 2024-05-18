@@ -14,7 +14,7 @@ const initialState = {
     totalUserCount: 0,
     activeUsersCount: 0
   },
-  redirectToHome: false
+  socketConnection: ""
 };
 
 const loginSlice = createSlice({
@@ -45,12 +45,12 @@ const loginSlice = createSlice({
     setTotalUsers: (state, actions) => {
       state.totalUsers = actions.payload;
     },
-    setRedirectToHome: (state, actions) => {
-      state.redirectToHome = actions.payload;
+    setSocketConnection: (state, actions) => {
+      state.socketConnection = actions.payload;
     }
   },
 });
 
-export const { setLoginDetails, setRedirectToHome, setTotalUsers, setVerifyOtp, setToken, setUserProfile, setAllUsers, setAllPreferences, setUserSelectedTopics } = loginSlice.actions;
+export const { setLoginDetails, setSocketConnection, setTotalUsers, setVerifyOtp, setToken, setUserProfile, setAllUsers, setAllPreferences, setUserSelectedTopics } = loginSlice.actions;
 
 export default loginSlice.reducer;

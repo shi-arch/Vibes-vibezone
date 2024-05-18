@@ -25,7 +25,8 @@ const initialState = {
   startCall: false,
   userToCall: "",
   triggerCall: false,
-  disableButton: false
+  disableButton: false,
+  socketConnection: ""
 };
 
 
@@ -89,10 +90,13 @@ const callSlice = createSlice({
     },
     setDisableButton: (state, actions) => {
       state.disableButton = actions.payload;
+    },
+    setSocketConnection: (state, actions) => {
+      state.socketConnection = actions.payload;
     }
   }  
 });
 
-export const { setUserToCall, setTriggerCall, setLocalStream,setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setHangUp, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
+export const { setSocketConnection, setUserToCall, setTriggerCall, setLocalStream,setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setHangUp, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
 
 export default callSlice.reducer;

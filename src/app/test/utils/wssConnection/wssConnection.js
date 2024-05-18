@@ -49,6 +49,7 @@ export const connectWithWebSocket = async () => {
 
   // listeners related with direct call
   socket.on('pre-offer', (data) => {
+    debugger
     dispatch(setButtonLabel('Skip'))
     dispatch(setSelectedUserData({ socketId: data.callerSocketId }))
     dispatch(setCalleeUserName(data.callerUsername))
@@ -197,7 +198,6 @@ export const stopTypingMethod = () => {
 // emitting events to server related with direct call
 
 export const sendPreOffer = (data) => {
-  //stp 1, my system
   socket.emit('pre-offer', data);
 };
 export const enableDisableCam = (enable) => {
