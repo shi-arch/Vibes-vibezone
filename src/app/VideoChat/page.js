@@ -19,12 +19,13 @@ import { useNavigate } from "react-router-dom";
 
 const VideoChat = () => {
   const dispatch = useDispatch()
-  const { userName, userLoggedIn } = useSelector(state => state.chatSlice)
-  useEffect(async () => {
-    const streamObj = await getLocalStream()
+  const { userName, userLoggedIn } = useSelector(state => state.chatSlice)     
+  useEffect(() => {
+    (async function() {
+      const streamObj = await getLocalStream()
     await CreatePeerConnection();
     if (userName) {
-      Swal.fire({
+      Swal.fire({        
         title: "Want to enable the camera?",
         text: "Enabling camera will better help you to communicate with strangers!",
         type: "warning",
@@ -43,6 +44,8 @@ const VideoChat = () => {
         dispatch(setLocalCameraEnabled(enableCam))
       })
     }
+    })();
+    
   }, [])
   useEffect(() => {
     if(!userLoggedIn){

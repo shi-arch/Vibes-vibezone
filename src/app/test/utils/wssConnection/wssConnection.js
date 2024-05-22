@@ -45,10 +45,15 @@ export const connectWithWebSocket = async () => {
   })
 
   socket.on('pre-offer', (data) => {
-    dispatch(setButtonLabel('Skip'))
-    dispatch(setSelectedUserData({ socketId: data.callerSocketId }))
-    dispatch(setCalleeUserName(data.callerUsername))
-    webRTCHandler.handlePreOffer(data);
+    try {
+      dispatch(setButtonLabel('Skip'))
+      dispatch(setSelectedUserData({ socketId: data.callerSocketId }))
+      dispatch(setCalleeUserName(data.callerUsername))
+      webRTCHandler.handlePreOffer(data);
+    } catch (err) {
+      console.log(err)
+    }
+
   });
 
   socket.on('pre-offer-answer', (data) => {
@@ -80,8 +85,8 @@ export const connectWithWebSocket = async () => {
   });
   socket.on("get-active-user", (user) => {
     let userData = user
-    if (user.findActiveUser) {
-      userData = user.findActiveUser      
+    if (user && user.findActiveUser) {
+      userData = user.findActiveUser
     } else {
       dispatch(setTriggerCall(true))
     }
@@ -191,7 +196,7 @@ export const sendPreOfferAnswer = (data) => {
 };
 
 export const closeTab = (data) => {
-  socket.emit('disconnect-current-user', {userSocketId: store.getState().callSlice.userToCall.socketId, mySocketId: socket.id});
+  socket.emit('disconnect-current-user', { userSocketId: store.getState().callSlice.userToCall.socketId, mySocketId: socket.id });
 };
 
 export const sendWebRTCOffer = (data) => {

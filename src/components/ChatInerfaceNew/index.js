@@ -25,20 +25,6 @@ const ChatInterfaceNew = () => {
     setMessage(val)
   }
 
-  // useEffect(() => {
-  //   if (input) {
-  //     input.addEventListener("keypress", function (event) {
-  //       if (event.key === "Enter") {
-  //         event.preventDefault();
-  //         if (message) {
-  //           document.getElementById("msg").onclick = sendMsg();
-  //         }
-  //       }
-  //     });
-  //   }
-  // }, [input])
-
-
   const handleKeyDown = (e)=>{
     if (e.key==='Enter'){
       sendMsg()
@@ -63,14 +49,7 @@ const ChatInterfaceNew = () => {
         label: 'send Message Button'
       })
       setMessage("")
-    } 
-    // else {
-    //   Swal.fire({
-    //     title: "sorry...",
-    //     text: "You can't send message without calling or message should not be empty!",
-    //     icon: "error",
-    //   })
-    // }
+    }
   }
   return (
     <div className="chatInterFaceNew-bg-container">
