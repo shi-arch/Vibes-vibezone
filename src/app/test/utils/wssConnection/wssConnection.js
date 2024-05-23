@@ -1,10 +1,10 @@
 import socketClient from 'socket.io-client';
-import store from '../../../redux/store';
+import store from '../../../../redux/store';
 import * as webRTCHandler from '../webRTC/webRTCHandler';
-import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData, setIsTyping, setUserAvailable } from '../../../redux/features/chatSlice';
-import { getApi } from '../../../response/api';
-import { setTriggerCall, setUserToCall } from '../../../redux/features/callSlice';
-import { setTotalUsers } from '../../../redux/features/loginSlice';
+import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData, setIsTyping, setUserAvailable } from '../../../../redux/features/chatSlice';
+import { getApi } from '../../../../response/api';
+import { setButtonLabel, setDisableButton, setTriggerCall, setUserToCall } from '../../../../redux/features/callSlice';
+import { setTotalUsers } from '../../../../redux/features/loginSlice';
 const token = store.getState().loginSlice.token || ""
 
 const SERVER = process.env.REACT_APP_BASEURL;
@@ -45,10 +45,15 @@ export const connectWithWebSocket = async () => {
   })
 
   socket.on('pre-offer', (data) => {
-    //dispatch(setButtonLabel('Skip'))
-    dispatch(setSelectedUserData({ socketId: data.callerSocketId }))
-    dispatch(setCalleeUserName(data.callerUsername))
-    webRTCHandler.handlePreOffer(data);
+    try {
+      dispatch(setButtonLabel('Skip'))
+      dispatch(setSelectedUserData({ socketId: data.callerSocketId }))
+      dispatch(setCalleeUserName(data.callerUsername))
+      webRTCHandler.handlePreOffer(data);
+    } catch (err) {
+      console.log(err)
+    }
+
   });
 
   socket.on('pre-offer-answer', (data) => {
@@ -61,7 +66,7 @@ export const connectWithWebSocket = async () => {
   });
 
   socket.on('webRTC-answer', (data) => {
-    //dispatch(setDisableButton(true))
+    dispatch(setDisableButton(true))
     webRTCHandler.handleAnswer(data);
   });
 
@@ -80,8 +85,8 @@ export const connectWithWebSocket = async () => {
   });
   socket.on("get-active-user", (user) => {
     let userData = user
-    if (user.findActiveUser) {
-      userData = user.findActiveUser      
+    if (user && user.findActiveUser) {
+      userData = user.findActiveUser
     } else {
       dispatch(setTriggerCall(true))
     }
@@ -123,7 +128,7 @@ export const registerNewUser = (username, enableCam) => {
   });
 };
 
-export const checkLastUsers = () => {
+export const checkLastUsers = (username, enableCam) => {
   socket.emit('last-users');
 };
 
@@ -191,7 +196,7 @@ export const sendPreOfferAnswer = (data) => {
 };
 
 export const closeTab = (data) => {
-  socket.emit('disconnect-current-user', {userSocketId: store.getState().callSlice.userToCall.socketId, mySocketId: socket.id});
+  socket.emit('disconnect-current-user', { userSocketId: store.getState().callSlice.userToCall.socketId, mySocketId: socket.id });
 };
 
 export const sendWebRTCOffer = (data) => {
@@ -199,10 +204,10 @@ export const sendWebRTCOffer = (data) => {
   socket.emit('webRTC-offer', data);
 };
 
-export const sendWebRTCAnswer = (data) => {  
+export const sendWebRTCAnswer = (data) => {
+  store.dispatch(setButtonLabel('Skip'))
+  store.dispatch(setDisableButton(false))
   socket.emit('webRTC-answer', data);
-  //store.dispatch(setButtonLabel('Skip'))
-  //store.dispatch(setDisableButton(false))
 };
 
 export const sendWebRTCCandidate = (data) => {

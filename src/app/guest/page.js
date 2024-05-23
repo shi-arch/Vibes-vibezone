@@ -56,38 +56,33 @@ function Page() {
 
 
 	const callUser = (id) => {
-		try {
-			navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-				setStream(stream)
-				myVideo.current.srcObject = stream
-				const peer = new Peer({
-					initiator: true,
-					trickle: false,
-					stream: stream
-				})
-				peer.on("signal", (data) => {
-					socket.emit("callUser", {
-						userToCall: id,
-						signalData: data,
-						from: me,
-						name: name
-					})
-				})
-				peer.on("stream", (stream) => {
-					userVideo.current.srcObject = stream
-				})
-				socket.on("callAccepted", (data) => {
-					setCallAccepted(true)
-					console.log('data from call accepted', data)
-					setCaller(data.from)
-					peer.signal(data.signal)
-				})
-				connectionRef.current = peer
+		navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+			setStream(stream)
+			myVideo.current.srcObject = stream
+			const peer = new Peer({
+				initiator: true,
+				trickle: false,
+				stream: stream
 			})
-		} catch (err){
-			console.log(err)
-		}
-		
+			peer.on("signal", (data) => {
+				socket.emit("callUser", {
+					userToCall: id,
+					signalData: data,
+					from: me,
+					name: name
+				})
+			})
+			peer.on("stream", (stream) => {
+				userVideo.current.srcObject = stream
+			})
+			socket.on("callAccepted", (data) => {
+				setCallAccepted(true)
+				console.log('data from call accepted', data)
+				setCaller(data.from)
+				peer.signal(data.signal)
+			})
+			connectionRef.current = peer
+		})
 	}
 
 	const answerCall = () => {

@@ -33,7 +33,7 @@ const IncomingCallModal = () => {
           <Typography id="modal-modal-title" variant="h6" component="h2">{callerUsername || 'Guest'}</Typography>
           <div style={{display: 'flex'}}>
           <div className="save-btn">        
-            <Button label="Accept"  type="button" />
+            <Button label="Accept" onClick={acceptIncomingCallRequest}  type="button" />
           </div>
           <div className="save-btn">
             <Button label="Decline"  type="button" />

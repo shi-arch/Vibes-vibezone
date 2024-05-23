@@ -6,7 +6,7 @@ import { Input } from "../commonComponents/commonComponents";
 import ChatsListNew from "../chat/ChatListNew";
 import _, { cloneDeep } from 'lodash'
 import "./index.css";
-import { sendMessage } from "../../app/utils/wssConnection/wssConnection";
+import { sendMessage } from "../../app/test/utils/wssConnection/wssConnection";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessages } from "../../redux/features/chatSlice";
 import Swal from "sweetalert2";
@@ -24,7 +24,6 @@ const ChatInterfaceNew = () => {
   const sendMsgFun = (val) => {
     setMessage(val)
   }
-
 
   const handleKeyDown = (e)=>{
     if (e.key==='Enter'){

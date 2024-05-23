@@ -6,8 +6,10 @@ import OtpInput from "../../components/otpInput/otpInput";
 import { setVerifyOtp, setLoginDetails, setToken } from "../../redux/features/loginSlice";
 import { postApi} from "../../response/api"
 import "./page.css";
-const Page = () => {
-  const {email, contact, countryCode} = useSelector(state => state.loginSlice.loginDetails);
+import { registerNewUser } from "../test/utils/wssConnection/wssConnection";
+const Page = (props) => {
+  console.log("props", props);
+  const {email, Contact, CountryCode} = useSelector(state => state.loginSlice.loginDetails);
   const dispatch = useDispatch();
   const router = useNavigate();
   const [timer, setTimer] = useState(30);
@@ -44,7 +46,7 @@ const Page = () => {
           <p className="verification-text">
             Enter We have sent Verification code to
             <br />
-            {countryCode && countryCode+" "} {email && email || contact && contact}
+            {CountryCode && CountryCode+" "} {email && email || Contact && Contact}
             <span>
               <a href="signup" className="Edit">
                 {" "}
@@ -54,7 +56,7 @@ const Page = () => {
           </p>
           <OtpInput getOtp={setOtp} />
           <button onClick={async () => {
-            let userCred = {contact}
+            let userCred = {Contact}
             if(email){
               userCred = {email}
             }
@@ -62,6 +64,8 @@ const Page = () => {
             const res = await postApi('/verify-otp', userCred)
             if(res.status !== 400){
               localStorage.setItem("userData", JSON.stringify(res));
+              
+              //registerNewUser(res.user.Name || "Guest")
               dispatch(setLoginDetails(res.user));
               dispatch(setToken(res.token));
               dispatch(setVerifyOtp(true))

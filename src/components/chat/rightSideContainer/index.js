@@ -3,11 +3,8 @@ import CallInterface from "../callInterface";
 import ChatInterface from "../chatInterface";
 import Friends from "../chatConnectionsPanel";
 import { useSelector } from "react-redux";
-import VideoCallInterFace from "../../VideoCallInterFace";
-import ChatInterfaceNew from "../../ChatInerfaceNew";
 
 const RightSideContainer = () => {
-  //VideoCallInterFace
   const {leftOpen, css} = useSelector((state) => state.modalSlice);
   return (
     <div
@@ -17,10 +14,8 @@ const RightSideContainer = () => {
     >
       <Header />
       <div className={css ? "" : "bottom-con"}>
-      <VideoCallInterFace />
-      <ChatInterfaceNew />
-        {/* <CallInterface /> */}
-        {/* <ChatInterface /> */}
+        <CallInterface />
+        <ChatInterface />
         <Friends />
       </div>
     </div>

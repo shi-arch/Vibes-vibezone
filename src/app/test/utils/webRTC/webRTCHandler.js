@@ -1,8 +1,8 @@
-import store from '../../../redux/store';
-import { setLocalStream, setCallState, setCallingDialogVisible, setCallerUsername, setCallRejected, setRemoteStream, setScreenSharingActive, setMessage, setHangUp, setStartCall, setButtonLabel, setUserToCall, setDisableButton } from '../../../redux/features/callSlice';
+import store from '../../../../redux/store';
+import { setLocalStream, setCallState, setCallingDialogVisible, setCallerUsername, setCallRejected, setRemoteStream, setScreenSharingActive, setMessage, setHangUp, setStartCall, setButtonLabel, setUserToCall, setDisableButton } from '../../../../redux/features/callSlice';
 import * as wss from '../wssConnection/wssConnection';
 import { useSelector } from 'react-redux';
-import { setLoader } from '../../../redux/features/chatSlice';
+import { setCalleeUserData, setCalleeUserName, setLoader } from '../../../../redux/features/chatSlice';
 import Swal from 'sweetalert2';
 
 const preOfferAnswers = {
@@ -46,9 +46,6 @@ export const CreatePeerConnection = async () => {
 
   peerConnection.ontrack = ({ streams: [stream] }) => {
     store.dispatch(setRemoteStream(stream));
-    store.dispatch(setCallState('CALL_IN_PROGRESS'));
-    store.dispatch(setButtonLabel('Skip'))
-    store.dispatch(setDisableButton(true))
   };
 
   // incoming data channel messages
@@ -90,6 +87,7 @@ export const CreatePeerConnection = async () => {
 
 export const callToOtherUser = (calleeDetails) => {
   connectedUserSocketId = calleeDetails.socketId;
+  store.dispatch(setCallState('CALL_IN_PROGRESS'));
   wss.sendPreOffer({
     callee: calleeDetails,
     caller: {
@@ -108,6 +106,7 @@ export const handlePreOffer = async (data) => {
       calleeSocketId: connectedUserSocketId,
       offer: offer
     });
+    store.dispatch(setCallState('CALL_IN_PROGRESS'));
   }
 };
 
@@ -150,15 +149,12 @@ export const handleOffer = async (data) => {
 };
 
 export const handleAnswer = async (data) => {
-  if (data && data.answer) {
-    await establishPeerConnection(data)    
-    wss.checkLastUsers();
-  }
-};
-
-const establishPeerConnection = async (data) => {
+  store.dispatch(setCallState('CALL_IN_PROGRESS'));
+  store.dispatch(setButtonLabel('Skip'))
+  store.dispatch(setDisableButton(true))
   await peerConnection.setRemoteDescription(data.answer);
-}
+  wss.checkLastUsers();
+};
 
 export const handleCandidate = async (data) => {
   try {

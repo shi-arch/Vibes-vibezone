@@ -6,71 +6,120 @@ import {
   CameraSvg,
   DownArrowSvg,
 } from "../../svgComponents/svgComponents";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import { useDispatch, useSelector } from "react-redux";
 import { setProfileModal } from "../../../redux/features/modalSlice";
-import { Button, LabelInput } from "../../commonComponents/commonComponents";
+import { Button } from "../../commonComponents/commonComponents";
 import { Box, Modal } from "@mui/material";
 import { postApi } from "../../../response/api";
 import { setUserProfile } from "../../../redux/features/loginSlice";
 import moment from "moment/moment";
-import { validation } from "../../../app/utils/constant";
 const url =
   "https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
-const genderData = [{ key: 'male', label: 'Male' }, { key: 'female', label: 'Female' }, { key: 'other', label: 'Other' }];
+const genderData = [
+  {
+    sex: "Male",
+    id: 1,
+  },
+  {
+    sex: "Female",
+    id: 2,
+  },
+  {
+    sex: "Others",
+    id: 3,
+  },
+];
+
+const LabelInput = ({ type, label, onChange, placeholder, value }) => {
+  return (
+    <div className="label-input-container">
+      <span class="Gender">
+        {label}
+        <span class="text-style-1">*</span>
+      </span>
+      <input
+        type={type}
+        name={label}
+        onChange={(e) => onChange(e.target.value)}
+        value={value}
+        className="input-container-pf"
+        placeholder={placeholder}
+        required
+      />
+    </div>
+  );
+};
 
 const ProfileModal = () => {
   const modalSelector = useSelector((state) => state.modalSlice);
   const { profileModal } = modalSelector;
   const dispatch = useDispatch();
-  const { userProfile } = useSelector((state) => state.loginSlice);
-  const { gender, name, profileImage, status, userName, dob, contact } = userProfile
+  const { Gender, Name, ProfileImage, Status, username, dob, Contact } =
+    useSelector((state) => state.loginSlice.userProfile);
+  const userProfile = useSelector((state) => state.loginSlice.userProfile);
+  const [selectedGender, setSelectedGender] = useState("");
+  const [status, setStatus] = useState();
   const { token } = useSelector((state) => state.loginSlice);
-  const [error, setError] = useState("")
+  const [dropDownSelected, setDropDownSelected] = useState(false);
+  const [DOB, setDOB] = useState();
+  const [name, setName] = useState();
+  const [number, setNumber] = useState();
+  const [userName, setUserName] = useState();
+  const [state, setState] = useState();
+  const [profileImage, setProfileImage] = useState();
+
+  useEffect(() => {
+    if (userProfile) {
+      setDOB(moment(dob).format("YYYY-MM-DD"));
+      setName(Name);
+      setProfileImage(ProfileImage ? ProfileImage : url);
+      setState(Status ? Status : "");
+      setUserName(username ? username : "");
+      setNumber(Contact ? Contact : "");
+      setSelectedGender(Gender ? Gender : "");
+    }
+  }, [userProfile]);
 
   const handleClose = () => {
-    dispatch(setUserProfile(""))
     dispatch(setProfileModal());
+  };
+
+  const handleGenderSelection = (gender) => {
+    console.log(gender);
+    setDropDownSelected(false);
+    setSelectedGender(gender.sex);
   };
 
   const handleDropDownClose = () => {
     setDropDownSelected(!dropDownSelected);
   };
+
   const handleSubmit = async (e) => {
-    const error = await validation(['name', 'contact', 'userName', 'status', 'gender', 'dob'], { name, contact, userName, status, gender, dob });
-    if (!error.isErr) {
-      handleClose();
-      const o = {
-        profileImage: profileImage,
-        name: name,
-        contact: contact,
-        userName: userName,
-        status: status,
-        gender: gender,
-        dob: dob,
-      };
-      const res = await postApi("/profile", o, token);
-      if (res) {
-        dispatch(setUserProfile(o));
-        setError("")
-        Swal.fire({
-          title: "Awesome!",
-          text: "Your profile updated successfully!",
-          icon: "success",
-        });
-      } else {
-        Swal.fire({
-          title: "Oops...!",
-          text: "Something went wrong!",
-          icon: "error",
-        });
-      }
+    handleClose();
+    const o = {
+      ProfileImage: profileImage,
+      Name: name,
+      Contact: number,
+      username: userName,
+      Status: state,
+      Gender: selectedGender,
+      DOB: DOB,
+    };
+    const res = await postApi("/profile", o, token);
+    if (res) {
+      dispatch(setUserProfile(o));
+      Swal.fire({
+        title: "Awesome!",
+        text: "Your profile updated successfully!",
+        icon: "success",
+      });
     } else {
-      setError(error)
+      Swal.fire({
+        title: "Oops...!",
+        text: "Something went wrong!",
+        icon: "error",
+      });
     }
   };
 
@@ -91,17 +140,9 @@ const ProfileModal = () => {
     formData.append("profileImg", e.target.files[0]);
     const res = await postApi("/image-upload", formData, token);
     if (res) {
-      const cloneData = _.cloneDeep(userProfile)
-      cloneData["profileImage"] = res.data
-      dispatch(setUserProfile(cloneData))
+      setProfileImage(res.data);
     }
   };
-
-  const handleChange = (value, name) => {
-    const cloneData = _.cloneDeep(userProfile)
-    cloneData[name] = value
-    dispatch(setUserProfile(cloneData))
-  }
 
   return (
     <Modal
@@ -140,46 +181,45 @@ const ProfileModal = () => {
                   <span className="Product-Designer">{status}</span>
                 </div>
               </div>
+
               <div>
                 <div>
+                  <span class="Gender">
+                    Gender<span class="text-style-1">*</span>
+                  </span>
                   <div className="drop-down-bg-container">
-                    <div>
-                      <FormControl sx={{ m: 1, minWidth: 300 }}>
-                        <InputLabel id="demo-simple-select-autowidth-label">Gender</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-autowidth-label"
-                          id="demo-simple-select-autowidth"
-                          value={gender}
-                          onChange={(e) => {
-                            handleChange(e.target.value, "gender")
-                          }}
-                          autoWidth
-                          label="Gender"
-                        >
-                          <MenuItem value="">
-                          </MenuItem>
-                          {
-                            genderData.map((item, index) => {
-                              return (
-                                <MenuItem key={index} value={item.key}>{item.label}</MenuItem>
-                              )
-                            })
-                          }
-                        </Select>
-                      </FormControl>
-                      <span style={{color: '#D90202'}}>{error.isErr && error.type === "gender" ? error.msg : ""}</span>
+                    <div className="gender-drop-down">
+                      {selectedGender}
+                      <button
+                        className="drop-down-button"
+                        onClick={handleDropDownClose}
+                      >
+                        <DownArrowSvg />
+                      </button>
                     </div>
+                    {dropDownSelected && (
+                      <div className={`gender-options-dropdown-container `}>
+                        {genderData.map((gender) => (
+                          <div
+                            key={gender.id}
+                            onClick={() => handleGenderSelection(gender)}
+                            className="gender-item"
+                          >
+                            {gender.sex}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
+
                 <LabelInput
                   type="date"
                   label="DOB"
-                  onChange={handleChange}
+                  onChange={setDOB}
                   placeholder=""
-                  value={dob}
-                  name="dob"
+                  value={DOB}
                 />
-                <span style={{color: '#D90202'}}>{error.isErr && error.type === "dob" ? error.msg : ""}</span>
               </div>
             </div>
 
@@ -187,39 +227,31 @@ const ProfileModal = () => {
               <LabelInput
                 type="text"
                 label="Name"
-                onChange={handleChange}
+                onChange={setName}
                 placeholder=""
                 value={name}
-                name="name"
               />
-              <span style={{color: '#D90202'}}>{error.isErr && error.type === "name" ? error.msg : ""}</span>
               <LabelInput
                 type="tel"
                 label="Number"
-                onChange={handleChange}
+                onChange={setNumber}
                 placeholder=""
-                value={contact}
-                name="contact"
+                value={number}
               />
-              <span style={{color: '#D90202'}}>{error.isErr && error.type === "contact" ? error.msg : ""}</span>
               <LabelInput
                 type="text"
                 label="User Name"
-                onChange={handleChange}
+                onChange={setUserName}
                 placeholder=""
                 value={userName}
-                name="userName"
               />
-              <span style={{color: '#D90202'}}>{error.isErr && error.type === "userName" ? error.msg : ""}</span>
               <LabelInput
                 type="text"
-                label="Status"
-                onChange={handleChange}
+                label="Statue"
+                onChange={setState}
                 placeholder=""
-                value={status}
-                name="status"
+                value={state}
               />
-              <span style={{color: '#D90202'}}>{error.isErr && error.type === "status" ? error.msg : ""}</span>
             </div>
           </div>
           <div className="save-btn">

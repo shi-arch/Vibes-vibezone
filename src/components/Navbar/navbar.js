@@ -28,11 +28,11 @@ const Navbar = () => {
           <div href="#contact" className="nav-link sm-lg-nav-links">
             <span>Contact</span>
           </div>
-          <Link to="/signup" className="nav-link">
+          {/* <Link to="/signup" className="nav-link">
             <button style={{ cursor: "pointer" }} className="sign-up">
               Sign Up
             </button>
-          </Link>
+          </Link> */}
         </div>
         <button className="hamburger-button"> 
           <img src={Hamburger} alt="Hamburger-icon" className="hamburger-icon" />

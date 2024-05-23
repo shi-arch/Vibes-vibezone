@@ -3,42 +3,52 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoginDetails } from "../../redux/features/loginSlice";
 import "./page.css";
 import { useNavigate } from "react-router-dom";
-import { postApi } from "../../response/api"
-import { Loader } from '../../components/commonComponents/commonComponents'
-import { setLoader } from "../../redux/features/chatSlice";
-import { isNumeric, validation } from "../utils/constant";
+import { postApi} from "../../response/api"
+import {Loader} from '../../components/commonComponents/commonComponents'
+import { connectWithWebSocket } from "../test/utils/wssConnection/wssConnection";
+const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+const phoneRegex = /^[6-9]\d{9}$/
+
+
 const Page = () => {
-  const [userInput, setUserInput] = useState({ type: "email", val: "" });  
-  const [isErr, setError] = useState({type: "email", msg: "", isErr: false});
-  const {loader} = useSelector(state => state.chatSlice)
+  const [userInput, setUserInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useNavigate();
+  useEffect(() => {
+    connectWithWebSocket()
+  }, [])
   const handleGetOtp = async () => {
-    dispatch(setLoader(true))
-    const error = await validation([userInput.type], { [userInput.type]: userInput.val })    
-    if (!error.isErr) {
-      const res = await postApi('/login', { [userInput.type]: userInput.val, countryCode: "+91" })
-      if (res) {
-        dispatch(setLoginDetails(res));
-        router("/verify-otp");
-      }
-    } else {
-      setError(error)
+    setIsLoading(true)
+    let obj = {Contact: userInput}
+    let isErr = true
+    if(emailRegex.test(userInput)){
+      obj = {email: userInput, CountryCode: "+91"}
+      isErr = false 
+    } else if(phoneRegex.test(userInput)){
+      obj = {Contact: userInput, CountryCode: "+91"}
+      isErr = false
     }
+    if(isErr){
+      alert("Invalid Email or Phone Number")
+      return
+    }    
+    const res = await postApi('/login', obj)
+    if(res){      
+      dispatch(setLoginDetails(res));
+      router("/verify-otp");  
+    } 
+    setIsLoading(false)   
   };
   const handleEmailOrPhoneNumber = (event) => {
-    const {value} = event.target
-    let user = { val: value, type: 'email' }
-    if (isNumeric(value)) {
-      user.type = 'contact'
-    }
-    setUserInput(user);
+    setUserInput(event.target.value);
   };
 
   return (
     <>
+      {/* <Navbar /> */}
       <div className="Sign-Up">
-        {loader ? <Loader /> : ""}
+      { isLoading ? <Loader /> : ""}
         <div className="login-form">
           <h1 className="Login-or-sign-up">
             Login
@@ -50,8 +60,8 @@ const Page = () => {
             <input
               type="tel"
               className="number-box"
-              //value={userInput?.val}
-              onBlur={handleEmailOrPhoneNumber}
+              value={userInput}
+              onChange={handleEmailOrPhoneNumber}
               placeholder="Enter your 10 digit number or email"
             />
             <p className="privacy-policy">
@@ -63,10 +73,9 @@ const Page = () => {
                 </a>
               </span>
             </p>
-            <button style={{ cursor: "pointer" }} type="button" onClick={handleGetOtp} className="button-otp">
+            <button style={{cursor: "pointer"}} type="button" onClick={handleGetOtp} className="button-otp">
               Get OTP
             </button>
-            <span style={{color: '#D90202'}}>{isErr?.msg}</span>
           </form>
           <p>
             Have trouble logging in?

@@ -7,11 +7,11 @@ import {
 } from "../../redux/features/callSlice.js";
 import {
   hangUpAutomateCall
-} from "../../app/utils/webRTC/webRTCHandler.js";
+} from "../../app/test/utils/webRTC/webRTCHandler.js";
 
 
 import ReactGA from "react-ga4"
-import { enableDisableCam } from '../../app/utils/wssConnection/wssConnection.js';
+import { enableDisableCam } from '../../app/test/utils/wssConnection/wssConnection.js';
 
 const CallIcons = () => {
   const dispatch = useDispatch();

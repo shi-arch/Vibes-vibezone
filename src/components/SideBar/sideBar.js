@@ -33,7 +33,7 @@ import { result } from "../commonComponents/commonComponents";
 
 const SideBar = () => {
   const modalSelector = useSelector(state => state.modalSlice);
-  const { profileImage, name, contact, userName, status } = useSelector(state => state.loginSlice.userProfile);
+  const { ProfileImage, Name, Contact, username, Status, Gender, DOB } = useSelector(state => state.loginSlice.userProfile);
   const { leftOpen } = modalSelector;
   result.onchange = () => {
     if (result.matches) {
@@ -82,13 +82,13 @@ const SideBar = () => {
         <div className="side-bar-top-container">
           <div className="profile-container">
             <div className="sidebar-profile">
-              <img className="sidebar-profile" src={profileImage ? profileImage : sidebarProfile} alt="sidebar-profile" />
+              <img className="sidebar-profile" src={ProfileImage ? ProfileImage : sidebarProfile} alt="sidebar-profile" />
             </div>
             <div className="img-icon-container">
               <CameraSvg />
             </div>
           </div>
-          <h5 className="user-name-head">{name ? name : "Guest User"}</h5>
+          <h5 className="user-name-head">{Name ? Name : "Pavan Kumar"}</h5>
           <p className="side-bar-user-prof-text">Software Developer</p>
         </div>
 
@@ -96,7 +96,7 @@ const SideBar = () => {
           <div className="side-bar-icon-text-container">
             <CallSvg />
             <div>
-              <p className="mobile-number-text">+91 {contact ? contact : 1234567890}</p>
+              <p className="mobile-number-text">+91 {Contact ? Contact : 1234567890}</p>
               <p className="phone-text">Phone</p>
             </div>
           </div>
@@ -105,7 +105,7 @@ const SideBar = () => {
             <AtSvg />
 
             <div>
-              <p className="mobile-number-text">{userName ? userName : "guest.user"}</p>
+              <p className="mobile-number-text">{username ? username : "pavan.kumar"}</p>
               <p className="phone-text">Username</p>
             </div>
           </div>
@@ -113,7 +113,7 @@ const SideBar = () => {
           <div className="side-bar-icon-text-container">
             <InfoSvg />
             <div>
-              <p className="mobile-number-text">{status ? status : "Guest status"}</p>
+              <p className="mobile-number-text">{Status ? Status : "Software engineer"}</p>
               <p className="phone-text">status</p>
             </div>
             <button
@@ -167,6 +167,14 @@ const SideBar = () => {
             <BadgesSvg />
             <p className="mobile-number-text">Badges</p>
           </div>
+
+          {/* <SideBarSelections
+        name={BsTrophy}
+        label="Badges"
+        color="#fff"
+        size={16}
+        onClick={handleSelection}
+      /> */}
         </div>
 
         <VibeZonePlans />

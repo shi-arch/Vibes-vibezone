@@ -87,9 +87,9 @@ const EarlyBardAccessModal = () => {
   const handleSubmit = async (e) => {
     if(handleValidation().type !== "") return ;
       ReactGA.event({
-      category: "Early Bird Access Modal Submit Button",
+      category: "Early Bard Access Modal Submit Button",
       action: "Submit",
-      label: "Early Bird Access Button Modal Submit Button",
+      label: "Early Bard Access Button Modal Submit Button",
     });
     handleModalClose();
     const o = {
@@ -137,7 +137,7 @@ const EarlyBardAccessModal = () => {
       <Box>
         <div className="Early-modal-bg-container">
           <div className="top-header">
-            <h6 className="Early-bard-access">Early bird access</h6>
+            <h6 className="Early-bard-access">Early bard access</h6>
             <button
               className="cross-button"
               type="button"
