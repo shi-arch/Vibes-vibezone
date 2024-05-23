@@ -25,25 +25,41 @@ const VideoCallInterFace = () => {
   } = useSelector((state) => state.callSlice);
 
   useEffect(() => {
-    if (localStream) {
-      const localVideo = myVideo.current;
-      localVideo.srcObject = localStream;
-      localVideo.onloadedmetadata = () => {
-        localVideo.play();
-        dispatch(setHangUp(false));
-      };
+    try {
+      if (localStream) {
+        const localVideo = myVideo.current;
+        localVideo.srcObject = localStream;
+        localVideo.onloadedmetadata = () => {
+          localVideo.play();
+          dispatch(setHangUp(false));
+        };
+      }
+    } catch (err) {
+      console.log(err)
     }
+
   }, [localStream]);
 
   useEffect(() => {
-    if (remoteStream) {
-      const remoteVideo = userVideo.current;
-      remoteVideo.srcObject = remoteStream;
-      remoteVideo.onloadedmetadata = () => {
-        remoteVideo.play();
-        dispatch(setHangUp(false));
-      };
+    if(callState === "CALL_IN_PROGRESS" && remoteStream){
+      debugger
     }
+  }, [callState, remoteStream])
+
+  useEffect(() => {
+    try {
+      if (remoteStream) {
+        const remoteVideo = userVideo.current; 
+        remoteVideo.srcObject = remoteStream;
+        remoteVideo.onloadedmetadata = () => {
+          remoteVideo.play();
+          dispatch(setHangUp(false));
+        };
+      }
+    } catch (err) {
+      console.log(err)
+    }
+
   }, [remoteStream]);
   return (
     <div className="video-call-interface-bg-container">
@@ -51,11 +67,11 @@ const VideoCallInterFace = () => {
         {remoteStream && callState === "CALL_IN_PROGRESS" && (
           <video
             id="userVideo"
-            style={{ width: "100%", height: "229px", objectFit: "cover", transform:'scale(-1,1)' }}
+            style={{ width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }}
             ref={userVideo}
             autoPlay
             playsInline
-            //muted
+          //muted
           />
         )}
         {loader ? (
@@ -96,7 +112,7 @@ const VideoCallInterFace = () => {
             id="myVideo"
             style={
               localStream
-                ? { width: "100%", height: "229px", objectFit: "cover", transform:'scale(-1,1)' }
+                ? { width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }
                 : { width: 0, height: 0, visibility: "hidden" }
             }
             ref={myVideo}

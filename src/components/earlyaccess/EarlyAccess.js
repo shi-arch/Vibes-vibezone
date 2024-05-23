@@ -1,6 +1,4 @@
 import { Box, Typography, Button } from "@mui/material";
-
-import { registerNewUser } from "../../app/test/utils/wssConnection/wssConnection";
 import { useNavigate } from "react-router-dom";
 import { setUserLoggedIn, setUserName } from "../../redux/features/chatSlice";
 import { useDispatch } from "react-redux";

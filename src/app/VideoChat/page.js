@@ -5,26 +5,26 @@ import HeaderNew from '../../components/HeaderNew';
 import CallInterface from '../../components/chat/callInterface';
 import VideoCallInterFace from '../../components/VideoCallInterFace';
 import ChatInterfaceNew from '../../components/ChatInerfaceNew';
-import { CreatePeerConnection, getLocalStream } from '../test/utils/webRTC/webRTCHandler';
+import { CreatePeerConnection, getLocalStream } from '../utils/webRTC/webRTCHandler';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocalCameraEnabled } from '../../redux/features/callSlice';
-import { getAvailableUser, registerNewUser } from '../test/utils/wssConnection/wssConnection';
+import { getAvailableUser, registerNewUser } from '../utils/wssConnection/wssConnection';
 import { LogoSvg } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
 import ActiveUsers from '../../components/ActiveUsers';
 import EarlyBoardAccessModal from "../../components/Modals/EarlyAccessBardModal";
 import EarlybardHeader from "../../components/EarlyBardHeader";
-import { useNavigate } from "react-router-dom";
 
 const VideoChat = () => {
-  const dispatch = useDispatch()
-  const { userName, userLoggedIn } = useSelector(state => state.chatSlice)
-  useEffect(async () => {
-    const streamObj = await getLocalStream()
+  const dispatch = useDispatch() 
+  const { userName, userLoggedIn } = useSelector(state => state.chatSlice)     
+  useEffect(() => {
+    (async function() {
+      const streamObj = await getLocalStream()
     await CreatePeerConnection();
     if (userName) {
-      Swal.fire({
+      Swal.fire({        
         title: "Want to enable the camera?",
         text: "Enabling camera will better help you to communicate with strangers!",
         type: "warning",
@@ -43,6 +43,8 @@ const VideoChat = () => {
         dispatch(setLocalCameraEnabled(enableCam))
       })
     }
+    })();
+    
   }, [])
   useEffect(() => {
     if(!userLoggedIn){

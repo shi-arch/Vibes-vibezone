@@ -11,9 +11,9 @@ const EarlybardHeader = () => {
 
   const handleOpenModal = () => {
     ReactGA.event({
-      category: "Early Bard Access Button Modal",
+      category: "Early Bird Access Button Modal",
       action:"Button",
-      label:"Early Bard Access Button Modal"
+      label:"Early Bird Access Button Modal"
     });
     dispatch(setEarlyAccessBardModal());
   };
@@ -50,7 +50,7 @@ const EarlybardHeader = () => {
             // paddingTop: "20px",
           }}
         >
-          Early Bard access is 6 months free for first 100 users...
+          Early Bird access is 6 months free for first 100 users...
         </Typography>
         <Button
           style={{
@@ -70,7 +70,7 @@ const EarlybardHeader = () => {
           }}
           onClick={handleOpenModal}
         >
-          Early Bard Access
+          Early Bird Access
         </Button>
         {/* <div style={{ display: "flex", justifyContent: "flex-end" }}></div> */}
       </Box>

@@ -14,7 +14,8 @@ const initialState = {
     totalUserCount: 0,
     activeUsersCount: 0
   },
-  socketConnection: ""
+  socketConnection: "",
+  error: {isErr: false, msg: ""}
 };
 
 const loginSlice = createSlice({

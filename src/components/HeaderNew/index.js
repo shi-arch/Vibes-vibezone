@@ -4,9 +4,9 @@ import { LogoSvg } from "../svgComponents";
 import "./index.css"
 import { useSelector, useDispatch } from "react-redux";
 import { setButtonLabel, setDisableButton, setTriggerCall } from "../../redux/features/callSlice";
-import { callToOtherUser, hangUpAutomateCall } from "../../app/test/utils/webRTC/webRTCHandler";
+import { callToOtherUser, hangUpAutomateCall } from "../../app/utils/webRTC/webRTCHandler";
 import { setUserName, setLoader, setMessages } from "../../redux/features/chatSlice";
-import { getActiveUser, updateName } from "../../app/test/utils/wssConnection/wssConnection";
+import { getActiveUser, updateName } from "../../app/utils/wssConnection/wssConnection";
 import ActiveUsers from "../ActiveUsers";
 
 import ReactGA from "react-ga4"
@@ -95,9 +95,6 @@ const HeaderNew = () => {
         }}
         value={userName}
       />
-
-
-
       <input
         type="text"
         className="head-input key-words-input"
@@ -108,9 +105,7 @@ const HeaderNew = () => {
 
       <button
         disabled={disableButton}
-        style={ disableButton ? { backgroundColor: bgColor, cursor: 'not-allowed' } : {backgroundColor: bgColor, cursor: 'pointer'}}
-        //style={{backgroundColor: bgColor, cursor: 'pointer'}}
-
+        style={ disableButton ? { backgroundColor: bgColor, cursor: 'not-allowed' } : {backgroundColor: bgColor, cursor: 'pointer'}}        
         className="call-buttons call-button-css"
         onClick={() => {
           ReactGA.event({

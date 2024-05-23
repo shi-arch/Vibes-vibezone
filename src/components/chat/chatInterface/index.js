@@ -13,16 +13,13 @@ import {
   ArrowLeft,
   Send,
 } from "../../svgComponents/index.js";
-import { Input, Button } from "../../commonComponents/commonComponents.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setRightOpen } from "../../../redux/features/modalSlice.js";
 import { postApi } from "../../../response/api.js";
-import { setOnEventChange, setChatData, setMessages } from "../../../redux/features/chatSlice.js";
-//import io from "socket.io-client";
-import { CreatePeerConnection, callToOtherUser, getLocalStream, hangUp } from "../../../app/test/utils/webRTC/webRTCHandler.js";
+import { setMessages } from "../../../redux/features/chatSlice.js";
+import { CreatePeerConnection, callToOtherUser, getLocalStream, hangUp } from "../../../app/utils/webRTC/webRTCHandler.js";
 import { setAvailableUsers } from "../../../redux/features/dashboardSlice.js";
 import { setHangUp, setStartCall } from "../../../redux/features/callSlice.js";
-//const socket = io.connect(process.env.REACT_APP_BASEURL);
 
 
 const ChatInterface = () => {

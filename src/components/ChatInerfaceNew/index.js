@@ -6,7 +6,7 @@ import { Input } from "../commonComponents/commonComponents";
 import ChatsListNew from "../chat/ChatListNew";
 import _, { cloneDeep } from 'lodash'
 import "./index.css";
-import { sendMessage } from "../../app/test/utils/wssConnection/wssConnection";
+import { sendMessage } from "../../app/utils/wssConnection/wssConnection";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessages } from "../../redux/features/chatSlice";
 import Swal from "sweetalert2";
@@ -24,19 +24,6 @@ const ChatInterfaceNew = () => {
   const sendMsgFun = (val) => {
     setMessage(val)
   }
-
-  // useEffect(() => {
-  //   if (input) {
-  //     input.addEventListener("keypress", function (event) {
-  //       if (event.key === "Enter") {
-  //         event.preventDefault();
-  //         if (message) {
-  //           document.getElementById("msg").onclick = sendMsg();
-  //         }
-  //       }
-  //     });
-  //   }
-  // }, [input])
 
 
   const handleKeyDown = (e)=>{
@@ -63,14 +50,7 @@ const ChatInterfaceNew = () => {
         label: 'send Message Button'
       })
       setMessage("")
-    } 
-    // else {
-    //   Swal.fire({
-    //     title: "sorry...",
-    //     text: "You can't send message without calling or message should not be empty!",
-    //     icon: "error",
-    //   })
-    // }
+    }
   }
   return (
     <div className="chatInterFaceNew-bg-container">

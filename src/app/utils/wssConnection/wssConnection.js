@@ -1,10 +1,10 @@
 import socketClient from 'socket.io-client';
-import store from '../../../../redux/store';
+import store from '../../../redux/store';
 import * as webRTCHandler from '../webRTC/webRTCHandler';
-import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData, setIsTyping, setUserAvailable } from '../../../../redux/features/chatSlice';
-import { getApi } from '../../../../response/api';
-import { setButtonLabel, setDisableButton, setTriggerCall, setUserToCall } from '../../../../redux/features/callSlice';
-import { setTotalUsers } from '../../../../redux/features/loginSlice';
+import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData, setIsTyping, setUserAvailable } from '../../../redux/features/chatSlice';
+import { getApi } from '../../../response/api';
+import { setTriggerCall, setUserToCall } from '../../../redux/features/callSlice';
+import { setTotalUsers } from '../../../redux/features/loginSlice';
 const token = store.getState().loginSlice.token || ""
 
 const SERVER = process.env.REACT_APP_BASEURL;
@@ -45,7 +45,7 @@ export const connectWithWebSocket = async () => {
   })
 
   socket.on('pre-offer', (data) => {
-    dispatch(setButtonLabel('Skip'))
+    //dispatch(setButtonLabel('Skip'))
     dispatch(setSelectedUserData({ socketId: data.callerSocketId }))
     dispatch(setCalleeUserName(data.callerUsername))
     webRTCHandler.handlePreOffer(data);
@@ -61,7 +61,7 @@ export const connectWithWebSocket = async () => {
   });
 
   socket.on('webRTC-answer', (data) => {
-    dispatch(setDisableButton(true))
+    //dispatch(setDisableButton(true))
     webRTCHandler.handleAnswer(data);
   });
 
@@ -123,7 +123,7 @@ export const registerNewUser = (username, enableCam) => {
   });
 };
 
-export const checkLastUsers = (username, enableCam) => {
+export const checkLastUsers = () => {
   socket.emit('last-users');
 };
 
@@ -199,10 +199,10 @@ export const sendWebRTCOffer = (data) => {
   socket.emit('webRTC-offer', data);
 };
 
-export const sendWebRTCAnswer = (data) => {
-  store.dispatch(setButtonLabel('Skip'))
-  store.dispatch(setDisableButton(false))
+export const sendWebRTCAnswer = (data) => {  
   socket.emit('webRTC-answer', data);
+  //store.dispatch(setButtonLabel('Skip'))
+  //store.dispatch(setDisableButton(false))
 };
 
 export const sendWebRTCCandidate = (data) => {

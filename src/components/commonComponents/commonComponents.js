@@ -42,6 +42,26 @@ export const Input = (props) => {
   );
 };
 
+export const LabelInput = ({ type, label, onChange, placeholder, value, name }) => {
+  return (
+    <div className="label-input-container">
+      <span class="Gender">
+        {label}
+        <span class="text-style-1">*</span>
+      </span>
+      <input
+        type={type}
+        name={name}
+        onChange={(e) => onChange(e.target.value, name)}
+        value={value}
+        className="input-container-pf"
+        placeholder={placeholder}
+        required
+      />
+    </div>
+  );
+};
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
