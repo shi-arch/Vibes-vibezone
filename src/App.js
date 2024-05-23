@@ -8,14 +8,6 @@ import Guest from './app/guest/page'
 import { connectWithWebSocket } from './app/utils/wssConnection/wssConnection';
 import VideoChat from './app/VideoChat/page';
 
-window.onerror = function (message, source, lineno, colno, error) {
-  console.error("Global error handler:", message, source, lineno, colno, error);
-};
-
-window.addEventListener('unhandledrejection', function (event) {
-  console.error("Unhandled promise rejection:", event.reason);
-});
-
 
 function App() {
   useEffect(() => {
