@@ -1,4 +1,4 @@
-import Header from "../Header";
+// import Header from "../Header";
 import CallInterface from "../callInterface";
 import ChatInterface from "../chatInterface";
 import Friends from "../chatConnectionsPanel";
@@ -15,7 +15,7 @@ const RightSideContainer = () => {
         leftOpen ? "" : "right-con-sidebar-close expand-left"
       }`}
     >
-      <Header />
+      {/* <Header /> */}
       <div className={css ? "" : "bottom-con"}>
       <VideoCallInterFace />
       <ChatInterfaceNew />
