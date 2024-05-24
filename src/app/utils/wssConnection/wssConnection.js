@@ -152,7 +152,7 @@ export const getAvailableUser = async () => {
   socket.emit('isUser-available');
 };
 
-export const getActiveUser = async (flag) => {
+export const getActiveUser = (flag) => {
   socket.emit('get-active-user', { flag: flag || '', prevUser: store.getState().callSlice.userToCall || ''});
 };
 

@@ -176,8 +176,11 @@ export const hangUpAutomateCall = async () => {
   connectedUserSocketId = null;
   store.dispatch(setCallState('CALL_AVAILABLE'));
   dispatch(setLoader(true))  
-  await wss.getActiveUser('skip')
-  dispatch(setUserToCall(""))
+  setTimeout(() => {
+    wss.getActiveUser('skip')
+    dispatch(setUserToCall(""))
+  }, [2000])  
+  
 }
 
 // export const hangUp = async () => {
