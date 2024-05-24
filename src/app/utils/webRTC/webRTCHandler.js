@@ -85,11 +85,13 @@ export const handlePreOffer = async (data) => {
     connectedUserSocketId = data.callerSocketId;
     await CreatePeerConnection();
     const offer = await peerConnection.createOffer();
-    await peerConnection.setLocalDescription(offer);
-    wss.sendWebRTCOffer({
-      calleeSocketId: connectedUserSocketId,
-      offer: offer
-    });
+    if(offer){
+      await peerConnection.setLocalDescription(offer);
+      wss.sendWebRTCOffer({
+        calleeSocketId: connectedUserSocketId,
+        offer: offer
+      });
+    }    
   }
 };
 
