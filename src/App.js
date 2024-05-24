@@ -5,9 +5,13 @@ import SignUp from './app/signup/page'
 import Chat from './app/chat/page'
 import VerifyOtp from './app/verify-otp/page'
 import Guest from './app/guest/page'
-import { connectWithWebSocket } from './app/utils/wssConnection/wssConnection';
+import { closeTab, connectWithWebSocket } from './app/utils/wssConnection/wssConnection';
 import VideoChat from './app/VideoChat/page';
 
+window.onbeforeunload = (event) => {
+  window.location.href = window.location.origin
+  closeTab()
+};
 
 function App() {
   useEffect(() => {

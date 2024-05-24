@@ -7,9 +7,6 @@ import VibeZoneLogo from "../../assets/images/VibeZoneLogo.svg"
 import "./videocallInterface.css";
 import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
-import {
-  setHangUp
-} from "../../redux/features/callSlice.js";
 import CallIcons from "../CallIcons/index.js";
 
 const VideoCallInterFace = () => {
@@ -31,7 +28,6 @@ const VideoCallInterFace = () => {
         localVideo.srcObject = localStream;
         localVideo.onloadedmetadata = () => {
           localVideo.play();
-          dispatch(setHangUp(false));
         };
       }
     } catch (err) {
@@ -47,7 +43,6 @@ const VideoCallInterFace = () => {
         remoteVideo.srcObject = remoteStream;
         remoteVideo.onloadedmetadata = () => {
           remoteVideo.play();
-          dispatch(setHangUp(false));
         };
       }
     } catch (err) {

@@ -19,7 +19,7 @@ import { postApi } from "../../../response/api.js";
 import { setMessages } from "../../../redux/features/chatSlice.js";
 import { CreatePeerConnection, callToOtherUser, getLocalStream, hangUp } from "../../../app/utils/webRTC/webRTCHandler.js";
 import { setAvailableUsers } from "../../../redux/features/dashboardSlice.js";
-import { setHangUp, setStartCall } from "../../../redux/features/callSlice.js";
+import { setStartCall } from "../../../redux/features/callSlice.js";
 
 
 const ChatInterface = () => {
@@ -119,8 +119,7 @@ const ChatInterface = () => {
 
   const endCall = async () => {
     if (callState == `CALL_IN_PROGRESS`) {
-      await hangUp();
-			dispatch(setHangUp(true))
+      //await hangUp();
 		}
   }
 

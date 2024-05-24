@@ -36,17 +36,17 @@ export const startRandomCall = async () => {
 }
 
 export const skipCall = async () => {
-  hangUpAutomateCall()
+  await hangUpAutomateCall()
   const dispatch = store.dispatch
   dispatch(setMessages([]))
   dispatch(setDisableButton(true))
   dispatch(setBgColor("#dc9c26"))
-  const disconnectedTime = new Date().getTime() - store.getState().callSlice.connectedTime
-const differenceInMinutes = disconnectedTime / (1000 * 60);
-  console.log(differenceInMinutes)
-  if(differenceInMinutes > 5){
-    dispatch(setTimeDiff(differenceInMinutes))
-  }    
+//   const disconnectedTime = new Date().getTime() - store.getState().callSlice.connectedTime
+// const differenceInMinutes = disconnectedTime / (1000 * 60);
+//   console.log(differenceInMinutes)
+//   if(differenceInMinutes > 5){
+//     dispatch(setTimeDiff(differenceInMinutes))
+//   }    
 }
 
 const getConnectedUserDetails = () => {

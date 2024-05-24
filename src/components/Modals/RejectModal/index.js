@@ -3,7 +3,7 @@ import "./index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../../commonComponents/commonComponents";
 import { Box, Modal, Typography } from "@mui/material";
-import { setCallRejected, setHangUp } from "../../../redux/features/callSlice";
+import { setCallRejected } from "../../../redux/features/callSlice";
 import store from "../../../redux/store";
 
 const style = {
@@ -40,7 +40,6 @@ const RejectModal = () => {
               localStream.getTracks().forEach(function(track) {
                 track.stop();
               });
-              dispatch(setHangUp(true))
               dispatch(setCallRejected({rejected: false, reason: ''}));
             }}  type="button" />
           </div>

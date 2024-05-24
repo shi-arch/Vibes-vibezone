@@ -17,7 +17,7 @@ import EarlybardHeader from "../../components/EarlyBardHeader";
 
 const VideoChat = () => {
   const dispatch = useDispatch()
-  const { userName, userLoggedIn } = useSelector(state => state.chatSlice) 
+  const { userName, userLoggedIn } = useSelector(state => state.chatSlice)  
 
   useEffect(() => {
     (async function () {

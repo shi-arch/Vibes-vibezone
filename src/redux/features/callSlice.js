@@ -16,7 +16,6 @@ const initialState = {
   screenSharingActive: false,
   groupCallActive: false,
   groupCallStreams: [],
-  hangUps: true,
   isActive: true,
   message: {
     received: false,
@@ -77,9 +76,6 @@ const callSlice = createSlice({
     setMessage: (state, actions) => {
       state.message = actions.payload;
     },
-    setHangUp: (state, actions) => {
-      state.hangUps = actions.payload;;
-    },
     setStartCall: (state, actions) => {
       state.startCall = actions.payload;
     },
@@ -125,6 +121,6 @@ const callSlice = createSlice({
   }  
 });
 
-export const { setUserObjectId, setTimeDiff, setConnectedTime, setKeyWords, setBgColor, setFlag, setTimer, setSocketConnection, setUserToCall, setTriggerCall, setLocalStream,setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setHangUp, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
+export const { setUserObjectId, setTimeDiff, setConnectedTime, setKeyWords, setBgColor, setFlag, setTimer, setSocketConnection, setUserToCall, setTriggerCall, setLocalStream,setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
 
 export default callSlice.reducer;

@@ -1,5 +1,5 @@
 import store from '../../../redux/store';
-import { setConnectedTime, setLocalStream, setCallState, setCallingDialogVisible, setCallerUsername, setCallRejected, setRemoteStream, setScreenSharingActive, setMessage, setHangUp, setStartCall, setButtonLabel, setUserToCall, setDisableButton } from '../../../redux/features/callSlice';
+import { setConnectedTime, setLocalStream, setCallState, setCallingDialogVisible, setCallerUsername, setCallRejected, setRemoteStream, setScreenSharingActive, setMessage, setStartCall, setButtonLabel, setUserToCall, setDisableButton } from '../../../redux/features/callSlice';
 import * as wss from '../wssConnection/wssConnection';
 import { useSelector } from 'react-redux';
 import { setLoader } from '../../../redux/features/chatSlice';
@@ -50,25 +50,6 @@ export const CreatePeerConnection = async () => {
     store.dispatch(setButtonLabel('Skip'))
     store.dispatch(setDisableButton(true))
     store.dispatch(setConnectedTime(new Date().getTime()));
-  };
-
-  // incoming data channel messages
-  peerConnection.ondatachannel = (event) => {
-    const dataChannel = event.channel;
-
-    dataChannel.onopen = () => {
-      console.log('peer connection is ready to receive data channel messages');
-    };
-
-    dataChannel.onmessage = (event) => {
-      store.dispatch(setMessage(true, event.data));
-    };
-  };
-
-  dataChannel = peerConnection.createDataChannel('chat');
-
-  dataChannel.onopen = () => {
-    console.log('chat data channel succesfully opened');
   };
 
   peerConnection.onicecandidate = (event) => {
@@ -152,14 +133,9 @@ export const handleOffer = async (data) => {
 
 export const handleAnswer = async (data) => {
   if (data && data.answer) {
-    await establishPeerConnection(data)    
-    wss.checkLastUsers();
+    await peerConnection.setRemoteDescription(data.answer);
   }
 };
-
-const establishPeerConnection = async (data) => {
-  await peerConnection.setRemoteDescription(data.answer);
-}
 
 export const handleCandidate = async (data) => {
   try {
@@ -177,63 +153,47 @@ export const checkIfCallIsPossible = () => {
   }
 };
 
-let screenSharingStream;
-
-export const switchForScreenSharingStream = async () => {
-  if (!store.getState().callSlice.screenSharingActive) {
-    try {
-      screenSharingStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-      store.dispatch(setScreenSharingActive(true));
-      const senders = peerConnection.getSenders();
-      const sender = senders.find(sender => sender.track.kind === screenSharingStream.getVideoTracks()[0].kind);
-      sender.replaceTrack(screenSharingStream.getVideoTracks()[0]);
-    } catch (err) {
-      console.error('error occured when trying to get screen sharing stream', err);
-    }
-  } else {
-    const localStream = store.getState().callSlice.localStream;
-    const senders = peerConnection.getSenders();
-    const sender = senders.find(sender => sender.track.kind === localStream.getVideoTracks()[0].kind);
-    sender.replaceTrack(localStream.getVideoTracks()[0]);
-    store.dispatch(setScreenSharingActive(false));
-    screenSharingStream.getTracks().forEach(track => track.stop());
-  }
-};
-
 export const handleUserHangedUp = async () => {
-  await resetCallDataAfterHangUp();
-};
-
-export const hangUpAutomateCall = async () => {
-  const dispatch = store.dispatch
-  await hangUp();
-  dispatch(setHangUp(true));
-  wss.getActiveUser('skip')
-  dispatch(setLoader(true))
-  dispatch(setUserToCall(""))
-}
-
-export const hangUp = async () => {
-  wss.sendUserHangedUp({
-    connectedUserSocketId: connectedUserSocketId,
-    _id: store.getState().loginSlice.loginDetails._id
-  });
-  resetCallDataAfterHangUp();
-};
-
-const resetCallDataAfterHangUp = async () => {
+  //await resetCallDataAfterHangUp();
   peerConnection.close();
   peerConnection = null;
-  CreatePeerConnection();
-  resetCallData();
-  store.dispatch(setHangUp(true));
-};
-
-export const resetCallData = () => {
+  await CreatePeerConnection();
   connectedUserSocketId = null;
   store.dispatch(setCallState('CALL_AVAILABLE'));
 };
 
-export const sendMessageUsingDataChannel = (message) => {
-  dataChannel.send(message);
+export const hangUpAutomateCall = async () => {
+  const dispatch = store.dispatch
+  await wss.sendUserHangedUp({
+    connectedUserSocketId: connectedUserSocketId,
+    _id: store.getState().loginSlice.loginDetails._id
+  });
+  peerConnection.close();
+  peerConnection = null;
+  await CreatePeerConnection();
+  connectedUserSocketId = null;
+  store.dispatch(setCallState('CALL_AVAILABLE'));
+  dispatch(setLoader(true))  
+  await wss.getActiveUser('skip')
+  dispatch(setUserToCall(""))
+}
+
+// export const hangUp = async () => {
+//   await wss.sendUserHangedUp({
+//     connectedUserSocketId: connectedUserSocketId,
+//     _id: store.getState().loginSlice.loginDetails._id
+//   });
+//   await resetCallDataAfterHangUp();
+// };
+
+const resetCallDataAfterHangUp = async () => {
+  peerConnection.close();
+  peerConnection = null;
+  await CreatePeerConnection();
+  await resetCallData();
 };
+
+// export const resetCallData = async () => {
+//   connectedUserSocketId = null;
+//   store.dispatch(setCallState('CALL_AVAILABLE'));
+// };

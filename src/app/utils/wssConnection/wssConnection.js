@@ -139,10 +139,6 @@ export const sendRequest = (user) => {
   });
 };
 
-export const checkLastUsers = () => {
-  socket.emit('last-users');
-};
-
 export const startCall = () => {
   const myObj = {
     username: store.getState().chatSlice.userName,
@@ -156,9 +152,7 @@ export const getAvailableUser = async () => {
   socket.emit('isUser-available');
 };
 
-export const getActiveUser = (flag) => {
-  // const { userProfile } = store.getState().loginSlice
-  // const { name, profileImage } = userProfile
+export const getActiveUser = async (flag) => {
   socket.emit('get-active-user', { flag: flag || '', prevUser: store.getState().callSlice.userToCall || ''});
 };
 
@@ -227,7 +221,7 @@ export const sendWebRTCCandidate = (data) => {
   socket.emit('webRTC-candidate', data);
 };
 
-export const sendUserHangedUp = (data) => {
+export const sendUserHangedUp = async (data) => {
   socket.emit('user-hanged-up', data);
 };
 

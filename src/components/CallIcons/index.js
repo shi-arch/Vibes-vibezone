@@ -23,8 +23,7 @@ const CallIcons = () => {
     callState,
     remoteStream,
     localCameraEnabled,
-    localMicrophoneEnabled,
-    hangUps,
+    localMicrophoneEnabled
   } = useSelector((state) => state.callSlice);
   const handleMicButtonPressed = () => {
       ReactGA.event({

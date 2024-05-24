@@ -1,8 +1,8 @@
 import { Mute, Video, EndCall, Unmute, VideoOff } from "../../svgComponents/index.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
-import { hangUp, switchForScreenSharingStream } from "../../../app/utils/webRTC/webRTCHandler.js";
-import { setLocalCameraEnabled, setLocalMicrophoneEnabled, setHangUp } from "../../../redux/features/callSlice.js";
+//import { hangUp } from "../../../app/utils/webRTC/webRTCHandler.js";
+import { setLocalCameraEnabled, setLocalMicrophoneEnabled } from "../../../redux/features/callSlice.js";
 import { CreatePeerConnection, callToOtherUser, getLocalStream } from "../../../app/utils/webRTC/webRTCHandler.js";
 
 const CallInterface = () => {
@@ -13,7 +13,7 @@ const CallInterface = () => {
 	const userVideo = useRef()
 	const { activeUsers } = useSelector(state => state.dashboardSlice)
 	const { css } = useSelector(state => state.modalSlice);
-	const { localStream, callState, remoteStream, localCameraEnabled, localMicrophoneEnabled, hangUps } = useSelector((state) => state.callSlice);
+	const { localStream, callState, remoteStream, localCameraEnabled, localMicrophoneEnabled } = useSelector((state) => state.callSlice);
 
 	useEffect(() => {
 		try {
@@ -22,7 +22,6 @@ const CallInterface = () => {
 				localVideo.srcObject = localStream;
 				localVideo.onloadedmetadata = () => {
 					localVideo.play();
-					dispatch(setHangUp(false))
 				};
 			}
 		} catch (err) {
@@ -38,7 +37,6 @@ const CallInterface = () => {
 				remoteVideo.srcObject = remoteStream;
 				remoteVideo.onloadedmetadata = () => {
 					remoteVideo.play();
-					dispatch(setHangUp(false))
 				};
 			}
 		} catch (err) {
@@ -65,14 +63,9 @@ const CallInterface = () => {
 		}
 	};
 
-	const handleScreenSharingButtonPressed = () => {
-		switchForScreenSharingStream();
-	};
-
 	const handleHangUpButtonPressed = async () => {
 		if (callState == `CALL_IN_PROGRESS`) {
-			await hangUp();
-			dispatch(setHangUp(true))
+			//await hangUp();
 			const activeUserData = _.cloneDeep(activeUsers)
 			if (activeUserData.length) {
 				activeUserData.filter(user => user.isActive === true)
@@ -96,14 +89,14 @@ const CallInterface = () => {
 				{
 					<video
 						id="myVideo"
-						style={!hangUps && localStream ? { width: '100%', height: 'auto' } : { width: 0, height: 0, visibility: 'hidden' }}
+						style={localStream ? { width: '100%', height: 'auto' } : { width: 0, height: 0, visibility: 'hidden' }}
 						ref={myVideo}
 						autoPlay
 						playsInline
 						muted
 					/>
 				}
-				{hangUps && <img
+				{!localStream && <img
 					src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222111/Rectangle_28_1_gisnki.png"
 					className="image"
 					alt="person1"
@@ -118,7 +111,7 @@ const CallInterface = () => {
 					//muted
 					/>
 				}
-				{hangUps ? <img
+				{!remoteStream ? <img
 					src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222352/Rectangle_29_zq40pr.png"
 					className="image"
 					alt="person2"
