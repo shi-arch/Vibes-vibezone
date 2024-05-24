@@ -15,9 +15,9 @@ import { setProfileModal } from "../../../redux/features/modalSlice";
 import { Button, LabelInput } from "../../commonComponents/commonComponents";
 import { Box, Modal } from "@mui/material";
 import { postApi } from "../../../response/api";
-import { setUserProfile } from "../../../redux/features/loginSlice";
+import { setLoginDetails } from "../../../redux/features/loginSlice";
 import moment from "moment/moment";
-import { validation } from "../../../app/utils/constant";
+import { formatDate, validation } from "../../../app/utils/constant";
 const url =
   "https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
@@ -27,21 +27,32 @@ const ProfileModal = () => {
   const modalSelector = useSelector((state) => state.modalSlice);
   const { profileModal } = modalSelector;
   const dispatch = useDispatch();
-  const { userProfile } = useSelector((state) => state.loginSlice);
-  const { gender, name, profileImage, status, userName, dob, contact } = userProfile
+  const {loginDetails} = useSelector((state) => state.loginSlice);
+  const { gender, name, profileImage, status, userName, dob, contact, email } = loginDetails
   const { token } = useSelector((state) => state.loginSlice);
   const [error, setError] = useState("")
+  const [DOB, setDOB] = useState("")
 
   const handleClose = () => {
-    dispatch(setUserProfile(""))
+    //dispatch(setLoginDetails(""))
     dispatch(setProfileModal());
   };
+
+  useEffect(() => {
+    if(dob){
+      const year = new Date(dob).getFullYear()
+      const month = new Date(dob).getMonth()
+      const date = new Date(dob).getDate()
+      console.log(`${year}-${month}-${date}`,'dddddddddddd')
+      setDOB(`${year}-${month}-${date}`)
+    }
+  }, [dob])
 
   const handleDropDownClose = () => {
     setDropDownSelected(!dropDownSelected);
   };
   const handleSubmit = async (e) => {
-    const error = await validation(['name', 'contact', 'userName', 'status', 'gender', 'dob'], { name, contact, userName, status, gender, dob });
+    const error = await validation(['name', 'contact', 'userName','email', 'status', 'gender', 'dob'], { name, contact, userName, email, status, gender, dob });
     if (!error.isErr) {
       handleClose();
       const o = {
@@ -52,10 +63,11 @@ const ProfileModal = () => {
         status: status,
         gender: gender,
         dob: dob,
+        email: email
       };
       const res = await postApi("/profile", o, token);
       if (res) {
-        dispatch(setUserProfile(o));
+        dispatch(setLoginDetails(o));
         setError("")
         Swal.fire({
           title: "Awesome!",
@@ -91,16 +103,16 @@ const ProfileModal = () => {
     formData.append("profileImg", e.target.files[0]);
     const res = await postApi("/image-upload", formData, token);
     if (res) {
-      const cloneData = _.cloneDeep(userProfile)
+      const cloneData = _.cloneDeep(loginDetails)
       cloneData["profileImage"] = res.data
-      dispatch(setUserProfile(cloneData))
+      dispatch(setLoginDetails(cloneData))
     }
   };
 
   const handleChange = (value, name) => {
-    const cloneData = _.cloneDeep(userProfile)
+    const cloneData = _.cloneDeep(loginDetails)
     cloneData[name] = value
-    dispatch(setUserProfile(cloneData))
+    dispatch(setLoginDetails(cloneData))
   }
 
   return (
@@ -176,7 +188,7 @@ const ProfileModal = () => {
                   label="DOB"
                   onChange={handleChange}
                   placeholder=""
-                  value={dob}
+                  value={DOB}
                   name="dob"
                 />
                 <span style={{color: '#D90202'}}>{error.isErr && error.type === "dob" ? error.msg : ""}</span>
@@ -211,6 +223,15 @@ const ProfileModal = () => {
                 name="userName"
               />
               <span style={{color: '#D90202'}}>{error.isErr && error.type === "userName" ? error.msg : ""}</span>
+              <LabelInput
+                type="text"
+                label="Email"
+                onChange={handleChange}
+                placeholder=""
+                value={email || ""}
+                name="email"
+              />
+              <span style={{color: '#D90202'}}>{error.isErr && error.type === "email" ? error.msg : ""}</span>
               <LabelInput
                 type="text"
                 label="Status"

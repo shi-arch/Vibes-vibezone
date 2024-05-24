@@ -26,7 +26,14 @@ const initialState = {
   userToCall: "",
   triggerCall: false,
   disableButton: false,
-  socketConnection: ""
+  socketConnection: "",
+  timer: false,
+  flag: false,
+  bgColor: '#8f47ff',
+  keyWords: "",
+  connectedTime: "",
+  timeDiff: "",
+  userObjectId: ""
 };
 
 
@@ -93,10 +100,31 @@ const callSlice = createSlice({
     },
     setSocketConnection: (state, actions) => {
       state.socketConnection = actions.payload;
+    },
+    setBgColor: (state, actions) => {
+      state.bgColor = actions.payload;
+    },
+    setFlag: (state, actions) => {
+      state.flag = actions.payload;
+    },
+    setTimer: (state, actions) => {
+      state.timer = actions.payload;
+    },
+    setKeyWords: (state, actions) => {
+      state.keyWords = actions.payload;
+    },
+    setConnectedTime: (state, actions) => {
+      state.connectedTime = actions.payload;
+    },
+    setTimeDiff: (state, actions) => {
+      state.timeDiff = actions.payload;
+    },
+    setUserObjectId: (state, actions) => {
+      state.userObjectId = actions.payload;
     }
   }  
 });
 
-export const { setSocketConnection, setUserToCall, setTriggerCall, setLocalStream,setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setHangUp, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
+export const { setUserObjectId, setTimeDiff, setConnectedTime, setKeyWords, setBgColor, setFlag, setTimer, setSocketConnection, setUserToCall, setTriggerCall, setLocalStream,setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setHangUp, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
 
 export default callSlice.reducer;

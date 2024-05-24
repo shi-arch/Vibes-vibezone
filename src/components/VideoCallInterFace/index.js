@@ -41,12 +41,6 @@ const VideoCallInterFace = () => {
   }, [localStream]);
 
   useEffect(() => {
-    if(callState === "CALL_IN_PROGRESS" && remoteStream){
-      debugger
-    }
-  }, [callState, remoteStream])
-
-  useEffect(() => {
     try {
       if (remoteStream) {
         const remoteVideo = userVideo.current; 

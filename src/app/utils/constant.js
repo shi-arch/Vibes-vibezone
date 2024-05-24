@@ -2,6 +2,15 @@ import store from '../../redux/store';
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const phoneRegex = /^[6-9]\d{9}$/
 
+
+export const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2); 
+    const day = ('0' + d.getDate()).slice(-2);
+    return `${day}-${month}-${year}`;
+};
+
 export const validation = async (dataToValidate, data) => {
     let result = { isErr: false, msg: "", type: ""  }
     for (let i = 0; i < dataToValidate.length; i++) {

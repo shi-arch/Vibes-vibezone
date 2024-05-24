@@ -23,13 +23,7 @@ const Chat = () => {
   return (
     <div className="main-container">
       <SideBar />
-      {pricingAndPlans ? (
-        <div className="pricing-bg">
-          <PricingPlansModal />
-        </div>
-      ) : (
-        <RightSideContainer />
-      )}
+      {pricingAndPlans ? <div className="pricing-bg"> <PricingPlansModal /></div> : <RightSideContainer />}
     </div>
   );
 };

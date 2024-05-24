@@ -33,7 +33,7 @@ import { result } from "../commonComponents/commonComponents";
 
 const SideBar = () => {
   const modalSelector = useSelector(state => state.modalSlice);
-  const { profileImage, name, contact, userName, status } = useSelector(state => state.loginSlice.userProfile);
+  const { profileImage, name, contact, userName, status, email } = useSelector(state => state.loginSlice.loginDetails);
   const { leftOpen } = modalSelector;
   result.onchange = () => {
     if (result.matches) {
@@ -88,8 +88,8 @@ const SideBar = () => {
               <CameraSvg />
             </div>
           </div>
-          <h5 className="user-name-head">{name ? name : "Guest User"}</h5>
-          <p className="side-bar-user-prof-text">Software Developer</p>
+          <h5 className="user-name-head">{name || contact || email}</h5>
+          <p className="side-bar-user-prof-text">Name</p>
         </div>
 
         <div>
@@ -100,7 +100,6 @@ const SideBar = () => {
               <p className="phone-text">Phone</p>
             </div>
           </div>
-
           <div className="side-bar-icon-text-container">
             <AtSvg />
 

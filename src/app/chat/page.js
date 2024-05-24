@@ -14,43 +14,49 @@ import { setLoginDetails, setToken, setUserProfile, setAllPreferences } from "..
 import { getApi } from '../../response/api';
 import { getAvailableUser, registerNewUser } from '../utils/wssConnection/wssConnection';
 import IncomingCallModal from '../../components/Modals/IncomingCallModal';
-import store from '../../redux/store';
 import { setCallState, setLocalCameraEnabled } from '../../redux/features/callSlice';
 import { CreatePeerConnection, getLocalStream } from '../utils/webRTC/webRTCHandler';
 import Swal from 'sweetalert2';
+import { restoreLocalData } from '../../components/commonComponents/commonComponents';
 
 const Page = () => {
   const dispatch = useDispatch();
-  const {loginDetails} = useSelector(state => state.loginSlice);
-  const {socketConnected} = useSelector(state => state.chatSlice);
-  const { profileImage, name, contact, userName, status } = useSelector(state => state.loginSlice.userProfile);
+  const { loginDetails } = useSelector(state => state.loginSlice);
+  const { socketConnected } = useSelector(state => state.chatSlice);
+  const { name } = useSelector(state => state.loginSlice.loginDetails);
 
-  useEffect(async () => {
-    const streamObj = await getLocalStream()
-    await CreatePeerConnection();
-    if (name) {
-      Swal.fire({
-        title: "Want to enable the camera?",
-        text: "Enabling camera will better help you to communicate with strangers!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, enable it!'
-      }).then(async (res) => {
-        await getAvailableUser()
-        let enableCam = true
-        if (res.dismiss == 'cancel') {
-          enableCam = false
-        }
-        registerNewUser(name, enableCam);
-        streamObj.getVideoTracks()[0].enabled = enableCam;
-        dispatch(setLocalCameraEnabled(enableCam))
-      })
-    }
+  useEffect(() => {
+    restoreLocalData()
   }, [])
+  useEffect(() => {
+    (async function () {
+      if (name) {
+        const streamObj = await getLocalStream()
+        await CreatePeerConnection();
+        Swal.fire({
+          title: "Want to enable the camera?",
+          text: "Enabling camera will better help you to communicate with strangers!",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, enable it!'
+        }).then(async (res) => {
+          await getAvailableUser()
+          let enableCam = true
+          if (res.dismiss == 'cancel') {
+            enableCam = false
+          }
+          registerNewUser(name, enableCam);
+          streamObj.getVideoTracks()[0].enabled = enableCam;
+          dispatch(setLocalCameraEnabled(enableCam))
+        })
+      }
+    })();
 
-  useEffect(async () => {
+  }, [name])
+
+  useEffect(() => {
     let userData = localStorage.getItem("userData")
     if (userData) {
       const { user, token } = JSON.parse(userData)
@@ -62,21 +68,21 @@ const Page = () => {
         }
       })
       getApi("/config?type=preference", token)
-      .then((response) => {
-        if(response.data){
-          dispatch(setAllPreferences(response.data));
-        }
-      })      
-    } 
-    
+        .then((response) => {
+          if (response.data) {
+            dispatch(setAllPreferences(response.data));
+          }
+        })
+    }
+
   }, []);
 
   useEffect(() => {
     if (socketConnected) {
       registerNewUser(loginDetails.Name || "Guest")
-      console.log("socket connected")
+      dispatch(setCallState('CALL_AVAILABLE'));
     }
-    store.dispatch(setCallState('CALL_AVAILABLE'));
+    
   }, [socketConnected])
   return (
     <div>

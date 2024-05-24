@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   loginDetails: "",
-  verifyOtp: false,
   token: "",
   userProfile: "",
   allUsers: "",
@@ -24,10 +23,7 @@ const loginSlice = createSlice({
   reducers: {
     setLoginDetails: (state, actions) => {
       state.loginDetails = actions.payload;
-    },
-    setVerifyOtp: (state, actions) => {
-      state.verifyOtp = actions.payload;
-    },
+    },    
     setToken: (state, actions) => {
       state.token = actions.payload;
     },
@@ -52,6 +48,6 @@ const loginSlice = createSlice({
   },
 });
 
-export const { setLoginDetails, setSocketConnection, setTotalUsers, setVerifyOtp, setToken, setUserProfile, setAllUsers, setAllPreferences, setUserSelectedTopics } = loginSlice.actions;
+export const { setLoginDetails, setSocketConnection, setTotalUsers, setToken, setUserProfile, setAllUsers, setAllPreferences, setUserSelectedTopics } = loginSlice.actions;
 
 export default loginSlice.reducer;

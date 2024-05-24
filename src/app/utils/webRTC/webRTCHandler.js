@@ -1,5 +1,5 @@
 import store from '../../../redux/store';
-import { setLocalStream, setCallState, setCallingDialogVisible, setCallerUsername, setCallRejected, setRemoteStream, setScreenSharingActive, setMessage, setHangUp, setStartCall, setButtonLabel, setUserToCall, setDisableButton } from '../../../redux/features/callSlice';
+import { setConnectedTime, setLocalStream, setCallState, setCallingDialogVisible, setCallerUsername, setCallRejected, setRemoteStream, setScreenSharingActive, setMessage, setHangUp, setStartCall, setButtonLabel, setUserToCall, setDisableButton } from '../../../redux/features/callSlice';
 import * as wss from '../wssConnection/wssConnection';
 import { useSelector } from 'react-redux';
 import { setLoader } from '../../../redux/features/chatSlice';
@@ -49,6 +49,7 @@ export const CreatePeerConnection = async () => {
     store.dispatch(setCallState('CALL_IN_PROGRESS'));
     store.dispatch(setButtonLabel('Skip'))
     store.dispatch(setDisableButton(true))
+    store.dispatch(setConnectedTime(new Date().getTime()));
   };
 
   // incoming data channel messages
@@ -203,7 +204,7 @@ export const handleUserHangedUp = async () => {
   await resetCallDataAfterHangUp();
 };
 
-export const hangUpAutomateCall = async (time) => {
+export const hangUpAutomateCall = async () => {
   const dispatch = store.dispatch
   await hangUp();
   dispatch(setHangUp(true));
@@ -214,7 +215,8 @@ export const hangUpAutomateCall = async (time) => {
 
 export const hangUp = async () => {
   wss.sendUserHangedUp({
-    connectedUserSocketId: connectedUserSocketId
+    connectedUserSocketId: connectedUserSocketId,
+    _id: store.getState().loginSlice.loginDetails._id
   });
   resetCallDataAfterHangUp();
 };
@@ -225,12 +227,6 @@ const resetCallDataAfterHangUp = async () => {
   CreatePeerConnection();
   resetCallData();
   store.dispatch(setHangUp(true));
-  const localStream = store.getState().callSlice.localStream;
-  // localStream.getTracks().forEach(function(track) {
-  //   track.stop();
-  // });
-  // localStream.getVideoTracks()[0].enabled = true;
-  // localStream.getAudioTracks()[0].enabled = true;
 };
 
 export const resetCallData = () => {

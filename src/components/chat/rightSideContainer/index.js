@@ -1,4 +1,4 @@
-import Header from "../header";
+import Header from "../Header";
 import CallInterface from "../callInterface";
 import ChatInterface from "../chatInterface";
 import Friends from "../chatConnectionsPanel";

@@ -3,8 +3,9 @@ import store from '../../../redux/store';
 import * as webRTCHandler from '../webRTC/webRTCHandler';
 import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData, setIsTyping, setUserAvailable } from '../../../redux/features/chatSlice';
 import { getApi } from '../../../response/api';
-import { setTriggerCall, setUserToCall } from '../../../redux/features/callSlice';
+import { setTriggerCall, setUserToCall, setUserObjectId } from '../../../redux/features/callSlice';
 import { setTotalUsers } from '../../../redux/features/loginSlice';
+import { useSelector } from 'react-redux';
 const token = store.getState().loginSlice.token || ""
 
 const SERVER = process.env.REACT_APP_BASEURL;
@@ -69,10 +70,13 @@ export const connectWithWebSocket = async () => {
     webRTCHandler.handleCandidate(data);
   });
 
-  socket.on('user-hanged-up', () => {
+  socket.on('user-hanged-up', (_id) => {
     dispatch(setUserToCall(""))
     dispatch(setMessages([]))
     webRTCHandler.handleUserHangedUp();
+    if(_id){
+      dispatch(setUserObjectId(_id))
+    }
   });
   socket.on("typing", (name) => {
     dispatch(setIsTyping(true))
@@ -91,6 +95,11 @@ export const connectWithWebSocket = async () => {
     dispatch(setIsTyping(false))
     dispatch(setUserName(""))
   });
+
+  socket.on("send-request", () => {
+    
+  });  
+
   socket.on("sendMessage", (msg) => {
     setUpdateMessage(msg)
     //setUpdateMessage(msg)
@@ -123,6 +132,13 @@ export const registerNewUser = (username, enableCam) => {
   });
 };
 
+export const sendRequest = (user) => {
+  socket.emit('send-request', {
+    userData: user.userData,
+    callerSocketId: user.callerSocketId
+  });
+};
+
 export const checkLastUsers = () => {
   socket.emit('last-users');
 };
@@ -140,8 +156,10 @@ export const getAvailableUser = async () => {
   socket.emit('isUser-available');
 };
 
-export const getActiveUser = async (flag) => {
-  socket.emit('get-active-user', { flag: flag || '', prevUser: store.getState().callSlice.userToCall || '' });
+export const getActiveUser = (flag) => {
+  // const { userProfile } = store.getState().loginSlice
+  // const { name, profileImage } = userProfile
+  socket.emit('get-active-user', { flag: flag || '', prevUser: store.getState().callSlice.userToCall || ''});
 };
 
 export const handleMeOnlineOffline = async (isOnline) => {

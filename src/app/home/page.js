@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box } from '@mui/material'
 import HomeComponent from '../../components/HomeComponent'
 import { useDispatch } from 'react-redux';
-import { result } from '../../components/commonComponents/commonComponents';
+import { restoreLocalData, result } from '../../components/commonComponents/commonComponents';
 import { Button } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import ReactGA from "react-ga4"
@@ -20,6 +20,10 @@ import { setUserLoggedIn, setUserName } from '../../redux/features/chatSlice';
 const LandingPage = () => {
   const router = useNavigate();
   const dispatch = useDispatch();
+  // useEffect(() => {
+  //   restoreLocalData()
+  //   router('/chat')
+  // }, [])
   return (
     <Box>
       {result.matches ? (

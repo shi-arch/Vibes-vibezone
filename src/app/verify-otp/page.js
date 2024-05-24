@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import OtpInput from "../../components/otpInput/otpInput";
-import { setVerifyOtp, setLoginDetails, setToken } from "../../redux/features/loginSlice";
+import { setLoginDetails, setToken } from "../../redux/features/loginSlice";
 import { postApi} from "../../response/api"
 import "./page.css";
 const Page = () => {
@@ -64,7 +64,6 @@ const Page = () => {
               localStorage.setItem("userData", JSON.stringify(res));
               dispatch(setLoginDetails(res.user));
               dispatch(setToken(res.token));
-              dispatch(setVerifyOtp(true))
               router("/chat");
             } else {
               alert("Invalid OTP")

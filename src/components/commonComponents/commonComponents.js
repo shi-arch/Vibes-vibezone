@@ -10,7 +10,88 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 import { useDispatch, useSelector } from "react-redux";
-import { setUserSelectedTopics } from '../../redux/features/loginSlice';
+import { setLoginDetails, setToken, setTotalUsers, setUserSelectedTopics } from '../../redux/features/loginSlice';
+import store from '../../redux/store';
+import { setBgColor, setButtonLabel, setDisableButton, setFlag, setTimer, setTriggerCall, setTimeDiff, setUserObjectId } from '../../redux/features/callSlice';
+import { setLoader, setMessages } from '../../redux/features/chatSlice';
+import { getActiveUser, sendRequest } from '../../app/utils/wssConnection/wssConnection';
+import { callToOtherUser, hangUpAutomateCall } from '../../app/utils/webRTC/webRTCHandler';
+import { getApi } from '../../response/api';
+
+export const restoreLocalData = () => {
+  const userData = localStorage.getItem("userData");
+  if (userData) {
+    const parsedData = JSON.parse(userData);
+    store.dispatch(setLoginDetails(parsedData.user));
+    store.dispatch(setToken(parsedData.token));
+  }
+}
+
+export const startRandomCall = async () => {
+  getActiveUser()
+  store.dispatch(setTimer(true))
+  store.dispatch(setDisableButton(true))
+  store.dispatch(setBgColor("#dc9c26"))
+  store.dispatch(setLoader(true))
+}
+
+export const skipCall = async () => {
+  hangUpAutomateCall()
+  const dispatch = store.dispatch
+  dispatch(setMessages([]))
+  dispatch(setDisableButton(true))
+  dispatch(setBgColor("#dc9c26"))
+  const disconnectedTime = new Date().getTime() - store.getState().callSlice.connectedTime
+const differenceInMinutes = disconnectedTime / (1000 * 60);
+  console.log(differenceInMinutes)
+  if(differenceInMinutes > 5){
+    dispatch(setTimeDiff(differenceInMinutes))
+  }    
+}
+
+const getConnectedUserDetails = () => {
+  
+}
+
+export const setUseEffectdata = () => {
+  const dispatch = store.dispatch
+  const {buttonLabel, bgColor, flag, callState, userToCall, triggerCall, timer, userObjectId, timeDiff} = store.getState().callSlice
+  const {token} = store.getState().loginSlice
+  if (userObjectId && timeDiff) {
+    getApi("/profile", token).then(res => {
+      if (res) {
+        const { profileImage, name, contact, userName, status } = res.data
+        const o = {
+          profileImage: profileImage || "",
+          name: name || contact || email
+        }
+        sendRequest({userData: o, callerSocketId: userToCall.socketId})
+      }
+    })
+    dispatch(setTimeDiff(""))
+    dispatch(setUserObjectId(""))
+  }
+  if (buttonLabel == 'Skip' && callState == 'CALL_AVAILABLE') {
+    dispatch(setLoader(true))
+  }
+  if (callState == "CALL_IN_PROGRESS") {
+    dispatch(setLoader(false))
+  }
+  if (userToCall && triggerCall) {
+    callToOtherUser(userToCall)
+    dispatch(setTriggerCall(false))
+  }
+  if (timer) {
+    dispatch(setTimer(false))
+    setTimeout(() => {
+      dispatch(setButtonLabel("Skip"))
+      dispatch(setBgColor("#ec4242"))
+      dispatch(setDisableButton(false))
+      dispatch(setTimer(true))
+      dispatch(setFlag(!flag))
+    }, 5000)
+  }
+}
 
 
 
@@ -86,10 +167,10 @@ export const MultipleSelectChip = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const [personName, setPersonName] = React.useState([]);
-  const {data} = useSelector((state) => state.loginSlice.allPreferences);
+  const { data } = useSelector((state) => state.loginSlice.allPreferences);
 
   React.useEffect(() => {
-    if(personName){
+    if (personName) {
       dispatch(setUserSelectedTopics(personName))
     }
   }, [personName]);
