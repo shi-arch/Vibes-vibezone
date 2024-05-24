@@ -124,17 +124,26 @@ const sendOffer = async () => {
 };
 
 export const handleOffer = async (data) => {
-  await peerConnection.setRemoteDescription(data.offer);
-  const answer = await peerConnection.createAnswer();
-  await peerConnection.setLocalDescription(answer);
-  wss.sendWebRTCAnswer({
-    callerSocketId: connectedUserSocketId,
-    answer: answer
-  });
+  if(data && data.offer){
+    console.log('handleOffer, setRemoteDescription >>>>>>>>>>>>>>>>>>>>.', peerConnection.setRemoteDescription)
+    console.log('handleOffer, offer >>>>>>>>>>>>>>>>>>>>.', data.offer)
+    await peerConnection.setRemoteDescription(data.offer);
+    const answer = await peerConnection.createAnswer();
+    if(answer){
+      console.log('handleOffer, answer >>>>>>>>>>>>>>>>>>>>.', answer)
+      await peerConnection.setLocalDescription(answer);
+      wss.sendWebRTCAnswer({
+        callerSocketId: connectedUserSocketId,
+        answer: answer
+      });
+    }    
+  }  
 };
 
 export const handleAnswer = async (data) => {
   if (data && data.answer) {
+    console.log('handleAnswer, setRemoteDescription >>>>>>>>>>>>>>>>>>>>.', peerConnection.setRemoteDescription)
+    console.log('handleAnswer, answer >>>>>>>>>>>>>>>>>>>>.', data.answer)
     await peerConnection.setRemoteDescription(data.answer);
   }
 };
@@ -179,7 +188,7 @@ export const hangUpAutomateCall = async () => {
   setTimeout(() => {
     wss.getActiveUser('skip')
     dispatch(setUserToCall(""))
-  }, [2000])  
+  }, [1000])  
   
 }
 

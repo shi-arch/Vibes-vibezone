@@ -87,7 +87,9 @@ export const connectWithWebSocket = async () => {
     if (user && user.findActiveUser) {
       userData = user.findActiveUser      
     } else {
-      dispatch(setTriggerCall(true))
+      setTimeout(() => {
+        dispatch(setTriggerCall(true))
+      }, 1000)      
     }
     dispatch(setUserToCall(userData))
   });
