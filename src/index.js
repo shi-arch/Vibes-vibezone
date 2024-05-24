@@ -6,7 +6,9 @@ import { Provider } from "react-redux";
 import reportWebVitals from "./reportWebVitals";
 import store from "./redux/store";
 import ReactGA from "react-ga4";
-
+import { createRoot } from 'react-dom/client';
+const container = document.getElementById('root');
+const root = createRoot(container);
 //google analytics setup
 ReactGA.initialize("G-4N8FWXLCBY");
 
@@ -15,12 +17,12 @@ ReactGA.send({
   page: window.location.pathname 
 });
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+//const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <App />
-  </Provider>,
-  document.getElementById("root")
+  </Provider>
+  //document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
