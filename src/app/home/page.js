@@ -70,7 +70,7 @@ const LandingPage = () => {
                   marginTop: "15px",
                 }}
               >
-                Get Early Accesssss
+                Get Early Access
               </Button>
             </div>
             <img
