@@ -12,7 +12,7 @@ const ChatsListNew = () => {
   let lastDisplayedDate = null;
   const { calleeUserName } = useSelector(state => state.chatSlice)
   const { messagesArr } = useSelector(state => state.chatSlice)
-  const { userToCall, callState } = useSelector(state => state.callSlice)
+  const { userToCall } = useSelector(state => state.callSlice)
   updateChatList(chatList);
 
   const getLastChat = (chatList, index) => {
@@ -24,7 +24,7 @@ const ChatsListNew = () => {
   return (
     <div className="chat-list-new-bg-container">
       <div className="guest-container">
-        <h1 className="guest-head">{userToCall && userToCall.username && callState === "CALL_IN_PROGRESS" ? userToCall.username : "Guest"}</h1>
+        <h1 className="guest-head">{userToCall && userToCall.username ? userToCall.username : "Guest"}</h1>
       </div>
       <div className="chatListNew-scroll-container">
         {messagesArr.map((chat, index) => {

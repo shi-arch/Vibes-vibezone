@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import ReactGA from "react-ga4";
 
 import "./EarlyAccess.css";
+import { setPeerId } from "../../redux/features/callSlice";
 
 const EarlyAccess = () => {
   const router = useNavigate();
@@ -52,6 +53,7 @@ const EarlyAccess = () => {
               const user = "Guest + " + Math.random().toString().substr(2, 8);
               dispatch(setUserName(user));
               dispatch(setUserLoggedIn(user));
+              dispatch(setPeerId((Math.random() + 1).toString(36).substring(7)))
               ReactGA.event({
                 category: "Early Access",
                 action: "Early Access Button",

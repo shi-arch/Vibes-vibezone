@@ -1,13 +1,10 @@
-// import Header from "../Header";
+import Header from "../header";
 import CallInterface from "../callInterface";
 import ChatInterface from "../chatInterface";
 import Friends from "../chatConnectionsPanel";
 import { useSelector } from "react-redux";
-import VideoCallInterFace from "../../VideoCallInterFace";
-import ChatInterfaceNew from "../../ChatInerfaceNew";
 
 const RightSideContainer = () => {
-  //VideoCallInterFace
   const {leftOpen, css} = useSelector((state) => state.modalSlice);
   return (
     <div
@@ -15,12 +12,10 @@ const RightSideContainer = () => {
         leftOpen ? "" : "right-con-sidebar-close expand-left"
       }`}
     >
-      {/* <Header /> */}
+      <Header />
       <div className={css ? "" : "bottom-con"}>
-      <VideoCallInterFace />
-      <ChatInterfaceNew />
-        {/* <CallInterface /> */}
-        {/* <ChatInterface /> */}
+        <CallInterface />
+        <ChatInterface />
         <Friends />
       </div>
     </div>

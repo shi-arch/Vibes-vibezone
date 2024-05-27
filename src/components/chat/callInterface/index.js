@@ -1,9 +1,9 @@
 import { Mute, Video, EndCall, Unmute, VideoOff } from "../../svgComponents/index.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
-//import { hangUp } from "../../../app/utils/webRTC/webRTCHandler.js";
-import { setLocalCameraEnabled, setLocalMicrophoneEnabled } from "../../../redux/features/callSlice.js";
-import { CreatePeerConnection, callToOtherUser, getLocalStream } from "../../../app/utils/webRTC/webRTCHandler.js";
+import { hangUp, switchForScreenSharingStream } from "../../../app/test/utils/webRTC/webRTCHandler.js";
+import { setLocalCameraEnabled, setLocalMicrophoneEnabled, setHangUp } from "../../../redux/features/callSlice.js";
+import { CreatePeerConnection, callToOtherUser, getLocalStream } from "../../../app/test/utils/webRTC/webRTCHandler.js";
 
 const CallInterface = () => {
 	const dispatch = useDispatch()
@@ -12,37 +12,29 @@ const CallInterface = () => {
 	const myVideo = useRef()
 	const userVideo = useRef()
 	const { activeUsers } = useSelector(state => state.dashboardSlice)
-	const { css } = useSelector(state => state.modalSlice);
-	const { localStream, callState, remoteStream, localCameraEnabled, localMicrophoneEnabled } = useSelector((state) => state.callSlice);
+	const {css} = useSelector(state => state.modalSlice);
+	const { localStream, callState, remoteStream, localCameraEnabled, localMicrophoneEnabled, hangUps } = useSelector((state) => state.callSlice);
 
 	useEffect(() => {
-		try {
-			if (localStream) {
-				const localVideo = myVideo.current;
-				localVideo.srcObject = localStream;
-				localVideo.onloadedmetadata = () => {
-					localVideo.play();
-				};
-			}
-		} catch (err) {
-			console.log(err)
+		if (localStream) {
+			const localVideo = myVideo.current;
+			localVideo.srcObject = localStream;
+			localVideo.onloadedmetadata = () => {
+				localVideo.play();
+				dispatch(setHangUp(false))
+			};
 		}
-
 	}, [localStream]);
 
 	useEffect(() => {
-		try {
-			if (remoteStream) {
-				const remoteVideo = userVideo.current;
-				remoteVideo.srcObject = remoteStream;
-				remoteVideo.onloadedmetadata = () => {
-					remoteVideo.play();
-				};
-			}
-		} catch (err) {
-			console.log(err)
+		if (remoteStream) {
+			const remoteVideo = userVideo.current;
+			remoteVideo.srcObject = remoteStream;
+			remoteVideo.onloadedmetadata = () => {
+				remoteVideo.play();
+				dispatch(setHangUp(false))
+			};
 		}
-
 	}, [remoteStream]);
 
 	const handleMicButtonPressed = () => {
@@ -63,9 +55,14 @@ const CallInterface = () => {
 		}
 	};
 
+	const handleScreenSharingButtonPressed = () => {
+		switchForScreenSharingStream();
+	};
+
 	const handleHangUpButtonPressed = async () => {
 		if (callState == `CALL_IN_PROGRESS`) {
-			//await hangUp();
+			await hangUp();
+			dispatch(setHangUp(true))
 			const activeUserData = _.cloneDeep(activeUsers)
 			if (activeUserData.length) {
 				activeUserData.filter(user => user.isActive === true)
@@ -89,14 +86,14 @@ const CallInterface = () => {
 				{
 					<video
 						id="myVideo"
-						style={localStream ? { width: '100%', height: 'auto' } : { width: 0, height: 0, visibility: 'hidden' }}
+						style={!hangUps && localStream ? { width: '100%', height: 'auto' } : { width: 0, height: 0, visibility: 'hidden' }}
 						ref={myVideo}
 						autoPlay
 						playsInline
 						muted
 					/>
 				}
-				{!localStream && <img
+				{hangUps && <img
 					src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222111/Rectangle_28_1_gisnki.png"
 					className="image"
 					alt="person1"
@@ -111,7 +108,7 @@ const CallInterface = () => {
 					//muted
 					/>
 				}
-				{!remoteStream ? <img
+				{hangUps ? <img
 					src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222352/Rectangle_29_zq40pr.png"
 					className="image"
 					alt="person2"

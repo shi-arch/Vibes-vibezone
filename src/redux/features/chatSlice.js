@@ -5,7 +5,6 @@ const initialState = {
   selectedUserData: {},
   chatData: "",
   messagesArr: [],
-  mySocketId: "",
   userName: "",
   calleeUserName: "",
   activeUserData: [],
@@ -36,10 +35,7 @@ const chatSlice = createSlice({
     },
     setMessages: (state, actions) => {
       state.messagesArr = actions.payload;
-    },
-    setMySocketId: (state, actions) => {      
-      state.mySocketId = actions.payload;
-    },
+    },    
     setUserName: (state, actions) => {      
       state.userName = actions.payload;
     },
@@ -73,6 +69,6 @@ const chatSlice = createSlice({
   },
 });
 
-export const { addChat, setUserAvailable, setCalleeUserData, setLoader, setUserLoggedIn, setSearchUserData, setSelectedUserData, setChatData, setMySocketId, setMessages, setUserName, setCalleeUserName, setActiveUserData, setUpdateMessage, setSocketConnected, setIsTyping } = chatSlice.actions;
+export const { addChat, setUserAvailable, setCalleeUserData, setLoader, setUserLoggedIn, setSearchUserData, setSelectedUserData, setChatData, setMessages, setUserName, setCalleeUserName, setActiveUserData, setUpdateMessage, setSocketConnected, setIsTyping } = chatSlice.actions;
 
 export default chatSlice.reducer;

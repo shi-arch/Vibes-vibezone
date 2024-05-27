@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  localStream: null, //
-  callState: 'CALL_UNAVAILABLE', //
+  localStream: "", //
+  callState: 'CALL_UNAVAILABLE' || "", //
   callingDialogVisible: false,
   callerUsername: '',
   callRejected: {
@@ -10,9 +10,9 @@ const initialState = {
     reason: ''
   },
   buttonLabel: 'Connect',
-  remoteStream: null,
+  remoteStream: "",
   localCameraEnabled: true,
-  localMicrophoneEnabled: true,
+  localMicrophoneEnabled: false,
   screenSharingActive: false,
   groupCallActive: false,
   groupCallStreams: [],
@@ -32,7 +32,10 @@ const initialState = {
   keyWords: "",
   connectedTime: "",
   timeDiff: "",
-  userObjectId: ""
+  userObjectId: "",
+  socketId: "",
+  peerId: "",
+  peer: ""
 };
 
 
@@ -42,6 +45,9 @@ const callSlice = createSlice({
   reducers: {
     setLocalStream: (state, actions) => {
       state.localStream = actions.payload;
+    },
+    setPeer: (state, actions) => {
+      state.peer = actions.payload;
     },
     setCallState: (state, actions) => {
       state.callState = actions.payload;
@@ -97,6 +103,9 @@ const callSlice = createSlice({
     setSocketConnection: (state, actions) => {
       state.socketConnection = actions.payload;
     },
+    setSocketId: (state, actions) => {
+      state.socketId = actions.payload;
+    },
     setBgColor: (state, actions) => {
       state.bgColor = actions.payload;
     },
@@ -117,10 +126,13 @@ const callSlice = createSlice({
     },
     setUserObjectId: (state, actions) => {
       state.userObjectId = actions.payload;
+    },
+    setPeerId: (state, actions) => {
+      state.peerId = actions.payload;
     }
   }  
 });
 
-export const { setUserObjectId, setTimeDiff, setConnectedTime, setKeyWords, setBgColor, setFlag, setTimer, setSocketConnection, setUserToCall, setTriggerCall, setLocalStream,setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
+export const { setPeer, setPeerId, setSocketId, setUserObjectId, setTimeDiff, setConnectedTime, setKeyWords, setBgColor, setFlag, setTimer, setSocketConnection, setUserToCall, setTriggerCall, setLocalStream,setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
 
 export default callSlice.reducer;

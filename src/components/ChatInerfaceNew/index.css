@@ -13,7 +13,37 @@
     height: 69vh;
     /* flex-grow: 1; */
 }
-
+.send-msg-con-1 {
+    /* position: fixed; */
+    padding: 10px 20px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 15px 0 rgba(0, 0, 0, 0.1);
+    /* z-index: 99999; */
+    /* width: 100%; */
+  }
+  
+  .send-msg-con-2 {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    justify-content: space-between;
+    padding: 10px 26px;
+    border-radius: 25px;
+  }
+  
+  .attach-type-con {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .input-send-message {
+    background-color: transparent;
+    margin-left: 5px;
+    width: 100%;
+    outline: none;
+    border: none;
+  }
 
 @media screen and (max-width:431px) {
     .chat-list-new-container{

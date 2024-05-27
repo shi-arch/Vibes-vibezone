@@ -5,9 +5,6 @@ import {
   setLocalCameraEnabled,
   setLocalMicrophoneEnabled
 } from "../../redux/features/callSlice.js";
-import {
-  hangUpAutomateCall
-} from "../../app/utils/webRTC/webRTCHandler.js";
 
 
 import ReactGA from "react-ga4"
@@ -49,21 +46,12 @@ const CallIcons = () => {
       label: `${userName} turned camera ${!localCameraEnabled ? "ON":"OFF"}`,
     });
   };
-
-  const handleHangUpButtonPressed = async () => {
-    if (callState == `CALL_IN_PROGRESS`) {
-      hangUpAutomateCall()
-    }
-  };
   return (
     <div className="call-icons-container">
       <div onClick={handleMicButtonPressed}>{mute ? <Mute /> : <Unmute />}</div>
       <div onClick={handleCameraButtonPressed}>
         {localCameraEnabled ? <Video /> : <VideoOff />}
       </div>
-      {/* <div onClick={handleHangUpButtonPressed}>
-        <EndCall />
-      </div> */}
     </div>
   );
 };

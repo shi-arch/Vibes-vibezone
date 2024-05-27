@@ -17,7 +17,6 @@ const VideoCallInterFace = () => {
   const { loader } = useSelector((state) => state.chatSlice);
   const {
     localStream,
-    callState,
     remoteStream
   } = useSelector((state) => state.callSlice);
 
@@ -53,7 +52,7 @@ const VideoCallInterFace = () => {
   return (
     <div className="video-call-interface-bg-container">
       <div className="video-img-container">
-        {remoteStream && callState === "CALL_IN_PROGRESS" && (
+        {remoteStream && (
           <video
             id="userVideo"
             style={{ width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }}

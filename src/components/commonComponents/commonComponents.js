@@ -12,10 +12,9 @@ import Chip from '@mui/material/Chip';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginDetails, setToken, setTotalUsers, setUserSelectedTopics } from '../../redux/features/loginSlice';
 import store from '../../redux/store';
-import { setBgColor, setButtonLabel, setDisableButton, setFlag, setTimer, setTriggerCall, setTimeDiff, setUserObjectId } from '../../redux/features/callSlice';
+import { setBgColor, setButtonLabel, setDisableButton, setFlag, setTimer, setTriggerCall, setTimeDiff, setUserObjectId, setRemoteStream } from '../../redux/features/callSlice';
 import { setLoader, setMessages } from '../../redux/features/chatSlice';
-import { getActiveUser, sendRequest } from '../../app/utils/wssConnection/wssConnection';
-import { callToOtherUser, hangUpAutomateCall } from '../../app/utils/webRTC/webRTCHandler';
+import { getActiveUser, hangUpAutomateCall, sendRequest, startCall } from '../../app/utils/wssConnection/wssConnection';
 import { getApi } from '../../response/api';
 
 export const restoreLocalData = () => {
@@ -39,6 +38,7 @@ export const skipCall = async () => {
   await hangUpAutomateCall()
   const dispatch = store.dispatch
   dispatch(setMessages([]))
+  dispatch(setRemoteStream(null));
   dispatch(setDisableButton(true))
   dispatch(setBgColor("#dc9c26"))
 //   const disconnectedTime = new Date().getTime() - store.getState().callSlice.connectedTime
@@ -47,10 +47,6 @@ export const skipCall = async () => {
 //   if(differenceInMinutes > 5){
 //     dispatch(setTimeDiff(differenceInMinutes))
 //   }    
-}
-
-const getConnectedUserDetails = () => {
-  
 }
 
 export const setUseEffectdata = () => {
@@ -78,7 +74,7 @@ export const setUseEffectdata = () => {
     dispatch(setLoader(false))
   }
   if (userToCall && triggerCall) {
-    callToOtherUser(userToCall)
+    startCall()
     dispatch(setTriggerCall(false))
   }
   if (timer) {
@@ -92,6 +88,7 @@ export const setUseEffectdata = () => {
     }, 5000)
   }
 }
+
 
 
 

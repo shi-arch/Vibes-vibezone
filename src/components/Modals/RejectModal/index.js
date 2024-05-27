@@ -36,7 +36,7 @@ const RejectModal = () => {
           <Typography id="modal-modal-title" variant="h6" component="h2">{reason}</Typography>
           <div className="save-btn">
             <Button label="close" onClick={() => {
-              const localStream = store.getState().callSlice.localStream;
+              const localStream = store.getState()?.callSlice?.localStream;
               localStream.getTracks().forEach(function(track) {
                 track.stop();
               });
