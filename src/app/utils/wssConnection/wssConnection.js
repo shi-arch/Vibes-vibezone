@@ -43,13 +43,15 @@ export const connectWithWebSocket = async () => {
         dispatch(setTriggerCall(true))
       }
       dispatch(setUserToCall(userData))
+    } else {
+      socket.emit('get-active-user', { flag: '', prevUser: '' });
     }
   });
   socket.on('stop-loader', () => {
     if(store.getState().callSlice.buttonLabel !== "Skip"){
       store.dispatch(setButtonLabel('Skip'))
     }    
-    store.dispatch(setCallState('CALL_IN_PROGRESS'))
+    store.dispatch(setCallState('CALL_CONNECTED'))
   });
   socket.on('end-call', () => {
     const dispatch = store.dispatch
@@ -65,7 +67,7 @@ export const connectWithWebSocket = async () => {
   });
   socket.on('user-hanged-up', () => {
     const dispatch = store.dispatch
-    dispatch(setRemoteStream(null))
+    dispatch(setTriggerEndCall(true))
     dispatch(setCallState('CALL_AVAILABLE'))
     dispatch(setUserToCall(""))
     dispatch(setMessages([]))
@@ -91,14 +93,13 @@ export const sendRequest = (user) => {
 
 export const startCall = (peer, localStream, userToCall, setRemoteStream) => {
   try {
-    debugger
     const { peerId } = userToCall
     if (peer && localStream && peerId) {
       const call = peer.call(peerId, localStream);
       if (call) {
         call.on('stream', async (remoteStream) => {
           await setRemoteStream(remoteStream)
-          store.dispatch(setCallState('CALL_IN_PROGRESS'))
+          store.dispatch(setCallState('CALL_CONNECTED'))
           store.dispatch(setButtonLabel('Skip'))
           socket.emit('stop-loader', userToCall.socketId)
         });

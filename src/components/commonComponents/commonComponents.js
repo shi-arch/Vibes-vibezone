@@ -12,7 +12,7 @@ import Chip from '@mui/material/Chip';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginDetails, setToken, setUserSelectedTopics } from '../../redux/features/loginSlice';
 import store from '../../redux/store';
-import { setCallState, setUserToCall } from '../../redux/features/callSlice';
+import { setCallState, setDisableButton, setTimer, setUserToCall } from '../../redux/features/callSlice';
 import { setLoader, setMessages } from '../../redux/features/chatSlice';
 import { endCall, getActiveUser } from '../../app/utils/wssConnection/wssConnection';
 
@@ -25,7 +25,9 @@ export const restoreLocalData = () => {
   }
 }
 
-export const startRandomCall = async () => {
+export const startRandomCall = async () => {  
+  store.dispatch(setTimer(true))
+  store.dispatch(setDisableButton(true))
   store.dispatch(setCallState('CALL_AVAILABLE'))
   await getActiveUser()
 }

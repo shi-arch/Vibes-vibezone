@@ -6,7 +6,7 @@ import VideoCallInterFace from '../../components/VideoCallInterFace';
 import ChatInterfaceNew from '../../components/ChatInerfaceNew';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLocalCameraEnabled, setPeer, setTriggerCall, setTriggerEndCall } from '../../redux/features/callSlice';
+import { setButtonLabel, setDisableButton, setLocalCameraEnabled, setPeer, setTimer, setTriggerCall, setTriggerEndCall } from '../../redux/features/callSlice';
 import { connectWithWebSocket, registerNewUser, startCall } from '../utils/wssConnection/wssConnection';
 import { LogoSvg } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
@@ -23,7 +23,7 @@ const VideoChat = () => {
   const [localCameraEnabled, setLocalCameraEnabled] = useState(null)  
   const [localMicrophoneEnabled, setLocalMicrophoneEnabled] = useState(null)  
   const { userName, userLoggedIn } = useSelector(state => state.chatSlice)
-  const { peerId, userToCall, triggerCall, triggerEndCall } = useSelector(state => state.callSlice)
+  const { peerId, userToCall, triggerCall, triggerEndCall, timer, disableButton } = useSelector(state => state.callSlice)
   const initiate = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -47,16 +47,24 @@ const VideoChat = () => {
       console.error('PeerJS error:', error);
     });
   }
+
+  useEffect(() => {
+    if(timer){
+      dispatch(setTimer(!timer))
+      setTimeout(() => {
+        dispatch(setTimer(!timer))
+        dispatch(setDisableButton(!disableButton))
+        dispatch(setButtonLabel('Skip'))
+      }, 5000)
+    }    
+  }, [timer])
+
   useEffect(() => {
     (async function () {
       connectWithWebSocket()
       await initiate()
     })();
   }, [])
-
-  const sendRemoteStream = () => [
-
-  ]
 
   useEffect(() => {
     if (userToCall && triggerCall) {
@@ -108,8 +116,9 @@ const VideoChat = () => {
     }
   }, [userLoggedIn])
   return (
-    <div className="video-chat-bg-container">
+    <div className="video-chat-bg-container">      
       <EarlybardHeader />
+      {/* <h1 style={{marginLeft: "150px"}}>{peerId}</h1> */}
       <EarlyBoardAccessModal />
       <SideBarNew />
       <div className="video-right-container">

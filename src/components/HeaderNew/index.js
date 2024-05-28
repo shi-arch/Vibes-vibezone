@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { LogoSvg } from "../svgComponents";
 import "./index.css"
 import { useSelector, useDispatch } from "react-redux";
-import { setKeyWords } from "../../redux/features/callSlice";
+import { setDisableButton, setKeyWords } from "../../redux/features/callSlice";
 import { setUserName } from "../../redux/features/chatSlice";
 import { updateName } from "../../app/utils/wssConnection/wssConnection";
 import ActiveUsers from "../ActiveUsers";
@@ -14,7 +14,7 @@ import { disableColor, enableColor, initialColor } from "../../app/utils/constan
 const HeaderNew = (props) => {
   const dispatch = useDispatch();
   const { userName } = useSelector(state => state.chatSlice)
-  const { callState, buttonLabel, isActive, keyWords } = useSelector((state) => state.callSlice);
+  const { callState, buttonLabel, isActive, keyWords, disableButton, userToCall } = useSelector((state) => state.callSlice);
 
   return (
     <div className="header-new-bg-container">
@@ -46,8 +46,9 @@ const HeaderNew = (props) => {
       />
 
       <button
-        disabled={callState == 'CALL_AVAILABLE' ? true : false}
-        style={ callState == 'CALL_UNAVAILABLE' ? {backgroundColor: initialColor, cursor: 'pointer'} : callState == 'CALL_AVAILABLE' ? { backgroundColor: disableColor, cursor: 'not-allowed' } : {backgroundColor: enableColor, cursor: 'pointer'}}        
+        disabled={disableButton}
+        style={ callState == 'CALL_UNAVAILABLE' ? {backgroundColor: initialColor} : 
+        disableButton ? { backgroundColor: disableColor, cursor: 'not-allowed'} : {backgroundColor: enableColor}}
         className="call-buttons call-button-css"        
         onClick={() => {
           ReactGA.event({
@@ -55,7 +56,7 @@ const HeaderNew = (props) => {
             action: "connect button",
             label: "Connect",
           });
-          buttonLabel == "Connect" ? startRandomCall() : skipCall(props.setRemoteStream);
+          userToCall ? skipCall(props.setRemoteStream) : startRandomCall()
         }}
       >
         {buttonLabel}
