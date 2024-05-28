@@ -5,33 +5,11 @@ import { Loader } from '../../components/commonComponents/commonComponents'
 import VibeZoneLogo from "../../assets/images/VibeZoneLogo.svg"
 
 import "./videocallInterface.css";
-import {
-  EndCall,
-  LogoSvg,
-  Mute,
-  Video,
-  Unmute,
-  VideoOff,
-} from "../svgComponents";
 import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
 import {
-  hangUp,
-  hangUpAutomateCall,
-  switchForScreenSharingStream,
-} from "../../app/test/utils/webRTC/webRTCHandler.js";
-import {
-  setLocalCameraEnabled,
-  setLocalMicrophoneEnabled,
-  setHangUp,
-  setStartCall,
+  setHangUp
 } from "../../redux/features/callSlice.js";
-import {
-  CreatePeerConnection,
-  callToOtherUser,
-  getLocalStream,
-} from "../../app/test/utils/webRTC/webRTCHandler.js";
-import { setCalleeUserName, setLoader, setSelectedUserData } from "../../redux/features/chatSlice.js";
 import CallIcons from "../CallIcons/index.js";
 
 const VideoCallInterFace = () => {
@@ -39,16 +17,11 @@ const VideoCallInterFace = () => {
   const [mute, setMute] = useState(false);
   const myVideo = useRef();
   const userVideo = useRef();
-  const { userName, loader, userAvailable } = useSelector((state) => state.chatSlice);
-  const { activeUsers } = useSelector((state) => state.dashboardSlice);
+  const { loader } = useSelector((state) => state.chatSlice);
   const {
     localStream,
     callState,
-    remoteStream,
-    localCameraEnabled,
-    localMicrophoneEnabled,
-    hangUps,
-    buttonLabel,
+    remoteStream
   } = useSelector((state) => state.callSlice);
 
   useEffect(() => {
@@ -78,7 +51,7 @@ const VideoCallInterFace = () => {
         {remoteStream && callState === "CALL_IN_PROGRESS" && (
           <video
             id="userVideo"
-            style={{ width: "100%", height: "229px", objectFit: "cover" }}
+            style={{ width: "100%", height: "229px", objectFit: "cover", transform:'scale(-1,1)' }}
             ref={userVideo}
             autoPlay
             playsInline
@@ -108,9 +81,6 @@ const VideoCallInterFace = () => {
               className="video"
               alt="person2"
             />
-            {/* <div className="logo-float">
-              <LogoSvg width={60} height={20} />
-            </div> */}
           </>
         ) : (
           ""
@@ -126,7 +96,7 @@ const VideoCallInterFace = () => {
             id="myVideo"
             style={
               localStream
-                ? { width: "100%", height: "229px", objectFit: "cover" }
+                ? { width: "100%", height: "229px", objectFit: "cover", transform:'scale(-1,1)' }
                 : { width: 0, height: 0, visibility: "hidden" }
             }
             ref={myVideo}
@@ -142,9 +112,6 @@ const VideoCallInterFace = () => {
               className="video"
               alt="person1"
             />
-            {/* <div className="logo-float">
-              <LogoSvg width={60} height={20} />
-            </div> */}
           </>
         )}
         <div className="logo-float">
@@ -155,18 +122,6 @@ const VideoCallInterFace = () => {
       <div className="sm-lg-icon-video-call-container">
         <CallIcons />
       </div>
-
-      {/* <div className="call-icons-container">
-        <div onClick={handleMicButtonPressed}>
-          {mute ? <Mute /> : <Unmute />}
-        </div>
-        <div onClick={handleCameraButtonPressed}>
-          {localCameraEnabled ? <Video /> : <VideoOff />}
-        </div>
-        <div onClick={handleHangUpButtonPressed}>
-          <EndCall />
-        </div>
-      </div> */}
     </div>
   );
 };

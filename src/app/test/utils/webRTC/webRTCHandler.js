@@ -110,24 +110,6 @@ export const handlePreOffer = async (data) => {
   }
 };
 
-export const acceptIncomingCallRequest = async () => {
-  await getLocalStream()
-  await CreatePeerConnection();
-  wss.sendPreOfferAnswer({
-    callerSocketId: connectedUserSocketId,
-    answer: preOfferAnswers.CALL_ACCEPTED
-  });
-  store.dispatch(setCallState('CALL_IN_PROGRESS'));
-};
-
-export const rejectIncomingCallRequest = () => {
-  wss.sendPreOfferAnswer({
-    callerSocketId: connectedUserSocketId,
-    answer: preOfferAnswers.CALL_REJECTED
-  });
-  resetCallData();
-};
-
 export const handlePreOfferAnswer = (data) => {
   store.dispatch(setCallingDialogVisible(false));
   if (data.answer === preOfferAnswers.CALL_ACCEPTED) {
@@ -169,7 +151,7 @@ export const handleOffer = async (data) => {
 export const handleAnswer = async (data) => {
   store.dispatch(setCallState('CALL_IN_PROGRESS'));
   store.dispatch(setButtonLabel('Skip'))
-  store.dispatch(setDisableButton(false))
+  store.dispatch(setDisableButton(true))
   await peerConnection.setRemoteDescription(data.answer);
   wss.checkLastUsers();
 };

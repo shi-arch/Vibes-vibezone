@@ -1,12 +1,9 @@
 import { Mute, Video, EndCall, Unmute, VideoOff } from "../../svgComponents/index.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
-import io from "socket.io-client";
 import { hangUp, switchForScreenSharingStream } from "../../../app/test/utils/webRTC/webRTCHandler.js";
 import { setLocalCameraEnabled, setLocalMicrophoneEnabled, setHangUp } from "../../../redux/features/callSlice.js";
-const socket = io.connect(process.env.REACT_APP_BASEURL);
 import { CreatePeerConnection, callToOtherUser, getLocalStream } from "../../../app/test/utils/webRTC/webRTCHandler.js";
-let containerCss = "call-container";
 
 const CallInterface = () => {
 	const dispatch = useDispatch()

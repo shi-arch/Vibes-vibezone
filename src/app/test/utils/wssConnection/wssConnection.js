@@ -1,13 +1,10 @@
 import socketClient from 'socket.io-client';
 import store from '../../../../redux/store';
-import { setActiveUsers, setCamOffUsers, setInActiveUsers } from '../../../../redux/features/dashboardSlice';
 import * as webRTCHandler from '../webRTC/webRTCHandler';
 import { setActiveUserData, setMySocketId, setUserName, setUpdateMessage, setSocketConnected, setCalleeUserName, setMessages, setSelectedUserData, setIsTyping, setUserAvailable } from '../../../../redux/features/chatSlice';
 import { getApi } from '../../../../response/api';
-import { setButtonLabel, setDisableButton, setIsActive, setTriggerCall, setUserToCall } from '../../../../redux/features/callSlice';
-import { setRedirectToHome, setTotalUsers } from '../../../../redux/features/loginSlice';
-import { Router } from 'react-router-dom';
-import { useEffect } from 'react';
+import { setButtonLabel, setDisableButton, setTriggerCall, setUserToCall } from '../../../../redux/features/callSlice';
+import { setTotalUsers } from '../../../../redux/features/loginSlice';
 const token = store.getState().loginSlice.token || ""
 
 const SERVER = process.env.REACT_APP_BASEURL;
@@ -47,12 +44,16 @@ export const connectWithWebSocket = async () => {
     dispatch(setSelectedUserData(calleeUserData))
   })
 
-  // listeners related with direct call
   socket.on('pre-offer', (data) => {
-    dispatch(setButtonLabel('Skip'))
-    dispatch(setSelectedUserData({ socketId: data.callerSocketId }))
-    dispatch(setCalleeUserName(data.callerUsername))
-    webRTCHandler.handlePreOffer(data);
+    try {
+      dispatch(setButtonLabel('Skip'))
+      dispatch(setSelectedUserData({ socketId: data.callerSocketId }))
+      dispatch(setCalleeUserName(data.callerUsername))
+      webRTCHandler.handlePreOffer(data);
+    } catch (err) {
+      console.log(err)
+    }
+
   });
 
   socket.on('pre-offer-answer', (data) => {
@@ -64,26 +65,14 @@ export const connectWithWebSocket = async () => {
     webRTCHandler.handleOffer(data);
   });
 
-  socket.on('get-active-users', (data) => {
-    const obj = {
-      event: broadcastEventTypes.ACTIVE_USERS,
-      activeUsers: data
-    }
-
-    handleBroadcastEvents(obj)
-  });
-
   socket.on('webRTC-answer', (data) => {
+    dispatch(setDisableButton(true))
     webRTCHandler.handleAnswer(data);
   });
 
   socket.on('webRTC-candidate', (data) => {
     webRTCHandler.handleCandidate(data);
   });
-
-  // socket.on('set-me-offline-and-online', (data) => {
-  //   //webRTCHandler.handleMeOnlineOffline(data);
-  // });
 
   socket.on('user-hanged-up', () => {
     dispatch(setUserToCall(""))
@@ -96,13 +85,12 @@ export const connectWithWebSocket = async () => {
   });
   socket.on("get-active-user", (user) => {
     let userData = user
-    if (user.findActiveUser) {
-      userData = user.findActiveUser      
+    if (user && user.findActiveUser) {
+      userData = user.findActiveUser
     } else {
       dispatch(setTriggerCall(true))
     }
     dispatch(setUserToCall(userData))
-
   });
   socket.on("stop typing", () => {
     dispatch(setIsTyping(false))
@@ -197,7 +185,6 @@ export const stopTypingMethod = () => {
 // emitting events to server related with direct call
 
 export const sendPreOffer = (data) => {
-  //stp 1, my system
   socket.emit('pre-offer', data);
 };
 export const enableDisableCam = (enable) => {
@@ -209,7 +196,7 @@ export const sendPreOfferAnswer = (data) => {
 };
 
 export const closeTab = (data) => {
-  socket.emit('disconnect-current-user', {userSocketId: store.getState().callSlice.userToCall.socketId, mySocketId: socket.id});
+  socket.emit('disconnect-current-user', { userSocketId: store.getState().callSlice.userToCall.socketId, mySocketId: socket.id });
 };
 
 export const sendWebRTCOffer = (data) => {

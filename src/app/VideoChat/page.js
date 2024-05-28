@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocalCameraEnabled } from '../../redux/features/callSlice';
 import { getAvailableUser, registerNewUser } from '../test/utils/wssConnection/wssConnection';
-import { EndCall, LogoSvg, Mute, Video } from '../../components/svgComponents';
+import { LogoSvg } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
 import ActiveUsers from '../../components/ActiveUsers';
 import EarlyBoardAccessModal from "../../components/Modals/EarlyAccessBardModal";
@@ -19,16 +19,13 @@ import { useNavigate } from "react-router-dom";
 
 const VideoChat = () => {
   const dispatch = useDispatch()
-  const router = useNavigate();
-  const { userName } = useSelector(state => state.chatSlice)
-  const { localStream, callState, remoteStream, localCameraEnabled, localMicrophoneEnabled, hangUps } = useSelector((state) => state.callSlice);
-
-
-  useEffect(async () => {
-    const streamObj = await getLocalStream()
+  const { userName, userLoggedIn } = useSelector(state => state.chatSlice)     
+  useEffect(() => {
+    (async function() {
+      const streamObj = await getLocalStream()
     await CreatePeerConnection();
     if (userName) {
-      Swal.fire({
+      Swal.fire({        
         title: "Want to enable the camera?",
         text: "Enabling camera will better help you to communicate with strangers!",
         type: "warning",
@@ -47,12 +44,14 @@ const VideoChat = () => {
         dispatch(setLocalCameraEnabled(enableCam))
       })
     }
+    })();
+    
   }, [])
   useEffect(() => {
-    if(!userName){
+    if(!userLoggedIn){
       window.location.href = window.location.origin
     }
-  }, [userName])
+  }, [userLoggedIn])
   return (
     <div className="video-chat-bg-container">
       <EarlybardHeader />

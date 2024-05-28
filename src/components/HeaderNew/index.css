@@ -21,14 +21,30 @@
   width: 30%;
 }
 
-.connect-button {
+.call-button-css{
   width: 130px;
   height: 57px;
   flex-grow: 0;
   margin: 0 0 0 49px;
   padding: 20px 30px 24px;
   border-radius: 25px;
+  border: none;
+  color: #fff;
+}
+
+.connect-button {
+  
   background-color: #8f47ff;
+  
+}
+.disConnect-button {
+  width: 130px;
+  height: 57px;
+  flex-grow: 0;
+  margin: 0 0 0 49px;
+  padding: 20px 30px 24px;
+  border-radius: 25px;
+  background-color: #ec4242;
   border: none;
   color: #fff;
 }
@@ -52,17 +68,7 @@
   }
 } */
 
-.disConnect-button {
-  width: 130px;
-  height: 57px;
-  flex-grow: 0;
-  margin: 0 0 0 -32px;
-  padding: 20px 30px 24px;
-  border-radius: 25px;
-  background-color: #ec4242;
-  border: none;
-  color: #fff;
-}
+
 
 @media screen and (max-width: 431px) {
   .call-buttons {
