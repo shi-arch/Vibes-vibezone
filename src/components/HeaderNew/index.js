@@ -8,22 +8,13 @@ import { setUserName } from "../../redux/features/chatSlice";
 import { updateName } from "../../app/utils/wssConnection/wssConnection";
 import ActiveUsers from "../ActiveUsers";
 import ReactGA from "react-ga4"
-import { setUseEffectdata, skipCall, startRandomCall } from "../commonComponents/commonComponents";
+import { skipCall, startRandomCall } from "../commonComponents/commonComponents";
+import { disableColor, enableColor, initialColor } from "../../app/utils/constant";
 
-const HeaderNew = () => {
+const HeaderNew = (props) => {
   const dispatch = useDispatch();
   const { userName } = useSelector(state => state.chatSlice)
-  const { callState, buttonLabel, isActive, userToCall, triggerCall, disableButton, timer, flag, bgColor, keyWords } = useSelector((state) => state.callSlice);
-
-  useEffect(() => {
-    setUseEffectdata()
-  }, [buttonLabel, bgColor, flag, callState, buttonLabel, userToCall, triggerCall, timer]) 
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+  const { callState, buttonLabel, isActive, keyWords } = useSelector((state) => state.callSlice);
 
   return (
     <div className="header-new-bg-container">
@@ -55,16 +46,16 @@ const HeaderNew = () => {
       />
 
       <button
-        disabled={disableButton}
-        style={ disableButton ? { backgroundColor: bgColor, cursor: 'not-allowed' } : {backgroundColor: bgColor, cursor: 'pointer'}}        
-        className="call-buttons call-button-css"
+        disabled={callState == 'CALL_AVAILABLE' ? true : false}
+        style={ callState == 'CALL_UNAVAILABLE' ? {backgroundColor: initialColor, cursor: 'pointer'} : callState == 'CALL_AVAILABLE' ? { backgroundColor: disableColor, cursor: 'not-allowed' } : {backgroundColor: enableColor, cursor: 'pointer'}}        
+        className="call-buttons call-button-css"        
         onClick={() => {
           ReactGA.event({
             category: "Connect",
             action: "connect button",
             label: "Connect",
           });
-          buttonLabel == "Connect" ? startRandomCall() : skipCall();
+          buttonLabel == "Connect" ? startRandomCall() : skipCall(props.setRemoteStream);
         }}
       >
         {buttonLabel}

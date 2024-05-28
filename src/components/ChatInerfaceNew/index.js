@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import ReactGA from "react-ga4"
 
 
-const ChatInterfaceNew = () => {
+const ChatInterfaceNew = (props) => {
   const dispatch = useDispatch()
   const [message, setMessage] = useState("")
   const { callState } = useSelector(state => state.callSlice)
@@ -55,7 +55,7 @@ const ChatInterfaceNew = () => {
   return (
     <div className="chatInterFaceNew-bg-container">
       <div className="chat-list-new-container">
-        <ChatsListNew />
+        <ChatsListNew remoteStream={props.remoteStream}/>
       </div>
       <div className="send-msg-con-1">
         <div className="send-msg-con-2">

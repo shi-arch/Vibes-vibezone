@@ -10,12 +10,11 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 import { useDispatch, useSelector } from "react-redux";
-import { setLoginDetails, setToken, setTotalUsers, setUserSelectedTopics } from '../../redux/features/loginSlice';
+import { setLoginDetails, setToken, setUserSelectedTopics } from '../../redux/features/loginSlice';
 import store from '../../redux/store';
-import { setBgColor, setButtonLabel, setDisableButton, setFlag, setTimer, setTriggerCall, setTimeDiff, setUserObjectId, setRemoteStream } from '../../redux/features/callSlice';
+import { setCallState, setUserToCall } from '../../redux/features/callSlice';
 import { setLoader, setMessages } from '../../redux/features/chatSlice';
-import { getActiveUser, hangUpAutomateCall, sendRequest, startCall } from '../../app/utils/wssConnection/wssConnection';
-import { getApi } from '../../response/api';
+import { endCall, getActiveUser } from '../../app/utils/wssConnection/wssConnection';
 
 export const restoreLocalData = () => {
   const userData = localStorage.getItem("userData");
@@ -27,71 +26,19 @@ export const restoreLocalData = () => {
 }
 
 export const startRandomCall = async () => {
-  getActiveUser()
-  store.dispatch(setTimer(true))
-  store.dispatch(setDisableButton(true))
-  store.dispatch(setBgColor("#dc9c26"))
-  store.dispatch(setLoader(true))
+  store.dispatch(setCallState('CALL_AVAILABLE'))
+  await getActiveUser()
 }
 
-export const skipCall = async () => {
-  await hangUpAutomateCall()
+export const skipCall = async (setRemoteStream) => {
   const dispatch = store.dispatch
+  await getActiveUser('skip')  
+  await endCall()  
   dispatch(setMessages([]))
-  dispatch(setRemoteStream(null));
-  dispatch(setDisableButton(true))
-  dispatch(setBgColor("#dc9c26"))
-//   const disconnectedTime = new Date().getTime() - store.getState().callSlice.connectedTime
-// const differenceInMinutes = disconnectedTime / (1000 * 60);
-//   console.log(differenceInMinutes)
-//   if(differenceInMinutes > 5){
-//     dispatch(setTimeDiff(differenceInMinutes))
-//   }    
+  setRemoteStream(null) 
+  dispatch(setUserToCall(""))
+  dispatch(setCallState('CALL_AVAILABLE'))
 }
-
-export const setUseEffectdata = () => {
-  const dispatch = store.dispatch
-  const {buttonLabel, bgColor, flag, callState, userToCall, triggerCall, timer, userObjectId, timeDiff} = store.getState().callSlice
-  const {token} = store.getState().loginSlice
-  if (userObjectId && timeDiff) {
-    getApi("/profile", token).then(res => {
-      if (res) {
-        const { profileImage, name, contact, userName, status } = res.data
-        const o = {
-          profileImage: profileImage || "",
-          name: name || contact || email
-        }
-        sendRequest({userData: o, callerSocketId: userToCall.socketId})
-      }
-    })
-    dispatch(setTimeDiff(""))
-    dispatch(setUserObjectId(""))
-  }
-  if (buttonLabel == 'Skip' && callState == 'CALL_AVAILABLE') {
-    dispatch(setLoader(true))
-  }
-  if (callState == "CALL_IN_PROGRESS") {
-    dispatch(setLoader(false))
-  }
-  if (userToCall && triggerCall) {
-    startCall()
-    dispatch(setTriggerCall(false))
-  }
-  if (timer) {
-    dispatch(setTimer(false))
-    setTimeout(() => {
-      dispatch(setButtonLabel("Skip"))
-      dispatch(setBgColor("#ec4242"))
-      dispatch(setDisableButton(false))
-      dispatch(setTimer(true))
-      dispatch(setFlag(!flag))
-    }, 5000)
-  }
-}
-
-
-
-
 export const Loader = (style) => {
   return <div style={style.style}>
     <CircularProgress />

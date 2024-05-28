@@ -8,8 +8,7 @@ import { chatList, updateChatList } from "../propsData";
 import "./index.css";
 import { useEffect } from "react";
 
-const ChatsListNew = () => {
-  let lastDisplayedDate = null;
+const ChatsListNew = (props) => {
   const { calleeUserName } = useSelector(state => state.chatSlice)
   const { messagesArr } = useSelector(state => state.chatSlice)
   const { userToCall } = useSelector(state => state.callSlice)
@@ -24,7 +23,7 @@ const ChatsListNew = () => {
   return (
     <div className="chat-list-new-bg-container">
       <div className="guest-container">
-        <h1 className="guest-head">{userToCall && userToCall.username ? userToCall.username : "Guest"}</h1>
+        <h1 className="guest-head">{props.remoteStream && userToCall && userToCall.username ? userToCall.username : "Guest"}</h1>
       </div>
       <div className="chatListNew-scroll-container">
         {messagesArr.map((chat, index) => {

@@ -1,24 +1,19 @@
 import React from "react";
 import Swal from "sweetalert2";
 import { Loader } from '../../components/commonComponents/commonComponents'
-
 import VibeZoneLogo from "../../assets/images/VibeZoneLogo.svg"
-
 import "./videocallInterface.css";
 import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
 import CallIcons from "../CallIcons/index.js";
 
-const VideoCallInterFace = () => {
+const VideoCallInterFace = (props) => {
+  const {localStream, remoteStream} = props
   const dispatch = useDispatch();
   const [mute, setMute] = useState(false);
   const myVideo = useRef();
   const userVideo = useRef();
-  const { loader } = useSelector((state) => state.chatSlice);
-  const {
-    localStream,
-    remoteStream
-  } = useSelector((state) => state.callSlice);
+  const {callState} = useSelector((state) => state.callSlice);
 
   useEffect(() => {
     try {
@@ -62,7 +57,7 @@ const VideoCallInterFace = () => {
           //muted
           />
         )}
-        {loader ? (
+        {(callState == 'CALL_AVAILABLE' || callState == 'CALL_IN_PROGRESS') && !remoteStream ? (
           <div
             style={{
               width: "100%",
@@ -78,7 +73,7 @@ const VideoCallInterFace = () => {
           </div>
         ) : null}
 
-        {!remoteStream && !loader ? (
+        {callState == 'CALL_UNAVAILABLE' ? (
           <>
             <img
               src="https://res.cloudinary.com/dysnxt2oz/image/upload/v1710222111/Rectangle_28_1_gisnki.png"

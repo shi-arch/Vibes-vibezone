@@ -2,6 +2,10 @@ import store from '../../redux/store';
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const phoneRegex = /^[6-9]\d{9}$/
 
+export const disableColor = '#dc9c26'
+export const enableColor = '#ec4242'
+export const initialColor = 'rgb(143, 71, 255)'
+
 
 export const formatDate = (date) => {
     const d = new Date(date);
@@ -90,3 +94,29 @@ export const isNumeric = (str) => {
     return !isNaN(str) &&
         !isNaN(parseFloat(str))
 }
+
+
+
+
+//   const disconnectedTime = new Date().getTime() - store.getState().callSlice.connectedTime
+// const differenceInMinutes = disconnectedTime / (1000 * 60);
+//   console.log(differenceInMinutes)
+//   if(differenceInMinutes > 5){
+//     dispatch(setTimeDiff(differenceInMinutes))
+//   }    
+
+
+// if (userObjectId && timeDiff) {
+  //   getApi("/profile", token).then(res => {
+  //     if (res) {
+  //       const { profileImage, name, contact, userName, status } = res.data
+  //       const o = {
+  //         profileImage: profileImage || "",
+  //         name: name || contact || email
+  //       }
+  //       sendRequest({userData: o, callerSocketId: userToCall.socketId})
+  //     }
+  //   })
+  //   dispatch(setTimeDiff(""))
+  //   dispatch(setUserObjectId(""))
+  // }
