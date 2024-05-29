@@ -1,7 +1,7 @@
 import socketClient from 'socket.io-client';
 import store from '../../../redux/store';
 import { setUserName, setMessages, setIsTyping } from '../../../redux/features/chatSlice';
-import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton } from '../../../redux/features/callSlice';
+import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer } from '../../../redux/features/callSlice';
 import { setTotalUsers } from '../../../redux/features/loginSlice';
 const SERVER = process.env.REACT_APP_BASEURL;
 let socket;
@@ -22,6 +22,11 @@ export const connectWithWebSocket = async () => {
     dispatch(setIsTyping(false))
     dispatch(setUserName(""))
   });
+  socket.on("skip-timer", () => {
+    debugger
+    store.dispatch(setSkipTimer(true))
+    store.dispatch(setDisableButton(true))
+  });  
   socket.on("send-message", (data) => {
     let arr = _.cloneDeep(store.getState().chatSlice.messagesArr)
     let o = { message: data.msgObj.message, sender: false }
@@ -71,7 +76,6 @@ export const connectWithWebSocket = async () => {
     const dispatch = store.dispatch
     dispatch(setTriggerEndCall(true))
     dispatch(setCallState('CALL_AVAILABLE'))
-    debugger
     dispatch(setUserToCall(""))
     dispatch(setMessages([]))
     socket.emit('get-active-user', { flag: '', prevUser: '', mySocketId: store.getState().callSlice.socketId });
@@ -113,6 +117,10 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream) 
 
 export const handleUserHangedUp = async () => {
   store.dispatch(setCallState('CALL_AVAILABLE'));
+};
+
+export const handleSkipTimer = async () => {
+  socket.emit('skip-timer', store.getState().callSlice.userToCall.socketId)
 };
 
 export const endCall = async () => {

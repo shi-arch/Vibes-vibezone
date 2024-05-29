@@ -6,7 +6,7 @@ import VideoCallInterFace from '../../components/VideoCallInterFace';
 import ChatInterfaceNew from '../../components/ChatInerfaceNew';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
-import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setMessage, setPeer, setTimer, setTriggerCall, setTriggerEndCall, setUserToCall } from '../../redux/features/callSlice';
+import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setMessage, setPeer, setTimer, setTriggerCall, setTriggerEndCall, setSkipTimer } from '../../redux/features/callSlice';
 import { connectWithWebSocket, registerNewUser, startCall } from '../utils/wssConnection/wssConnection';
 import { LogoSvg } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
@@ -24,7 +24,7 @@ const VideoChat = () => {
   const [localCameraEnabled, setLocalCameraEnabled] = useState(null)
   const [localMicrophoneEnabled, setLocalMicrophoneEnabled] = useState(null)
   const { userLoggedIn } = useSelector(state => state.chatSlice)
-  const { peerId, userToCall, triggerCall, triggerEndCall, timer, disableButton, socketId } = useSelector(state => state.callSlice)
+  const { peerId, userToCall, triggerCall, triggerEndCall, timer, disableButton, socketId, skipTimer } = useSelector(state => state.callSlice)
   const initiate = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -51,14 +51,22 @@ const VideoChat = () => {
 
   useEffect(() => {
     if (timer) {
-      dispatch(setTimer(!timer))
       setTimeout(() => {
-        dispatch(setTimer(!timer))
-        dispatch(setDisableButton(!disableButton))
+        dispatch(setTimer(false))
+        dispatch(setDisableButton(false))
         dispatch(setButtonLabel('Skip'))
-      }, 5000)
+      }, 2000)
     }
   }, [timer])
+  
+  useEffect(() => {
+    if (skipTimer) {
+      setTimeout(() => {
+        dispatch(setSkipTimer(false))
+        dispatch(setDisableButton(false))
+      }, 5000)
+    }
+  }, [skipTimer])
 
   useEffect(() => {
     if (remoteStream) {
@@ -85,8 +93,6 @@ const VideoChat = () => {
       setRemoteStream(null)
       setTriggerEndCall(false)
       dispatch(setCallState('CALL_AVAILABLE'))
-      debugger
-      //dispatch(setUserToCall(""))
       dispatch(setMessages([]))
     }
   }, [userToCall, triggerCall, triggerEndCall])

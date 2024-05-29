@@ -12,9 +12,9 @@ import Chip from '@mui/material/Chip';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginDetails, setToken, setUserSelectedTopics } from '../../redux/features/loginSlice';
 import store from '../../redux/store';
-import { setCallState, setDisableButton, setTimer, setUserToCall } from '../../redux/features/callSlice';
+import { setCallState, setDisableButton, setSkipTimer, setTimer, setUserToCall } from '../../redux/features/callSlice';
 import { setLoader, setMessages } from '../../redux/features/chatSlice';
-import { endCall, getActiveUser } from '../../app/utils/wssConnection/wssConnection';
+import { endCall, getActiveUser, handleSkipTimer } from '../../app/utils/wssConnection/wssConnection';
 
 export const restoreLocalData = () => {
   const userData = localStorage.getItem("userData");
@@ -35,6 +35,9 @@ export const startRandomCall = async () => {
 export const skipCall = async (setRemoteStream) => {
   const dispatch = store.dispatch
   dispatch(setMessages([]))
+  dispatch(setSkipTimer(true))
+  await handleSkipTimer()
+  store.dispatch(setDisableButton(true))
   setRemoteStream(null)
   await endCall()
   await getActiveUser('skip')  
