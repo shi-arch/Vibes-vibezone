@@ -24,7 +24,7 @@ const initialState = {
   startCall: false,
   userToCall: "",
   triggerCall: false,
-  disableButton: false,
+  disableButton: true,
   socketConnection: "",
   timer: false,
   flag: false,

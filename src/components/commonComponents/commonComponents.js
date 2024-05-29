@@ -25,7 +25,7 @@ export const restoreLocalData = () => {
   }
 }
 
-export const startRandomCall = async () => {  
+export const startRandomCall = async () => {
   store.dispatch(setTimer(true))
   store.dispatch(setDisableButton(true))
   store.dispatch(setCallState('CALL_AVAILABLE'))
@@ -34,10 +34,10 @@ export const startRandomCall = async () => {
 
 export const skipCall = async (setRemoteStream) => {
   const dispatch = store.dispatch
-  await getActiveUser('skip')  
-  await endCall()  
   dispatch(setMessages([]))
-  setRemoteStream(null) 
+  setRemoteStream(null)
+  await endCall()
+  await getActiveUser('skip')  
   dispatch(setUserToCall(""))
   dispatch(setCallState('CALL_AVAILABLE'))
 }

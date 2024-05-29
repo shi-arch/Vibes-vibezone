@@ -47,7 +47,7 @@ const HeaderNew = (props) => {
 
       <button
         disabled={disableButton}
-        style={ callState == 'CALL_UNAVAILABLE' ? {backgroundColor: initialColor} : 
+        style={ callState == 'CALL_UNAVAILABLE' && !disableButton ? {backgroundColor: initialColor} : 
         disableButton ? { backgroundColor: disableColor, cursor: 'not-allowed'} : {backgroundColor: enableColor}}
         className="call-buttons call-button-css"        
         onClick={() => {

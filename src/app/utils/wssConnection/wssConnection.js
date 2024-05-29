@@ -1,7 +1,7 @@
 import socketClient from 'socket.io-client';
 import store from '../../../redux/store';
 import { setUserName, setMessages, setIsTyping } from '../../../redux/features/chatSlice';
-import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall } from '../../../redux/features/callSlice';
+import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton } from '../../../redux/features/callSlice';
 import { setTotalUsers } from '../../../redux/features/loginSlice';
 const SERVER = process.env.REACT_APP_BASEURL;
 let socket;
@@ -34,17 +34,16 @@ export const connectWithWebSocket = async () => {
   })
   socket.on("get-active-user", (user) => {
     if (store.getState().callSlice.callState == "CALL_AVAILABLE") {
+      console.log('cccccccccccccccccccccccccccc')      
       const dispatch = store.dispatch
+      dispatch(setCallState('CALL_IN_PROGRESS'))
       let userData = user
-      if (user && user.findActiveUser) {
-        userData = user.findActiveUser
+      if (user && user?.findActiveUser) {
+        userData = user?.findActiveUser
       } else {
-        dispatch(setCallState('CALL_IN_PROGRESS'))
         dispatch(setTriggerCall(true))
       }
       dispatch(setUserToCall(userData))
-    } else {
-      socket.emit('get-active-user', { flag: '', prevUser: '' });
     }
   });
   socket.on('stop-loader', () => {
@@ -54,23 +53,28 @@ export const connectWithWebSocket = async () => {
     store.dispatch(setCallState('CALL_CONNECTED'))
   });
   socket.on('end-call', () => {
-    const dispatch = store.dispatch
-    dispatch(setTriggerEndCall(true))
-    dispatch(setCallState('CALL_AVAILABLE'))
-    dispatch(setUserToCall(""))
-    dispatch(setMessages([]))
+    store.dispatch(setTriggerEndCall(true))
+    
   });
   socket.on('broadcast', (data) => {
     if(data && data.totalUsers){
       store.dispatch(setTotalUsers(data.totalUsers))
     }
   });
+  socket.on('register-user', () => {
+    setTimeout(() => {
+      store.dispatch(setDisableButton(false))
+    }, 4000)
+  });
+  
   socket.on('user-hanged-up', () => {
     const dispatch = store.dispatch
     dispatch(setTriggerEndCall(true))
     dispatch(setCallState('CALL_AVAILABLE'))
+    debugger
     dispatch(setUserToCall(""))
     dispatch(setMessages([]))
+    socket.emit('get-active-user', { flag: '', prevUser: '', mySocketId: store.getState().callSlice.socketId });
   });
 };
 
@@ -91,19 +95,16 @@ export const sendRequest = (user) => {
   });
 };
 
-export const startCall = (peer, localStream, userToCall, setRemoteStream) => {
+export const startCall = async (peer, localStream, userToCall, setRemoteStream) => {
   try {
     const { peerId } = userToCall
     if (peer && localStream && peerId) {
-      const call = peer.call(peerId, localStream);
-      if (call) {
-        call.on('stream', async (remoteStream) => {
-          await setRemoteStream(remoteStream)
-          store.dispatch(setCallState('CALL_CONNECTED'))
-          store.dispatch(setButtonLabel('Skip'))
-          socket.emit('stop-loader', userToCall.socketId)
-        });
-      }
+      const call = await peer.call(peerId, localStream)
+      console.log(call,'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+      await call.on('stream', async (remoteStream) => {
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        await setRemoteStream(remoteStream)
+      });
     }
   } catch (err) {
     console.log('start call error: ', err);
@@ -119,7 +120,7 @@ export const endCall = async () => {
 }
 
 export const getActiveUser = async (flag) => {
-  socket.emit('get-active-user', { flag: flag || '', prevUser: store.getState().callSlice.userToCall || '' });
+  socket.emit('get-active-user', { prevUser: store.getState().callSlice.userToCall || '', mySocketId: store.getState().callSlice.socketId, flag: flag || '' });
 };
 
 export const updateName = (username) => {

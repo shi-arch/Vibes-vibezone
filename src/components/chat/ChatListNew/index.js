@@ -14,12 +14,6 @@ const ChatsListNew = (props) => {
   const { userToCall } = useSelector(state => state.callSlice)
   updateChatList(chatList);
 
-  const getLastChat = (chatList, index) => {
-    if (index < chatList.length - 1) {
-      return chatList[index].sender === chatList[index + 1].sender;
-    }
-  };
-
   return (
     <div className="chat-list-new-bg-container">
       <div className="guest-container">

@@ -50,7 +50,7 @@ const EarlyAccess = () => {
           </Typography>
           <Button
             onClick={() => {
-              const user = "Guest + " + Math.random().toString().substr(2, 8);
+              let user = "Guest + " + Math.random().toString().substr(2, 8);
               dispatch(setUserName(user));
               dispatch(setUserLoggedIn(user));
               dispatch(setPeerId((Math.random() + 1).toString(36).substring(7)))
