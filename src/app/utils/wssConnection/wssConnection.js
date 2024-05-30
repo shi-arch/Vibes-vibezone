@@ -99,6 +99,7 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
         if(store.getState().callSlice.buttonLabel !== 'Skip'){
           store.dispatch(setButtonLabel('Skip'))
         } 
+        console.log('user connected >>>>>>>>>>')
       });
       await setCurrentCall(call)
       call.on('close', async () => {

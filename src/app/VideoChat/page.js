@@ -47,6 +47,7 @@ const VideoChat = () => {
           dispatch(setButtonLabel('Skip'))
         }        
         setRemoteStream(remoteStream)
+        console.log('user connected >>>>>>>>>>')
       });
       setCurrentCall(call)
       call.on('close', () => {
