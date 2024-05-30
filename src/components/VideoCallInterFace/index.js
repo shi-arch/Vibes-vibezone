@@ -47,7 +47,7 @@ const VideoCallInterFace = (props) => {
   return (
     <div className="video-call-interface-bg-container">
       <div className="video-img-container">
-        {remoteStream && (
+        {callState == 'CALL_CONNECTED' && (
           <video
             id="userVideo"
             style={{ width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }}
@@ -57,7 +57,7 @@ const VideoCallInterFace = (props) => {
           //muted
           />
         )}
-        {(callState == 'CALL_AVAILABLE' || callState == 'CALL_IN_PROGRESS') && !remoteStream ? (
+        {callState == 'CALL_AVAILABLE' ? (
           <div
             style={{
               width: "100%",

@@ -1,7 +1,7 @@
 import socketClient from 'socket.io-client';
 import store from '../../../redux/store';
 import { setUserName, setMessages, setIsTyping } from '../../../redux/features/chatSlice';
-import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer } from '../../../redux/features/callSlice';
+import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer, setCurrentCall } from '../../../redux/features/callSlice';
 import { setTotalUsers } from '../../../redux/features/loginSlice';
 const SERVER = process.env.REACT_APP_BASEURL;
 let socket;
@@ -23,7 +23,6 @@ export const connectWithWebSocket = async () => {
     dispatch(setUserName(""))
   });
   socket.on("skip-timer", () => {
-    debugger
     store.dispatch(setSkipTimer(true))
     store.dispatch(setDisableButton(true))
   });  
@@ -39,7 +38,7 @@ export const connectWithWebSocket = async () => {
   })
   socket.on("get-active-user", (user) => {
     if (store.getState().callSlice.callState == "CALL_AVAILABLE") {
-      console.log('cccccccccccccccccccccccccccc')      
+      console.log('user enters into get active user >>>>>>>>', user)      
       const dispatch = store.dispatch
       dispatch(setCallState('CALL_IN_PROGRESS'))
       let userData = user
@@ -50,16 +49,6 @@ export const connectWithWebSocket = async () => {
       }
       dispatch(setUserToCall(userData))
     }
-  });
-  socket.on('stop-loader', () => {
-    if(store.getState().callSlice.buttonLabel !== "Skip"){
-      store.dispatch(setButtonLabel('Skip'))
-    }    
-    store.dispatch(setCallState('CALL_CONNECTED'))
-  });
-  socket.on('end-call', () => {
-    store.dispatch(setTriggerEndCall(true))
-    
   });
   socket.on('broadcast', (data) => {
     if(data && data.totalUsers){
@@ -99,15 +88,27 @@ export const sendRequest = (user) => {
   });
 };
 
-export const startCall = async (peer, localStream, userToCall, setRemoteStream) => {
+export const startCall = async (peer, localStream, userToCall, setRemoteStream, setCurrentCall) => {
   try {
     const { peerId } = userToCall
     if (peer && localStream && peerId) {
       const call = await peer.call(peerId, localStream)
-      console.log(call,'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-      await call.on('stream', async (remoteStream) => {
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-        await setRemoteStream(remoteStream)
+      call.on('stream', (remoteStream) => {
+        store.dispatch(setCallState('CALL_CONNECTED'))               
+        setRemoteStream(remoteStream)
+        if(store.getState().callSlice.buttonLabel !== 'Skip'){
+          store.dispatch(setButtonLabel('Skip'))
+        } 
+      });
+      await setCurrentCall(call)
+      call.on('close', async () => {
+        store.dispatch(setSkipTimer(true))
+        store.dispatch(setDisableButton(true))
+        store.dispatch(setMessages([]))
+        await getActiveUser('skip')
+        store.dispatch(setUserToCall(""))
+        store.dispatch(setCallState('CALL_AVAILABLE'))
+        console.log('Call ended>>>>>>>>>>>>>>>>');
       });
     }
   } catch (err) {

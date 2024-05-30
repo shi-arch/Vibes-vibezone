@@ -3,18 +3,27 @@ import _ from 'lodash'
 import { LogoSvg } from "../svgComponents";
 import "./index.css"
 import { useSelector, useDispatch } from "react-redux";
-import { setDisableButton, setKeyWords } from "../../redux/features/callSlice";
+import { setCallState, setDisableButton, setKeyWords, setTimer } from "../../redux/features/callSlice";
 import { setUserName } from "../../redux/features/chatSlice";
-import { updateName } from "../../app/utils/wssConnection/wssConnection";
+import { getActiveUser, updateName } from "../../app/utils/wssConnection/wssConnection";
 import ActiveUsers from "../ActiveUsers";
 import ReactGA from "react-ga4"
-import { skipCall, startRandomCall } from "../commonComponents/commonComponents";
 import { disableColor, enableColor, initialColor } from "../../app/utils/constant";
 
 const HeaderNew = (props) => {
   const dispatch = useDispatch();
   const { userName } = useSelector(state => state.chatSlice)
   const { callState, buttonLabel, isActive, keyWords, disableButton, userToCall } = useSelector((state) => state.callSlice);
+  const skipCall = () => {
+    props.currentCall.close()
+  }
+
+  const startRandomCall = async () => {
+    dispatch(setTimer(true))
+    dispatch(setDisableButton(true))
+    dispatch(setCallState('CALL_AVAILABLE'))
+    await getActiveUser()
+  }
 
   return (
     <div className="header-new-bg-container">
@@ -56,7 +65,7 @@ const HeaderNew = (props) => {
             action: "connect button",
             label: "Connect",
           });
-          userToCall ? skipCall(props.setRemoteStream) : startRandomCall()
+          userToCall ? skipCall() : startRandomCall()
         }}
       >
         {buttonLabel}

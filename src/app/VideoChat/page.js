@@ -6,7 +6,7 @@ import VideoCallInterFace from '../../components/VideoCallInterFace';
 import ChatInterfaceNew from '../../components/ChatInerfaceNew';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
-import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setMessage, setPeer, setTimer, setTriggerCall, setTriggerEndCall, setSkipTimer } from '../../redux/features/callSlice';
+import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setMessage, setPeer, setTimer, setTriggerCall, setTriggerEndCall, setSkipTimer, setUserToCall } from '../../redux/features/callSlice';
 import { connectWithWebSocket, registerNewUser, startCall } from '../utils/wssConnection/wssConnection';
 import { LogoSvg } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
@@ -21,10 +21,11 @@ const VideoChat = () => {
   const [localStream, setLocalStream] = useState(null)
   const [remoteStream, setRemoteStream] = useState(null)
   const [peer, setPeer] = useState(null)
+  const [currentCall, setCurrentCall] = useState(null)  
   const [localCameraEnabled, setLocalCameraEnabled] = useState(null)
   const [localMicrophoneEnabled, setLocalMicrophoneEnabled] = useState(null)
   const { userLoggedIn } = useSelector(state => state.chatSlice)
-  const { peerId, userToCall, triggerCall, triggerEndCall, timer, disableButton, socketId, skipTimer } = useSelector(state => state.callSlice)
+  const { peerId, userToCall, triggerCall, triggerEndCall, timer, disableButton, socketId, skipTimer, buttonLabel } = useSelector(state => state.callSlice)
   const initiate = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -41,7 +42,20 @@ const VideoChat = () => {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       call.answer(stream);
       call.on('stream', (remoteStream) => {
+        dispatch(setCallState('CALL_CONNECTED'))
+        if(buttonLabel !== 'Skip'){
+          dispatch(setButtonLabel('Skip'))
+        }        
         setRemoteStream(remoteStream)
+      });
+      setCurrentCall(call)
+      call.on('close', () => {
+        dispatch(setSkipTimer(true))
+        dispatch(setDisableButton(true))
+        dispatch(setMessages([]))
+        dispatch(setUserToCall(""))
+        dispatch(setCallState('CALL_AVAILABLE'))
+        console.log('Call ended>>>>>>>>>>>>>>>>>>>>>>>>>');
       });
     });
     newPeer.on('error', (error) => {
@@ -54,7 +68,6 @@ const VideoChat = () => {
       setTimeout(() => {
         dispatch(setTimer(false))
         dispatch(setDisableButton(false))
-        dispatch(setButtonLabel('Skip'))
       }, 2000)
     }
   }, [timer])
@@ -69,13 +82,6 @@ const VideoChat = () => {
   }, [skipTimer])
 
   useEffect(() => {
-    if (remoteStream) {
-      dispatch(setCallState('CALL_CONNECTED'))
-      dispatch(setButtonLabel('Skip'))
-    }
-  }, [remoteStream])
-
-  useEffect(() => {
     connectWithWebSocket()
   }, [])
   useEffect(() => {
@@ -86,16 +92,10 @@ const VideoChat = () => {
 
   useEffect(() => {
     if (userToCall && triggerCall) {
-      startCall(peer, localStream, userToCall, setRemoteStream)
+      startCall(peer, localStream, userToCall, setRemoteStream, setCurrentCall)
       dispatch(setTriggerCall(false))
     }
-    if (triggerEndCall) {
-      setRemoteStream(null)
-      setTriggerEndCall(false)
-      dispatch(setCallState('CALL_AVAILABLE'))
-      dispatch(setMessages([]))
-    }
-  }, [userToCall, triggerCall, triggerEndCall])
+  }, [userToCall, triggerCall])
 
   useEffect(() => {
     if (localStream) {
@@ -143,7 +143,6 @@ const VideoChat = () => {
   return (
     <div className="video-chat-bg-container">
       <EarlybardHeader />
-      {/* <h1 style={{marginLeft: "150px"}}>{peerId}</h1> */}
       <EarlyBoardAccessModal />
       <SideBarNew />
       <div className="video-right-container">
@@ -151,7 +150,7 @@ const VideoChat = () => {
           <LogoSvg />
         </div>
 
-        <HeaderNew setRemoteStream={setRemoteStream} />
+        <HeaderNew currentCall={currentCall} />
         <div className="sm-lg-icons-container">
           <div className="video-chat-new-container">
             <VideoCallInterFace localStream={localStream} remoteStream={remoteStream} />

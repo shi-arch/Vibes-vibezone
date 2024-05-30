@@ -24,26 +24,6 @@ export const restoreLocalData = () => {
     store.dispatch(setToken(parsedData.token));
   }
 }
-
-export const startRandomCall = async () => {
-  store.dispatch(setTimer(true))
-  store.dispatch(setDisableButton(true))
-  store.dispatch(setCallState('CALL_AVAILABLE'))
-  await getActiveUser()
-}
-
-export const skipCall = async (setRemoteStream) => {
-  const dispatch = store.dispatch
-  dispatch(setMessages([]))
-  dispatch(setSkipTimer(true))
-  await handleSkipTimer()
-  store.dispatch(setDisableButton(true))
-  setRemoteStream(null)
-  await endCall()
-  await getActiveUser('skip')  
-  dispatch(setUserToCall(""))
-  dispatch(setCallState('CALL_AVAILABLE'))
-}
 export const Loader = (style) => {
   return <div style={style.style}>
     <CircularProgress />
