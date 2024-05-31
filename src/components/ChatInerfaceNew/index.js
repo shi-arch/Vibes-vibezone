@@ -33,7 +33,7 @@ const ChatInterfaceNew = (props) => {
   }
 
   const sendMsg = () => {
-    if (message.trim() && callState == "CALL_IN_PROGRESS") {
+    if (message.trim() && callState == "CALL_CONNECTED") {
       let arr = _.cloneDeep(messagesArr)
       let o = { message: message, sender: true }
       if (arr.length) {

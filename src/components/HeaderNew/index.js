@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { LogoSvg } from "../svgComponents";
 import "./index.css"
 import { useSelector, useDispatch } from "react-redux";
-import { setCallState, setDisableButton, setKeyWords, setTimer } from "../../redux/features/callSlice";
+import { setCallState, setDisableButton, setKeyWords, setTimer, setDisable } from "../../redux/features/callSlice";
 import { setUserName } from "../../redux/features/chatSlice";
 import { getActiveUser, updateName } from "../../app/utils/wssConnection/wssConnection";
 import ActiveUsers from "../ActiveUsers";
@@ -13,12 +13,13 @@ import { disableColor, enableColor, initialColor } from "../../app/utils/constan
 const HeaderNew = (props) => {
   const dispatch = useDispatch();
   const { userName } = useSelector(state => state.chatSlice)
-  const { callState, buttonLabel, isActive, keyWords, disableButton, userToCall } = useSelector((state) => state.callSlice);
+  const { callState, buttonLabel, isActive, keyWords, disableButton, userToCall, disable } = useSelector((state) => state.callSlice);
   const skipCall = () => {
-    props.currentCall.close()
+    props?.currentCall?.close()
   }
 
   const startRandomCall = async () => {
+    dispatch(setDisable(true))
     dispatch(setTimer(true))
     dispatch(setDisableButton(true))
     dispatch(setCallState('CALL_AVAILABLE'))
@@ -55,8 +56,8 @@ const HeaderNew = (props) => {
       />
 
       <button
-        disabled={disableButton}
-        style={ callState == 'CALL_UNAVAILABLE' && !disableButton ? {backgroundColor: initialColor} : 
+        disabled={disable ? true : disableButton}
+        style={ disable ? {backgroundColor: disableColor, cursor: 'not-allowed'} : callState == 'CALL_UNAVAILABLE' && !disableButton ? {backgroundColor: initialColor} : 
         disableButton ? { backgroundColor: disableColor, cursor: 'not-allowed'} : {backgroundColor: enableColor}}
         className="call-buttons call-button-css"        
         onClick={() => {

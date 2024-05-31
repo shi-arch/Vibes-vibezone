@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { MsgSeen } from "../../svgComponents";
 // import url1 from "../../../assets/images/profile1.svg";
 // import url2 from "../../../assets/images/profile2.svg";
-import { chatList, updateChatList } from "../propsData";
+import { chatList } from "../propsData";
 
 import "./index.css";
 import { useEffect } from "react";
@@ -12,7 +12,12 @@ const ChatsListNew = (props) => {
   const { calleeUserName } = useSelector(state => state.chatSlice)
   const { messagesArr } = useSelector(state => state.chatSlice)
   const { userToCall } = useSelector(state => state.callSlice)
-  updateChatList(chatList);
+
+  useEffect(() => {
+    if(messagesArr.length){
+      debugger 
+    }
+  }, [messagesArr]);
 
   return (
     <div className="chat-list-new-bg-container">

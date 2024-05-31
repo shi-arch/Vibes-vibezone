@@ -1,7 +1,7 @@
 import socketClient from 'socket.io-client';
 import store from '../../../redux/store';
 import { setUserName, setMessages, setIsTyping } from '../../../redux/features/chatSlice';
-import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer, setCurrentCall } from '../../../redux/features/callSlice';
+import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer, setCurrentCall, setEnableDisableRemoteCam } from '../../../redux/features/callSlice';
 import { setTotalUsers } from '../../../redux/features/loginSlice';
 const SERVER = process.env.REACT_APP_BASEURL;
 let socket;
@@ -34,7 +34,7 @@ export const connectWithWebSocket = async () => {
     } else {
       arr.push(o)
     }
-    dispatch(setMessages(arr))
+    store.dispatch(setMessages(arr))
   })
   socket.on("get-active-user", (user) => {
     if (store.getState().callSlice.callState == "CALL_AVAILABLE") {
@@ -60,7 +60,12 @@ export const connectWithWebSocket = async () => {
       store.dispatch(setDisableButton(false))
     }, 4000)
   });
-  
+  socket.on('handle-camera', (enable) => {
+    store.dispatch(setEnableDisableRemoteCam(enable))
+  })
+  socket.on('enableDisableCam', (enable) => {
+    store.dispatch(setEnableDisableRemoteCam(enable))
+  })
   socket.on('user-hanged-up', async () => {
     const dispatch = store.dispatch
     dispatch(setCallState('CALL_AVAILABLE'))
@@ -96,7 +101,7 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
         setRemoteStream(remoteStream)
         if(store.getState().callSlice.buttonLabel !== 'Skip'){
           store.dispatch(setButtonLabel('Skip'))
-        } 
+        }
         console.log('user connected >>>>>>>>>>')
       });
       await setCurrentCall(call)
@@ -117,6 +122,10 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
 
 export const handleUserHangedUp = async () => {
   store.dispatch(setCallState('CALL_AVAILABLE'));
+};
+
+export const handleCamera = async () => {
+  socket.emit('handle-camera', {socketId: store.getState().callSlice.userToCall.socketId, enableOrDisable: store.getState().callSlice.localCameraEnabled})
 };
 
 export const handleSkipTimer = async () => {
@@ -162,7 +171,7 @@ export const stopTypingMethod = () => {
 // emitting events to server related with direct call
 
 export const enableDisableCam = (enable) => {
-  socket.emit('enableDisableCam', enable);
+  socket.emit('enableDisableCam', {enableOrDisable: enable, socketId: store.getState().callSlice.socketId, userSocketId: store.getState().callSlice.userToCall.socketId});
 };
 
 export const closeTab = () => {

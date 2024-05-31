@@ -6,9 +6,10 @@ import "./videocallInterface.css";
 import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
 import CallIcons from "../CallIcons/index.js";
+import { setLocalCameraEnabled } from "../../redux/features/callSlice.js";
 
 const VideoCallInterFace = (props) => {
-  const { localStream, remoteStream } = props
+  const {localStream, remoteStream} = props
   const dispatch = useDispatch();
   const [mute, setMute] = useState(false);
   const { callState } = useSelector((state) => state.callSlice);
@@ -24,7 +25,6 @@ const VideoCallInterFace = (props) => {
             }}
             autoPlay
             playsInline
-          //muted
           />
         )}
         {callState == 'CALL_AVAILABLE' ? (
@@ -98,9 +98,8 @@ const VideoCallInterFace = (props) => {
           <img src={VibeZoneLogo} alt="logo" className="vibe-logo-float" />
         </div>
       </div>
-
       <div className="sm-lg-icon-video-call-container">
-        <CallIcons />
+        <CallIcons localStream={localStream} />
       </div>
     </div>
   );

@@ -6,8 +6,8 @@ import VideoCallInterFace from '../../components/VideoCallInterFace';
 import ChatInterfaceNew from '../../components/ChatInerfaceNew';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
-import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setMessage, setPeer, setTimer, setTriggerCall, setSkipTimer, setUserToCall } from '../../redux/features/callSlice';
-import { connectWithWebSocket, registerNewUser, startCall } from '../utils/wssConnection/wssConnection';
+import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setMessage, setPeer, setTimer, setTriggerCall, setSkipTimer, setUserToCall, setDisable } from '../../redux/features/callSlice';
+import { connectWithWebSocket, handleCamera, registerNewUser, startCall } from '../utils/wssConnection/wssConnection';
 import { LogoSvg } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
 import ActiveUsers from '../../components/ActiveUsers';
@@ -21,11 +21,9 @@ const VideoChat = () => {
   const [localStream, setLocalStream] = useState(null)
   const [remoteStream, setRemoteStream] = useState(null)
   const [peer, setPeer] = useState(null)
-  const [currentCall, setCurrentCall] = useState(null)  
-  const [localCameraEnabled, setLocalCameraEnabled] = useState(null)
-  const [localMicrophoneEnabled, setLocalMicrophoneEnabled] = useState(null)
+  const [currentCall, setCurrentCall] = useState(null)
   const { userLoggedIn } = useSelector(state => state.chatSlice)
-  const { peerId, userToCall, triggerCall, triggerEndCall, timer, disableButton, socketId, skipTimer, buttonLabel } = useSelector(state => state.callSlice)
+  const { peerId, userToCall, triggerCall, triggerEndCall, timer, disableButton, socketId, skipTimer, buttonLabel, localCameraEnabled, enableDisableRemoteCam } = useSelector(state => state.callSlice)
   const initiate = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -41,12 +39,13 @@ const VideoChat = () => {
     newPeer.on('call', async (call) => {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       call.answer(stream);
-      call.on('stream', (remoteStream) => {
+      call.on('stream', async (remoteStream) => {
+        await handleCamera(localCameraEnabled)     
         if(buttonLabel !== 'Skip'){
           dispatch(setButtonLabel('Skip'))
         }        
         setRemoteStream(remoteStream)
-        console.log('user connected >>>>>>>>>>')
+        console.log(localCameraEnabled,'user connected 22222222222222222')
       });
       setCurrentCall(call)
       call.on('close', () => {
@@ -92,9 +91,20 @@ const VideoChat = () => {
 
   useEffect(() => {
     if (remoteStream) {
+      dispatch(setDisable(false))
+      console.log(enableDisableRemoteCam)
+      remoteStream.getVideoTracks()[0].enabled = enableDisableRemoteCam
+      setRemoteStream(remoteStream)
       dispatch(setCallState('CALL_CONNECTED'))
     }
   }, [remoteStream])
+
+  useEffect(() => {
+    if (remoteStream) {
+      remoteStream.getVideoTracks()[0].enabled = enableDisableRemoteCam
+      setRemoteStream(remoteStream)
+    }
+  }, [enableDisableRemoteCam])
 
   useEffect(() => {
     if (userToCall && triggerCall) {
@@ -105,38 +115,29 @@ const VideoChat = () => {
 
   useEffect(() => {
     if (localStream) {
-      let enableCam = true
-      registerNewUser(enableCam);
-      localStream.getVideoTracks()[0].enabled = enableCam;
-      setLocalCameraEnabled(enableCam)
-      // Swal.fire({
-      //   title: "Want to enable the camera?",
-      //   text: "Enabling camera will better help you to communicate with strangers!",
-      //   type: "warning",
-      //   showCancelButton: true,
-      //   confirmButtonColor: '#3085d6',
-      //   cancelButtonColor: '#d33',
-      //   confirmButtonText: 'Yes, enable it!'
-      // }).then(async (res) => {
-      //   if (res && res.isDenied == false) {
-      //     let enableCam = true
-      //     if (res.dismiss == 'cancel') {
-      //       enableCam = false
-      //     }
-      //     registerNewUser(enableCam);            
-      //     localStream.getVideoTracks()[0].enabled = enableCam;
-      //     setLocalCameraEnabled(enableCam)
-      //   }
-      // })
-      // return () => {
-      //   if (peer) {
-      //     peer.disconnect();
-      //     peer.destroy();
-      //   }
-      //   if (localStream) {
-      //     localStream.getTracks().forEach((track) => track.stop());
-      //   }
-      // };
+      // let enableCam = true
+      // registerNewUser(enableCam);
+      // localStream.getVideoTracks()[0].enabled = enableCam;
+      // setLocalCameraEnabled(enableCam)
+      Swal.fire({
+        title: "Want to enable the camera?",
+        text: "Enabling camera will better help you to communicate with strangers!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, enable it!'
+      }).then(async (res) => {
+        if (res && res.isDenied == false) {
+          let enableCam = true
+          if (res.dismiss == 'cancel') {
+            enableCam = false
+          }
+          registerNewUser(enableCam);            
+          localStream.getVideoTracks()[0].enabled = enableCam;
+          dispatch(setLocalCameraEnabled(enableCam))
+        }
+      })
     }
 
   }, [localStream])
@@ -168,7 +169,7 @@ const VideoChat = () => {
             </div>
 
             <div className="call-icons-container-sm-lg">
-              <CallIcons localStream={localStream} setLocalMicrophoneEnabled={setLocalMicrophoneEnabled} setLocalCameraEnabled={setLocalCameraEnabled} localCameraEnabled={localCameraEnabled} localMicrophoneEnabled={localMicrophoneEnabled} />
+              <CallIcons localStream={localStream} />
             </div>
           </div>
         </div>
