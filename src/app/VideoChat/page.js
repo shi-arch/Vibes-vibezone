@@ -53,7 +53,6 @@ const VideoChat = () => {
         dispatch(setSkipTimer(true))
         dispatch(setDisableButton(true))
         dispatch(setMessages([]))
-        debugger
         dispatch(setUserToCall(""))
         dispatch(setCallState('CALL_AVAILABLE'))
         console.log('Call ended>>>>>>>>>>>>>>>>>>>>>>>>>');

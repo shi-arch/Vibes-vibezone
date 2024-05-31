@@ -38,7 +38,6 @@ export const connectWithWebSocket = async () => {
   })
   socket.on("get-active-user", (user) => {
     if (store.getState().callSlice.callState == "CALL_AVAILABLE") {
-      debugger
       console.log('user enters into get active user >>>>>>>>', user)      
       const dispatch = store.dispatch
       dispatch(setCallState('CALL_IN_PROGRESS'))
@@ -65,7 +64,6 @@ export const connectWithWebSocket = async () => {
   socket.on('user-hanged-up', async () => {
     const dispatch = store.dispatch
     dispatch(setCallState('CALL_AVAILABLE'))
-    debugger
     dispatch(setUserToCall(""))
     dispatch(setMessages([]))
     await getActiveUser()
@@ -107,7 +105,6 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
         store.dispatch(setDisableButton(true))
         store.dispatch(setMessages([]))
         await getActiveUser('skip')
-        debugger
         store.dispatch(setUserToCall(""))
         store.dispatch(setCallState('CALL_AVAILABLE'))
         console.log('Call ended>>>>>>>>>>>>>>>>');
