@@ -6,7 +6,7 @@ import VideoCallInterFace from '../../components/VideoCallInterFace';
 import ChatInterfaceNew from '../../components/ChatInerfaceNew';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
-import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setMessage, setPeer, setTimer, setTriggerCall, setTriggerEndCall, setSkipTimer, setUserToCall } from '../../redux/features/callSlice';
+import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setMessage, setPeer, setTimer, setTriggerCall, setSkipTimer, setUserToCall } from '../../redux/features/callSlice';
 import { connectWithWebSocket, registerNewUser, startCall } from '../utils/wssConnection/wssConnection';
 import { LogoSvg } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
@@ -42,7 +42,6 @@ const VideoChat = () => {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       call.answer(stream);
       call.on('stream', (remoteStream) => {
-        dispatch(setCallState('CALL_CONNECTED'))
         if(buttonLabel !== 'Skip'){
           dispatch(setButtonLabel('Skip'))
         }        
@@ -54,6 +53,7 @@ const VideoChat = () => {
         dispatch(setSkipTimer(true))
         dispatch(setDisableButton(true))
         dispatch(setMessages([]))
+        debugger
         dispatch(setUserToCall(""))
         dispatch(setCallState('CALL_AVAILABLE'))
         console.log('Call ended>>>>>>>>>>>>>>>>>>>>>>>>>');
@@ -90,6 +90,12 @@ const VideoChat = () => {
       initiate()
     }
   }, [socketId])
+
+  useEffect(() => {
+    if (remoteStream) {
+      dispatch(setCallState('CALL_CONNECTED'))
+    }
+  }, [remoteStream])
 
   useEffect(() => {
     if (userToCall && triggerCall) {

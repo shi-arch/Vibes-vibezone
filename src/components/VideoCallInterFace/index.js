@@ -15,35 +15,35 @@ const VideoCallInterFace = (props) => {
   const userVideo = useRef();
   const {callState} = useSelector((state) => state.callSlice);
 
-  useEffect(() => {
-    try {
-      if (localStream) {
-        const localVideo = myVideo.current;
-        localVideo.srcObject = localStream;
-        localVideo.onloadedmetadata = () => {
-          localVideo.play();
-        };
-      }
-    } catch (err) {
-      console.log(err)
-    }
+  // useEffect(() => {
+  //   try {
+  //     if (localStream) {
+  //       const localVideo = myVideo.current;
+  //       localVideo.srcObject = localStream;
+  //       localVideo.onloadedmetadata = () => {
+  //         localVideo.play();
+  //       };
+  //     }
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
 
-  }, [localStream]);
+  // }, [localStream]);
 
-  useEffect(() => {
-    try {
-      if (remoteStream) {
-        const remoteVideo = userVideo.current; 
-        remoteVideo.srcObject = remoteStream;
-        remoteVideo.onloadedmetadata = () => {
-          remoteVideo.play();
-        };
-      }
-    } catch (err) {
-      console.log(err)
-    }
+  // useEffect(() => {
+  //   try {
+  //     if (remoteStream) {
+  //       const remoteVideo = userVideo.current; 
+  //       remoteVideo.srcObject = remoteStream;
+  //       remoteVideo.onloadedmetadata = () => {
+  //         remoteVideo.play();
+  //       };
+  //     }
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
 
-  }, [remoteStream]);
+  // }, [remoteStream]);
   return (
     <div className="video-call-interface-bg-container">
       <div className="video-img-container">
@@ -51,7 +51,9 @@ const VideoCallInterFace = (props) => {
           <video
             id="userVideo"
             style={{ width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }}
-            ref={userVideo}
+            ref={(video) => {
+              if (video) video.srcObject = remoteStream;
+            }}
             autoPlay
             playsInline
           //muted
@@ -98,7 +100,9 @@ const VideoCallInterFace = (props) => {
                 ? { width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }
                 : { width: 0, height: 0, visibility: "hidden" }
             }
-            ref={myVideo}
+            ref={(video) => {
+              if (video) video.srcObject = localStream;
+            }}
             autoPlay
             playsInline
             muted

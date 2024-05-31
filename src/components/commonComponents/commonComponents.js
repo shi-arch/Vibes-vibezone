@@ -12,9 +12,6 @@ import Chip from '@mui/material/Chip';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginDetails, setToken, setUserSelectedTopics } from '../../redux/features/loginSlice';
 import store from '../../redux/store';
-import { setCallState, setDisableButton, setSkipTimer, setTimer, setUserToCall } from '../../redux/features/callSlice';
-import { setLoader, setMessages } from '../../redux/features/chatSlice';
-import { endCall, getActiveUser, handleSkipTimer } from '../../app/utils/wssConnection/wssConnection';
 
 export const restoreLocalData = () => {
   const userData = localStorage.getItem("userData");

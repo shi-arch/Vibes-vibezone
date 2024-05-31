@@ -38,6 +38,7 @@ export const connectWithWebSocket = async () => {
   })
   socket.on("get-active-user", (user) => {
     if (store.getState().callSlice.callState == "CALL_AVAILABLE") {
+      debugger
       console.log('user enters into get active user >>>>>>>>', user)      
       const dispatch = store.dispatch
       dispatch(setCallState('CALL_IN_PROGRESS'))
@@ -61,13 +62,13 @@ export const connectWithWebSocket = async () => {
     }, 4000)
   });
   
-  socket.on('user-hanged-up', () => {
+  socket.on('user-hanged-up', async () => {
     const dispatch = store.dispatch
-    dispatch(setTriggerEndCall(true))
     dispatch(setCallState('CALL_AVAILABLE'))
+    debugger
     dispatch(setUserToCall(""))
     dispatch(setMessages([]))
-    socket.emit('get-active-user', { flag: '', prevUser: '', mySocketId: store.getState().callSlice.socketId });
+    await getActiveUser()
   });
 };
 
@@ -94,7 +95,6 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
     if (peer && localStream && peerId) {
       const call = await peer.call(peerId, localStream)
       call.on('stream', (remoteStream) => {
-        store.dispatch(setCallState('CALL_CONNECTED'))               
         setRemoteStream(remoteStream)
         if(store.getState().callSlice.buttonLabel !== 'Skip'){
           store.dispatch(setButtonLabel('Skip'))
@@ -107,6 +107,7 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
         store.dispatch(setDisableButton(true))
         store.dispatch(setMessages([]))
         await getActiveUser('skip')
+        debugger
         store.dispatch(setUserToCall(""))
         store.dispatch(setCallState('CALL_AVAILABLE'))
         console.log('Call ended>>>>>>>>>>>>>>>>');
@@ -169,8 +170,4 @@ export const enableDisableCam = (enable) => {
 
 export const closeTab = () => {
   socket.emit('disconnect-current-user', { userSocketId: store.getState().callSlice.userToCall.socketId, mySocketId: store.getState().callSlice.socketId });
-};
-
-export const sendUserHangedUp = async (data) => {
-  socket.emit('user-hanged-up', data);
 };

@@ -9,12 +9,7 @@ import { postApi } from "../../../response/api.js";
 import { setSearchUserData } from "../../../redux/features/chatSlice.js";
 import { setAllUsers } from "../../../redux/features/loginSlice.js";
 import { CreatePeerConnection, callToOtherUser, getLocalStream } from "../../../app/test/utils/webRTC/webRTCHandler.js";
-import { closeTab } from "../../../app/test/utils/wssConnection/wssConnection.js";
 const notification = true;
-window.onbeforeunload = (event) => {
-  window.location.href = window.location.origin
-  closeTab()  
-};
 
 const Header = () => {
   const dispatch = useDispatch();

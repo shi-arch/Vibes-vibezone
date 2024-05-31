@@ -14,6 +14,13 @@ const ChatsListNew = (props) => {
   const { userToCall } = useSelector(state => state.callSlice)
   updateChatList(chatList);
 
+  useEffect(() => {
+    if(props.remoteStream && userToCall){
+      debugger
+    }
+    
+  }, [props.remoteStream, userToCall]);
+
   return (
     <div className="chat-list-new-bg-container">
       <div className="guest-container">
