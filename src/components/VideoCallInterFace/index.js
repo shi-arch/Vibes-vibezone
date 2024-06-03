@@ -16,7 +16,7 @@ const VideoCallInterFace = (props) => {
   return (
     <div className="video-call-interface-bg-container">
       <div className="video-img-container">
-        {callState == 'CALL_CONNECTED' && (
+        {/* {callState == 'CALL_CONNECTED' && (
           <video
             id="userVideo"
             style={{ width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }}
@@ -26,9 +26,8 @@ const VideoCallInterFace = (props) => {
             autoPlay
             playsInline
           />
-        )}
-        {callState == 'CALL_AVAILABLE' ? (
-          <div
+        )} */}
+        <div
             style={{
               width: "100%",
               height: "229px",
@@ -38,12 +37,23 @@ const VideoCallInterFace = (props) => {
               alignItems: "center",
               backgroundColor: "#f1f1f1",
             }}
-          >
-            <Loader />
+          > 
+        {
+          remoteStream ? 
+          <video
+            id="userVideo"
+            style={{ width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }}
+            ref={(video) => {
+              if (video) video.srcObject = remoteStream;
+            }}
+            autoPlay
+            playsInline
+          /> : <Loader />
+        }        
+            
           </div>
-        ) : null}
 
-        {callState == 'CALL_UNAVAILABLE' ? (
+        {/* {callState == 'CALL_UNAVAILABLE' ? (
           <>
             <div style={{
               width: "100%",
@@ -59,7 +69,7 @@ const VideoCallInterFace = (props) => {
           </>
         ) : (
           ""
-        )}
+        )} */}
         <div className="logo-float">
           <img src={VibeZoneLogo} alt="logo" className="vibe-logo-float" />
         </div>

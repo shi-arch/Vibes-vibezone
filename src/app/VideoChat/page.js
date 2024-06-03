@@ -49,6 +49,7 @@ const VideoChat = () => {
       });
       setCurrentCall(call)
       call.on('close', () => {
+        setRemoteStream(null)
         dispatch(setSkipTimer(true))
         dispatch(setDisableButton(true))
         dispatch(setMessages([]))
@@ -107,6 +108,13 @@ const VideoChat = () => {
   }, [enableDisableRemoteCam])
 
   useEffect(() => {
+    if (remoteStream) {
+      remoteStream.getVideoTracks()[0].enabled = enableDisableRemoteCam
+      setRemoteStream(remoteStream)
+    }
+  }, [enableDisableRemoteCam])
+
+  useEffect(() => {
     if (userToCall && triggerCall) {
       startCall(peer, localStream, userToCall, setRemoteStream, setCurrentCall)
       dispatch(setTriggerCall(false))
@@ -115,10 +123,6 @@ const VideoChat = () => {
 
   useEffect(() => {
     if (localStream) {
-      // let enableCam = true
-      // registerNewUser(enableCam);
-      // localStream.getVideoTracks()[0].enabled = enableCam;
-      // setLocalCameraEnabled(enableCam)
       Swal.fire({
         title: "Want to enable the camera?",
         text: "Enabling camera will better help you to communicate with strangers!",

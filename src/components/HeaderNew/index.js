@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { memo, useState } from "react";
 import _ from 'lodash'
 import { LogoSvg } from "../svgComponents";
 import "./index.css"
@@ -36,17 +36,7 @@ const HeaderNew = (props) => {
       ) : (
         <span className="red-dots"></span>
       )}
-      <input
-        type="text"
-        className="head-input"
-        placeholder="Enter Name"
-        onChange={(e) => dispatch(setUserName(e.target.value))}
-        onBlur={(e) => {
-          const { value } = e.target;
-          updateName(value);
-        }}
-        value={userName}
-      />
+      <ChildComponent />
       <input
         type="text"
         className="head-input key-words-input"
@@ -57,9 +47,9 @@ const HeaderNew = (props) => {
 
       <button
         disabled={disable ? true : disableButton}
-        style={ disable ? {backgroundColor: disableColor, cursor: 'not-allowed'} : callState == 'CALL_UNAVAILABLE' && !disableButton ? {backgroundColor: initialColor} : 
-        disableButton ? { backgroundColor: disableColor, cursor: 'not-allowed'} : {backgroundColor: enableColor}}
-        className="call-buttons call-button-css"        
+        style={disable ? { backgroundColor: disableColor, cursor: 'not-allowed' } : callState == 'CALL_UNAVAILABLE' && !disableButton ? { backgroundColor: initialColor } :
+          disableButton ? { backgroundColor: disableColor, cursor: 'not-allowed' } : { backgroundColor: enableColor }}
+        className="call-buttons call-button-css"
         onClick={() => {
           ReactGA.event({
             category: "Connect",
@@ -78,5 +68,22 @@ const HeaderNew = (props) => {
     </div>
   );
 };
+
+const ChildComponent = memo(() => {
+  const dispatch = useDispatch();
+  const { userName } = useSelector(state => state.chatSlice)
+  const [name, setName] = useState(userName)
+  return <input
+    type="text"
+    className="head-input"
+    placeholder="Enter Name"
+    onChange={(e) => setName(e.target.value)}
+    onBlur={() => {
+      updateName(userName)
+      dispatch(setUserName(name))
+    }}
+    value={name}
+  />;
+});
 
 export default HeaderNew;

@@ -1,7 +1,7 @@
 import socketClient from 'socket.io-client';
 import store from '../../../redux/store';
 import { setUserName, setMessages, setIsTyping } from '../../../redux/features/chatSlice';
-import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer, setCurrentCall, setEnableDisableRemoteCam } from '../../../redux/features/callSlice';
+import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer, setCurrentCall, setEnableDisableRemoteCam, setLocalMicrophoneEnabled } from '../../../redux/features/callSlice';
 import { setTotalUsers } from '../../../redux/features/loginSlice';
 const SERVER = process.env.REACT_APP_BASEURL;
 let socket;
@@ -66,6 +66,9 @@ export const connectWithWebSocket = async () => {
   socket.on('enableDisableCam', (enable) => {
     store.dispatch(setEnableDisableRemoteCam(enable))
   })
+  socket.on('enableDisableMic', (enable) => {
+    store.dispatch(setLocalMicrophoneEnabled(enable))
+  })
   socket.on('user-hanged-up', async () => {
     const dispatch = store.dispatch
     dispatch(setCallState('CALL_AVAILABLE'))
@@ -106,6 +109,7 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
       });
       await setCurrentCall(call)
       call.on('close', async () => {
+        setRemoteStream(null)
         store.dispatch(setSkipTimer(true))
         store.dispatch(setDisableButton(true))
         store.dispatch(setMessages([]))
@@ -172,6 +176,10 @@ export const stopTypingMethod = () => {
 
 export const enableDisableCam = (enable) => {
   socket.emit('enableDisableCam', {enableOrDisable: enable, socketId: store.getState().callSlice.socketId, userSocketId: store.getState().callSlice.userToCall.socketId});
+};
+
+export const enableDisableMic = (enable) => {
+  socket.emit('enableDisableMic', {enableOrDisable: enable, userSocketId: store.getState().callSlice.userToCall.socketId});
 };
 
 export const closeTab = () => {

@@ -13,12 +13,6 @@ const ChatsListNew = (props) => {
   const { messagesArr } = useSelector(state => state.chatSlice)
   const { userToCall } = useSelector(state => state.callSlice)
 
-  useEffect(() => {
-    if(messagesArr.length){
-      debugger 
-    }
-  }, [messagesArr]);
-
   return (
     <div className="chat-list-new-bg-container">
       <div className="guest-container">
@@ -53,53 +47,3 @@ const ChatsListNew = (props) => {
 };
 
 export default ChatsListNew;
-
-
-// return (
-//   <div key={chat.id}>
-//     {isNewDate && (
-//       <p className="chat-date">
-//         {isToday
-//           ? "Today"
-//           : isYesterday
-//           ? "Yesterday"
-//           : formattedDate}
-//       </p>
-//     )}
-//     <div className={`msg-con ${isLastChat ? "margin2" : "margin1"}`}>
-//       <div className={`${chat.sender === 2 ? "sender" : "receiver"}`}>
-//         {isImage ? (
-//           <img
-//             className={`chat-img ${
-//               chat.sender === 2 ? "message-1" : "message-2"
-//             }`}
-//             src={chat.message}
-//             alt="chat-img"
-//           />
-//         ) : (
-//           <div
-//             className={`msg-con-seen ${
-//               chat.sender === 2 ? "message-1" : "message-2"
-//             }`}
-//           >
-//             <p className="message">{chat.message}</p>
-//             {chat.sender === 2 && (
-//               <div className="msg-seen-icon-con">
-//                 <MsgSeen />
-//               </div>
-//             )}
-//           </div>
-//         )}
-//       </div>
-//       {!isLastChat && (                  
-//           <p
-//             className={`chat-time ${
-//               chat.sender === 1 ? "profile-name-receiver" : ""
-//             }`}
-//           >
-//             {chat.date.split(";")[1]}
-//           </p>
-//       )}
-//     </div>
-//   </div>
-// );

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { EndCall, Mute, Unmute, Video, VideoOff } from '../svgComponents';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactGA from "react-ga4"
-import { enableDisableCam, handleCamera } from '../../app/utils/wssConnection/wssConnection.js';
+import { enableDisableCam, enableDisableMic, handleCamera } from '../../app/utils/wssConnection/wssConnection.js';
 import { setLocalCameraEnabled, setLocalMicrophoneEnabled } from '../../redux/features/callSlice.js';
 
 const CallIcons = (props) => {
@@ -19,7 +19,8 @@ const CallIcons = (props) => {
     });
     let micEnabled = localMicrophoneEnabled;
     localStream.getAudioTracks()[0].enabled = !micEnabled;
-    dispatch(setLocalMicrophoneEnabled(!micEnabled))    
+    dispatch(setLocalMicrophoneEnabled(!micEnabled)) 
+    //enableDisableMic(!micEnabled)   
   };
 
   const handleCameraButtonPressed = async () => {
