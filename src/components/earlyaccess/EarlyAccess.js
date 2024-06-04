@@ -6,6 +6,7 @@ import ReactGA from "react-ga4";
 
 import "./EarlyAccess.css";
 import { setPeerId } from "../../redux/features/callSlice";
+import { getEarlyAccess } from "../commonComponents/commonComponents";
 
 const EarlyAccess = () => {
   const router = useNavigate();
@@ -49,18 +50,12 @@ const EarlyAccess = () => {
             random video chats.
           </Typography>
           <Button
-            onClick={() => {
-              let user = "Guest + " + Math.random().toString().substr(2, 8);
-              dispatch(setUserName(user));
-              dispatch(setUserLoggedIn(user));
-              dispatch(setPeerId((Math.random() + 1).toString(36).substring(7)))
+            onClick={async () => {
+              await getEarlyAccess()
               ReactGA.event({
                 category: "Early Access",
                 action: "Early Access Button",
-                label: "Button", // optional
-                // value: 99, // optional, must be a number
-                // nonInteraction: true, // optional, true/false
-                // transport: "xhr", // optional, beacon/xhr/image
+                label: "Button"
               });
               router("/video-chat");
             }}

@@ -39,7 +39,8 @@ const initialState = {
   triggerEndCall: false,
   skipTimer: false,
   disable: false,
-  enableDisableRemoteCam: true
+  enableDisableRemoteCam: true,
+  enableDisableRemoteMic: true
 };
 
 
@@ -145,10 +146,13 @@ const callSlice = createSlice({
     },
     setEnableDisableRemoteCam: (state, actions) => {
       state.enableDisableRemoteCam = actions.payload;
-    }
+    },
+    setEnableDisableRemoteMic: (state, actions) => {
+      state.enableDisableRemoteMic = actions.payload;
+    }    
   }  
 });
 
-export const { setDisable, setEnableDisableRemoteCam, setSkipTimer, setTriggerEndCall, setPeer, setPeerId, setSocketId, setUserObjectId, setTimeDiff, setConnectedTime, setKeyWords, setBgColor, setFlag, setTimer, setSocketConnection, setUserToCall, setTriggerCall, setLocalStream,setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
+export const { setDisable, setEnableDisableRemoteMic, setEnableDisableRemoteCam, setSkipTimer, setTriggerEndCall, setPeer, setPeerId, setSocketId, setUserObjectId, setTimeDiff, setConnectedTime, setKeyWords, setBgColor, setFlag, setTimer, setSocketConnection, setUserToCall, setTriggerCall, setLocalStream,setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
 
 export default callSlice.reducer;

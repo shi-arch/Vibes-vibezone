@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Box } from '@mui/material'
 import HomeComponent from '../../components/HomeComponent'
 import { useDispatch } from 'react-redux';
-import { restoreLocalData, result } from '../../components/commonComponents/commonComponents';
+import { getEarlyAccess, restoreLocalData, result } from '../../components/commonComponents/commonComponents';
 import { Button } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import ReactGA from "react-ga4"
@@ -45,11 +45,8 @@ const LandingPage = () => {
               </div>
 
               <Button
-                onClick={() => {
-                  const user = "Guest + " + Math.random().toString().substr(2, 8);
-                  dispatch(setUserName(user));
-                  dispatch(setUserLoggedIn(user));
-                  dispatch(setPeerId((Math.random() + 1).toString(36).substring(7)))
+                onClick={async () => {
+                  await getEarlyAccess()
                   ReactGA.event({
                     category: "Early Access",
                     action: "Early Access Button",

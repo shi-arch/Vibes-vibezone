@@ -12,6 +12,8 @@ import Chip from '@mui/material/Chip';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginDetails, setToken, setUserSelectedTopics } from '../../redux/features/loginSlice';
 import store from '../../redux/store';
+import { setUserLoggedIn, setUserName } from '../../redux/features/chatSlice';
+import { setPeerId } from '../../redux/features/callSlice';
 
 export const restoreLocalData = () => {
   const userData = localStorage.getItem("userData");
@@ -25,6 +27,13 @@ export const Loader = (style) => {
   return <div style={style.style}>
     <CircularProgress />
   </div>
+}
+
+export const getEarlyAccess = async () => {
+  let user = "Guest + " + Math.random().toString().substr(2, 8);
+  store.dispatch(setUserName(user));
+  store.dispatch(setUserLoggedIn(user));
+  store.dispatch(setPeerId((Math.random() + 1).toString(36).substring(7)))
 }
 
 export const validateEmail = (email) => {

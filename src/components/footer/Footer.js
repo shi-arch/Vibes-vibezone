@@ -1,5 +1,5 @@
 import React from "react";
-import { Box , Typography} from "@mui/material";
+import { Box, Typography, Link } from "@mui/material";
 
 const Footer = () => {
   return (
@@ -10,9 +10,9 @@ const Footer = () => {
         backgroundColor: "#212121",
         padding: "30px",
         "@media (max-width:426px)": {
-          marginLeft:"-24px",
-          marginRight:"-24px",
-          padding:"24px"
+          marginLeft: "-24px",
+          marginRight: "-24px",
+          padding: "24px"
         },
       }}
     >
@@ -36,38 +36,6 @@ const Footer = () => {
             },
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              fontFamily: "Poppins, Arial",
-              "@media (max-width:426px)": {
-                width: "50%",
-              },
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                fontSize: "25px",
-                fontWeight: "bold",
-                marginBottom: "20px",
-                color: "#ffffff",
-                "@media (max-width:426px)": {
-                  fontSize: "18px",
-                },
-              }}
-            >
-              Business Chat
-            </Typography>
-            <Typography
-              variant="p"
-              sx={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.77)" }}
-            >
-              Whether you're looking to make new friends, learn a new language,
-              or network professionally
-            </Typography>
-          </Box>
           <Box
             sx={{
               display: "flex",
@@ -97,7 +65,10 @@ const Footer = () => {
                 marginBottom: "10px",
               }}
             >
-              About Us
+              <Link href="https://vibezone.org/about/" target="_blank" underline="hover">
+                About Us
+              </Link>
+
             </Typography>
             <Typography
               variant="p"
@@ -107,28 +78,11 @@ const Footer = () => {
                 marginBottom: "10px",
               }}
             >
-              Career
+              <Link href="https://vibezone.org/blog/" target="_blank" underline="hover">
+                Our Story
+              </Link>
             </Typography>
-            <Typography
-              variant="p"
-              sx={{
-                fontSize: "12px",
-                color: "rgba(255, 255, 255, 0.77)",
-                marginBottom: "10px",
-              }}
-            >
-              Our Story
-            </Typography>
-            <Typography
-              variant="p"
-              sx={{
-                fontSize: "12px",
-                color: "rgba(255, 255, 255, 0.77)",
-                marginBottom: "10px",
-              }}
-            >
-              How we started
-            </Typography>
+            
           </Box>
         </Box>
 
@@ -173,7 +127,9 @@ const Footer = () => {
                 marginBottom: "10px",
               }}
             >
-              Home
+              <Link href="#home" underline="hover">
+                Home
+              </Link>
             </Typography>
             <Typography
               variant="p"
@@ -183,7 +139,10 @@ const Footer = () => {
                 marginBottom: "10px",
               }}
             >
-              Online Shop
+              <Link href="https://vibezone.org/news/" target="_blank" underline="hover">
+                News & Update
+              </Link>
+
             </Typography>
             <Typography
               variant="p"
@@ -193,82 +152,9 @@ const Footer = () => {
                 marginBottom: "10px",
               }}
             >
-              News & Update
-            </Typography>
-            <Typography
-              variant="p"
-              sx={{
-                fontSize: "12px",
-                color: "rgba(255, 255, 255, 0.77)",
-                marginBottom: "10px",
-              }}
-            >
-              Contact Us
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              fontFamily: "Poppins, Arial",
-              "@media (max-width:426px)": {
-                width: "50%",
-              },
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                fontSize: "25px",
-                fontWeight: "bold",
-                marginBottom: "20px",
-                color: "#ffffff",
-                "@media (max-width:426px)": {
-                  fontSize: "18px",
-                },
-              }}
-            >
-              Resources
-            </Typography>
-            <Typography
-              variant="p"
-              sx={{
-                fontSize: "12px",
-                color: "rgba(255, 255, 255, 0.77)",
-                marginBottom: "10px",
-              }}
-            >
-              Home
-            </Typography>
-            <Typography
-              variant="p"
-              sx={{
-                fontSize: "12px",
-                color: "rgba(255, 255, 255, 0.77)",
-                marginBottom: "10px",
-              }}
-            >
-              Online Shop
-            </Typography>
-            <Typography
-              variant="p"
-              sx={{
-                fontSize: "12px",
-                color: "rgba(255, 255, 255, 0.77)",
-                marginBottom: "10px",
-              }}
-            >
-              News & Update
-            </Typography>
-            <Typography
-              variant="p"
-              sx={{
-                fontSize: "12px",
-                color: "rgba(255, 255, 255, 0.77)",
-                marginBottom: "10px",
-              }}
-            >
-              Contact Us
+              <Link href="https://vibezone.org/contact-us/" target="_blank" underline="hover">
+                Contact us
+              </Link>
             </Typography>
           </Box>
         </Box>

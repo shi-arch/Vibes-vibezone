@@ -1,11 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Hamburger from "../../assets/images/Hamburger.svg"
 
 import "./navbar.css";
 import { LogoSvg } from "../svgComponents";
+import { getEarlyAccess } from "../commonComponents/commonComponents";
 
 const Navbar = () => {
+  const router = useNavigate();
   return (
     <nav className="Rectangle-156">
       <div className="VibeZone">
@@ -19,15 +21,15 @@ const Navbar = () => {
           <a href="#about" className="nav-link sm-lg-nav-links">
             <span>About</span>
           </a>
-          <div href="#early-access" className="nav-link sm-lg-nav-links">
+          <a onClick={async () => {
+            await getEarlyAccess()
+            router("/video-chat");
+          }} href="#" className="nav-link sm-lg-nav-links">
             <span>Early Access</span>
-          </div>
-          <div href="#pricing" className="nav-link sm-lg-nav-links">
-            <span>Pricing</span>
-          </div>
-          <div href="#contact" className="nav-link sm-lg-nav-links">
+          </a>
+          <a href="https://vibezone.org/contact-us/" target="_blank" className="nav-link sm-lg-nav-links">
             <span>Contact</span>
-          </div>
+          </a>
           {/* <Link to="/signup" className="nav-link">
             <button style={{ cursor: "pointer" }} className="sign-up">
               Sign Up

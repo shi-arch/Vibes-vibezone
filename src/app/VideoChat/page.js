@@ -23,7 +23,7 @@ const VideoChat = () => {
   const [peer, setPeer] = useState(null)
   const [currentCall, setCurrentCall] = useState(null)
   const { userLoggedIn } = useSelector(state => state.chatSlice)
-  const { peerId, userToCall, triggerCall, triggerEndCall, timer, disableButton, socketId, skipTimer, buttonLabel, localCameraEnabled, enableDisableRemoteCam } = useSelector(state => state.callSlice)
+  const { peerId, userToCall, triggerCall, triggerEndCall, timer, disableButton, socketId, skipTimer, buttonLabel, localCameraEnabled, enableDisableRemoteCam, enableDisableRemoteMic } = useSelector(state => state.callSlice)
   const initiate = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -45,7 +45,7 @@ const VideoChat = () => {
           dispatch(setButtonLabel('Skip'))
         }        
         setRemoteStream(remoteStream)
-        console.log(localCameraEnabled,'user connected 22222222222222222')
+        console.log(localCameraEnabled,'user connected')
       });
       setCurrentCall(call)
       call.on('close', () => {
@@ -55,7 +55,7 @@ const VideoChat = () => {
         dispatch(setMessages([]))
         dispatch(setUserToCall(""))
         dispatch(setCallState('CALL_AVAILABLE'))
-        console.log('Call ended>>>>>>>>>>>>>>>>>>>>>>>>>');
+        console.log('Call ended');
       });
     });
     newPeer.on('error', (error) => {
@@ -93,9 +93,7 @@ const VideoChat = () => {
   useEffect(() => {
     if (remoteStream) {
       dispatch(setDisable(false))
-      console.log(enableDisableRemoteCam)
       remoteStream.getVideoTracks()[0].enabled = enableDisableRemoteCam
-      setRemoteStream(remoteStream)
       dispatch(setCallState('CALL_CONNECTED'))
     }
   }, [remoteStream])
@@ -103,16 +101,14 @@ const VideoChat = () => {
   useEffect(() => {
     if (remoteStream) {
       remoteStream.getVideoTracks()[0].enabled = enableDisableRemoteCam
-      setRemoteStream(remoteStream)
     }
   }, [enableDisableRemoteCam])
 
   useEffect(() => {
     if (remoteStream) {
-      remoteStream.getVideoTracks()[0].enabled = enableDisableRemoteCam
-      setRemoteStream(remoteStream)
+      remoteStream.getAudioTracks()[0].enabled = enableDisableRemoteMic
     }
-  }, [enableDisableRemoteCam])
+  }, [enableDisableRemoteMic])
 
   useEffect(() => {
     if (userToCall && triggerCall) {
@@ -160,7 +156,6 @@ const VideoChat = () => {
         <div className='logo-sm-lg-container'>
           <LogoSvg />
         </div>
-
         <HeaderNew currentCall={currentCall} />
         <div className="sm-lg-icons-container">
           <div className="video-chat-new-container">
@@ -171,7 +166,6 @@ const VideoChat = () => {
             <div className="active-sm-lg-container">
               <ActiveUsers />
             </div>
-
             <div className="call-icons-container-sm-lg">
               <CallIcons localStream={localStream} />
             </div>

@@ -19,13 +19,13 @@ const CallIcons = (props) => {
     });
     let micEnabled = localMicrophoneEnabled;
     localStream.getAudioTracks()[0].enabled = !micEnabled;
-    dispatch(setLocalMicrophoneEnabled(!micEnabled)) 
-    //enableDisableMic(!micEnabled)   
+    dispatch(setLocalMicrophoneEnabled(!micEnabled))
+    enableDisableMic(!micEnabled)
   };
 
   const handleCameraButtonPressed = async () => {
     localStream.getVideoTracks()[0].enabled = !localCameraEnabled;
-    dispatch(setLocalCameraEnabled(!localCameraEnabled))    
+    dispatch(setLocalCameraEnabled(!localCameraEnabled))
     enableDisableCam(!localCameraEnabled)
     ReactGA.event({
       category: "Camera Button",
@@ -35,9 +35,13 @@ const CallIcons = (props) => {
   };
   return (
     <div className="call-icons-container">
-      <div onClick={handleMicButtonPressed}>{localMicrophoneEnabled ? <Unmute /> : <Mute />}</div>
-      <div onClick={handleCameraButtonPressed}>
+      <div className="tooltip" onClick={handleMicButtonPressed}>
+      <span class="tooltiptext">{localMicrophoneEnabled ? "Mute" : "Unmute"}</span>
+      {localMicrophoneEnabled ? <Unmute /> : <Mute />}
+      </div>
+      <div className="tooltip" onClick={handleCameraButtonPressed}>
         {localCameraEnabled ? <Video /> : <VideoOff />}
+        <span class="tooltiptext">{localCameraEnabled ? "Turn Off Camera" : "Turn On Camera"}</span>
       </div>
     </div>
   );

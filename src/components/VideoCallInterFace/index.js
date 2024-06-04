@@ -1,32 +1,14 @@
-import React from "react";
-import Swal from "sweetalert2";
+import React, { useEffect } from "react";
 import { Loader } from '../../components/commonComponents/commonComponents'
 import VibeZoneLogo from "../../assets/images/VibeZoneLogo.svg"
 import "./videocallInterface.css";
-import { useSelector, useDispatch } from "react-redux";
-import { useRef, useEffect, useState } from "react";
 import CallIcons from "../CallIcons/index.js";
-import { setLocalCameraEnabled } from "../../redux/features/callSlice.js";
 
 const VideoCallInterFace = (props) => {
   const {localStream, remoteStream} = props
-  const dispatch = useDispatch();
-  const [mute, setMute] = useState(false);
-  const { callState } = useSelector((state) => state.callSlice);
   return (
     <div className="video-call-interface-bg-container">
       <div className="video-img-container">
-        {/* {callState == 'CALL_CONNECTED' && (
-          <video
-            id="userVideo"
-            style={{ width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }}
-            ref={(video) => {
-              if (video) video.srcObject = remoteStream;
-            }}
-            autoPlay
-            playsInline
-          />
-        )} */}
         <div
             style={{
               width: "100%",
@@ -49,27 +31,8 @@ const VideoCallInterFace = (props) => {
             autoPlay
             playsInline
           /> : <Loader />
-        }        
-            
+        } 
           </div>
-
-        {/* {callState == 'CALL_UNAVAILABLE' ? (
-          <>
-            <div style={{
-              width: "100%",
-              height: "229px",
-              border: "1px solid #f1f1f1",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#f1f1f1",
-            }} >
-
-            </div>
-          </>
-        ) : (
-          ""
-        )} */}
         <div className="logo-float">
           <img src={VibeZoneLogo} alt="logo" className="vibe-logo-float" />
         </div>

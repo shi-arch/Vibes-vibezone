@@ -1,7 +1,7 @@
 import socketClient from 'socket.io-client';
 import store from '../../../redux/store';
 import { setUserName, setMessages, setIsTyping } from '../../../redux/features/chatSlice';
-import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer, setCurrentCall, setEnableDisableRemoteCam, setLocalMicrophoneEnabled } from '../../../redux/features/callSlice';
+import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer, setCurrentCall, setEnableDisableRemoteCam, setLocalMicrophoneEnabled, setEnableDisableRemoteMic } from '../../../redux/features/callSlice';
 import { setTotalUsers } from '../../../redux/features/loginSlice';
 const SERVER = process.env.REACT_APP_BASEURL;
 let socket;
@@ -67,7 +67,7 @@ export const connectWithWebSocket = async () => {
     store.dispatch(setEnableDisableRemoteCam(enable))
   })
   socket.on('enableDisableMic', (enable) => {
-    store.dispatch(setLocalMicrophoneEnabled(enable))
+    store.dispatch(setEnableDisableRemoteMic(enable))
   })
   socket.on('user-hanged-up', async () => {
     const dispatch = store.dispatch
@@ -105,7 +105,7 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
         if(store.getState().callSlice.buttonLabel !== 'Skip'){
           store.dispatch(setButtonLabel('Skip'))
         }
-        console.log('user connected >>>>>>>>>>')
+        console.log('user connected')
       });
       await setCurrentCall(call)
       call.on('close', async () => {
@@ -116,7 +116,7 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
         await getActiveUser('skip')
         store.dispatch(setUserToCall(""))
         store.dispatch(setCallState('CALL_AVAILABLE'))
-        console.log('Call ended>>>>>>>>>>>>>>>>');
+        console.log('Call ended');
       });
     }
   } catch (err) {

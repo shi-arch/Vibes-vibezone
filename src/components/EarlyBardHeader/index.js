@@ -24,7 +24,7 @@ const EarlybardHeader = () => {
         style={{
           marginTop: "-44px",
           backgroundColor: "#010101",
-          height: "56px",
+          height: "30px",
           width: "calc(100% - 48px)",
           display: "flex",
           alignItems: "center",
@@ -54,8 +54,6 @@ const EarlybardHeader = () => {
         </Typography>
         <Button
           style={{
-            // width: "130px",
-            // height: "23px",
             backgroundColor: "#ffa64d",
             borderRadius: "10px",
             color: "#000",
@@ -63,10 +61,8 @@ const EarlybardHeader = () => {
             textAlign: "left",
             fontFamily: "Poppins,Arial",
             fontWeight: "bold",
-            height: "30px",
-            // marginRight: "40px",
-            // right: "15px",
-            // bottom: "15px",
+            height: "26px",
+            marginTop: "14px",
           }}
           onClick={handleOpenModal}
         >

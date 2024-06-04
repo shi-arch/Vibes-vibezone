@@ -34,43 +34,12 @@ const Partners = () => {
         >
           Who are our partners?
         </Typography>
-        {/* <Box sx={{display:'flex', flexDirection:'row'}}>
-                <Box sx={{display:'flex', flexDirection:'column'}}>
-                    <Typography variant='h6'>Boss</Typography>
-                    <Typography variant='p' component='body1'>HUGO BOSS</Typography>
-                    <Typography variant='h6'>Boss</Typography>
-                    <Typography variant='p' component='subtitile'>HUGO BOSS</Typography>
-                    <Typography variant='h6'>Boss</Typography>
-                    <Typography variant='p' component='subtitile'>HUGO BOSS</Typography>
-                </Box>
-                <Box sx={{display:'flex', flexDirection:'column'}}>
-                    <Typography variant='h6'>BARCLAYS</Typography>
-                    <Typography variant='h6'>BARCLAYS</Typography>
-                    <Typography variant='h6'>BARCLAYS</Typography>
-                </Box>
-                <Box sx={{display:'flex', flexDirection:'column'}}>
-                    <Typography variant='h6'>sky</Typography>
-                    <Typography variant='h6'>sky</Typography>
-                    <Typography variant='h6'>sky</Typography>
-                </Box>
-                <Box sx={{display:'flex', flexDirection:'column'}}>
-                    <Typography variant='h6'>SAMSUNG</Typography>
-                    <Typography variant='h6'>SAMSUNG</Typography>
-                    <Typography variant='h6'>SAMSUNG</Typography>
-                </Box>
-                <Box sx={{display:'flex', flexDirection:'column'}}>
-                    <Typography variant='h6'>Boss</Typography>
-                    <Typography variant='p' component='subtitile'>HUGO BOSS</Typography>
-                    <Typography variant='h6'>Boss</Typography>
-                    <Typography variant='p' component='subtitile'>HUGO BOSS</Typography>
-                    <Typography variant='h6'>Boss</Typography>
-                    <Typography variant='p' component='subtitile'>HUGO BOSS</Typography>
-                </Box>
-            </Box> */}
         <Box>
           <Box
             component="img"
-            src="https://res.cloudinary.com/dhczdaczx/image/upload/v1710910698/n7sku215yl7zrjkoktkt.png"
+            onClick={() => window.open("https://www.soqall.com/", "_blank")}
+            sx={{ width: "118px", marginTop: "50px", cursor: "pointer" }}
+            src="https://static.wixstatic.com/media/cea51b_1089702f09fc422293c509440ff4d68b~mv2.png/v1/fill/w_181,h_63,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Gradient%20PNG.png"
             className="partners-img"
           />
         </Box>
