@@ -48,9 +48,6 @@ const callSlice = createSlice({
   name: "callSlice",
   initialState: initialState,
   reducers: {
-    setLocalStream: (state, actions) => {
-      state.localStream = actions.payload;
-    },
     setPeer: (state, actions) => {
       state.peer = actions.payload;
     },
@@ -153,6 +150,6 @@ const callSlice = createSlice({
   }  
 });
 
-export const { setDisable, setEnableDisableRemoteMic, setEnableDisableRemoteCam, setSkipTimer, setTriggerEndCall, setPeer, setPeerId, setSocketId, setUserObjectId, setTimeDiff, setConnectedTime, setKeyWords, setBgColor, setFlag, setTimer, setSocketConnection, setUserToCall, setTriggerCall, setLocalStream,setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
+export const { setDisable, setEnableDisableRemoteMic, setEnableDisableRemoteCam, setSkipTimer, setTriggerEndCall, setPeer, setPeerId, setSocketId, setUserObjectId, setTimeDiff, setConnectedTime, setKeyWords, setBgColor, setFlag, setTimer, setSocketConnection, setUserToCall, setTriggerCall, setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
 
 export default callSlice.reducer;

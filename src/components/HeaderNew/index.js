@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import _ from 'lodash'
 import { LogoSvg } from "../svgComponents";
 import "./index.css"
@@ -73,13 +73,20 @@ const ChildComponent = memo(() => {
   const dispatch = useDispatch();
   const { userName } = useSelector(state => state.chatSlice)
   const [name, setName] = useState(userName)
+  const [updateFlag, setUpdateFlag] = useState(false)
+  useEffect(() => {
+    if(updateFlag) {
+      setUpdateFlag(false)
+      updateName(userName)
+    }
+  }, [updateFlag, userName])
   return <input
     type="text"
     className="head-input"
     placeholder="Enter Name"
     onChange={(e) => setName(e.target.value)}
     onBlur={() => {
-      updateName(userName)
+      setUpdateFlag(true)
       dispatch(setUserName(name))
     }}
     value={name}
