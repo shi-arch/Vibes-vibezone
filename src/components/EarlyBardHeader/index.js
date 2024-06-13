@@ -64,10 +64,28 @@ const EarlybardHeader = () => {
             height: "26px",
             marginTop: "14px",
           }}
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Reload
+        </Button>
+        <Button
+          style={{
+            backgroundColor: "#ffa64d",
+            borderRadius: "10px",
+            color: "#000",
+            fontSize: "10px",
+            textAlign: "left",
+            fontFamily: "Poppins,Arial",
+            fontWeight: "bold",
+            height: "26px",
+            marginTop: "14px",
+          }}
           onClick={handleOpenModal}
         >
           Early Bird Access
-        </Button>
+        </Button>        
         {/* <div style={{ display: "flex", justifyContent: "flex-end" }}></div> */}
       </Box>
       <EarlyBardAccessModal />

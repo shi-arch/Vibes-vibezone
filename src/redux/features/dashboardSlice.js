@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  username: '',
   activeUsers: [],
   groupCallRooms: [],
   availableUsers: [],
@@ -13,9 +12,6 @@ const dashboardSlice = createSlice({
   name: "dashboardSlice",
   initialState: initialState,
   reducers: {
-    setUserName: (state, actions) => {
-      state.username = actions.payload;
-    },
     setActiveUsers: (state, actions) => {
       state.activeUsers = actions.payload;
     },
@@ -34,6 +30,6 @@ const dashboardSlice = createSlice({
   },
 });
 
-export const {setActiveUsers, setCamOffUsers, setInActiveUsers, setGroupCallRooms, setUserName, setAvailableUsers} = dashboardSlice.actions;
+export const {setActiveUsers, setCamOffUsers, setInActiveUsers, setGroupCallRooms, setAvailableUsers} = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

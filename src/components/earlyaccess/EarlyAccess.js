@@ -1,16 +1,11 @@
 import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { setUserLoggedIn, setUserName } from "../../redux/features/chatSlice";
-import { useDispatch } from "react-redux";
 import ReactGA from "react-ga4";
-
 import "./EarlyAccess.css";
-import { setPeerId } from "../../redux/features/callSlice";
 import { getEarlyAccess } from "../commonComponents/commonComponents";
 
 const EarlyAccess = () => {
   const router = useNavigate();
-  const dispatch = useDispatch();
   return (
     <Box
     id="home"

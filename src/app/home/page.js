@@ -20,11 +20,10 @@ import { setUserLoggedIn, setUserName } from '../../redux/features/chatSlice';
 import { setPeerId } from '../../redux/features/callSlice';
 const LandingPage = () => {
   const router = useNavigate();
-  const dispatch = useDispatch();
-  // useEffect(() => {
-  //   restoreLocalData()
-  //   router('/chat')
-  // }, [])
+  useEffect(() => {
+    localStorage.removeItem("user")
+    localStorage.removeItem("peerId")
+  }, [])
   return (
     <Box>
       {result.matches ? (

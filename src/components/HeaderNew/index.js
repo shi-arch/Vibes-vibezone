@@ -72,8 +72,14 @@ const HeaderNew = (props) => {
 const ChildComponent = memo(() => {
   const dispatch = useDispatch();
   const { userName } = useSelector(state => state.chatSlice)
-  const [name, setName] = useState(userName)
+  const [name, setName] = useState("")
   const [updateFlag, setUpdateFlag] = useState(false)
+  useEffect(() => {
+    if(userName){
+      setName(userName)
+      debugger
+    }
+  }, [userName])
   useEffect(() => {
     if(updateFlag) {
       setUpdateFlag(false)

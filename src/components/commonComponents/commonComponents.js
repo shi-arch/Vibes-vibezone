@@ -14,6 +14,7 @@ import { setLoginDetails, setToken, setUserSelectedTopics } from '../../redux/fe
 import store from '../../redux/store';
 import { setUserLoggedIn, setUserName } from '../../redux/features/chatSlice';
 import { setPeerId } from '../../redux/features/callSlice';
+import { Cookie } from '@mui/icons-material';
 
 export const restoreLocalData = () => {
   const userData = localStorage.getItem("userData");
@@ -30,10 +31,15 @@ export const Loader = (style) => {
 }
 
 export const getEarlyAccess = async () => {
-  let user = "Guest + " + Math.random().toString().substr(2, 8);
+  const user = "Guest + " + Math.random().toString().substr(2, 8);
+  const peerId = (Math.random() + 1).toString(36).substring(7)
   store.dispatch(setUserName(user));
-  store.dispatch(setUserLoggedIn(user));
-  store.dispatch(setPeerId((Math.random() + 1).toString(36).substring(7)))
+  store.dispatch(setPeerId(peerId))
+  const checkUser = localStorage.getItem("user")
+  if(!checkUser){
+    localStorage.setItem("user", user);
+    localStorage.setItem("peerId", peerId);
+  }  
 }
 
 export const validateEmail = (email) => {
