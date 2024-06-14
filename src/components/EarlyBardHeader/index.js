@@ -35,7 +35,8 @@ const EarlybardHeader = () => {
         sx={{
           "@media (max-width:426px)": {
             flexDirection: "column",
-            padding:"2px 0px"
+            marginBottom:"15px!important",
+            height: "50px!important"
           },
         }}
       >
@@ -52,24 +53,7 @@ const EarlybardHeader = () => {
         >
           Early Bird access is 6 months free for first 100 users...
         </Typography>
-        <Button
-          style={{
-            backgroundColor: "#ffa64d",
-            borderRadius: "10px",
-            color: "#000",
-            fontSize: "10px",
-            textAlign: "left",
-            fontFamily: "Poppins,Arial",
-            fontWeight: "bold",
-            height: "26px",
-            marginTop: "14px",
-          }}
-          onClick={() => {
-            window.location.reload();
-          }}
-        >
-          Reload
-        </Button>
+        
         <Button
           style={{
             backgroundColor: "#ffa64d",
@@ -88,9 +72,65 @@ const EarlybardHeader = () => {
         </Button>        
         {/* <div style={{ display: "flex", justifyContent: "flex-end" }}></div> */}
       </Box>
+      <Box
+        style={{
+          marginTop: "-15px",
+          backgroundColor: "#010101",
+          height: "30px",
+          width: "calc(100% - 48px)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0px 24px 10px 24px",
+          marginBottom: "15px"          
+        }}
+        sx={{
+          "@media (max-width:426px)": {
+            flexDirection: "column",
+            marginBottom:"32px!important",
+            height: "50px!important"
+          },
+        }}
+      >
+        <Typography
+          style={{
+            height: "12px",
+            fontFamily: "Poppins,Arial",
+            fontSize: "16px",
+            fontWeight: "500",
+            textAlign: "center",
+            color: "#fff",
+            // paddingTop: "20px",
+          }}
+        >
+          Please reload when feel technical issues...
+        </Typography>
+        
+        <Button
+          style={{
+            backgroundColor: "#ffa64d",
+            borderRadius: "10px",
+            color: "#000",
+            fontSize: "10px",
+            textAlign: "left",
+            fontFamily: "Poppins,Arial",
+            fontWeight: "bold",
+            height: "26px",
+            marginTop: "14px",
+          }}
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Reload
+        </Button>       
+        {/* <div style={{ display: "flex", justifyContent: "flex-end" }}></div> */}
+      </Box>
       <EarlyBardAccessModal />
     </Box>
   );
 };
 
 export default EarlybardHeader;
+
+{/*  */}
