@@ -6,19 +6,20 @@ import { Input } from "../commonComponents/commonComponents";
 import ChatsListNew from "../chat/ChatListNew";
 import _, { cloneDeep } from 'lodash'
 import "./index.css";
-import { sendMessage } from "../../app/utils/wssConnection/wssConnection";
+import { sendBotMessage, sendMessage } from "../../app/utils/wssConnection/wssConnection";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessages } from "../../redux/features/chatSlice";
+import { setMessages, setSessionId } from "../../redux/features/chatSlice";
 import Swal from "sweetalert2";
 
 import ReactGA from "react-ga4"
+import { postApi } from "../../response/api";
 
 
 const ChatInterfaceNew = (props) => {
   const dispatch = useDispatch()
   const [message, setMessage] = useState("")
-  const { callState } = useSelector(state => state.callSlice)
-  const { calleeUserName, isTyping, messagesArr } = useSelector(state => state.chatSlice)
+  const { callState, chatBot } = useSelector(state => state.callSlice)
+  const { calleeUserName, isTyping, messagesArr, sessionId } = useSelector(state => state.chatSlice)
 
   var input = document.getElementById("msg");
   const sendMsgFun = (val) => {
@@ -26,13 +27,13 @@ const ChatInterfaceNew = (props) => {
   }
 
 
-  const handleKeyDown = (e)=>{
-    if (e.key==='Enter'){
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
       sendMsg()
     }
   }
 
-  const sendMsg = () => {
+  const sendMsg = async () => {
     if (message.trim() && callState == "CALL_CONNECTED") {
       let arr = _.cloneDeep(messagesArr)
       let o = { message: message, sender: true }
@@ -42,20 +43,23 @@ const ChatInterfaceNew = (props) => {
         arr.push(o)
       }
       dispatch(setMessages(arr))
-      sendMessage(message);
-
+      if (chatBot) {
+        await sendBotMessage(arr, message, setMessage)        
+      } else {
+        await sendMessage(message);
+        setMessage("")
+      }
       ReactGA.event({
         category: 'send Message',
         action: 'send Message Button',
         label: 'send Message Button'
-      })
-      setMessage("")
+      })      
     }
   }
   return (
     <div className="chatInterFaceNew-bg-container">
       <div className="chat-list-new-container">
-        <ChatsListNew remoteStream={props.remoteStream}/>
+        <ChatsListNew remoteStream={props.remoteStream} />
       </div>
       <div className="send-msg-con-1">
         <div className="send-msg-con-2">

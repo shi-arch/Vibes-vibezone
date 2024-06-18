@@ -3,9 +3,11 @@ import { Loader } from '../../components/commonComponents/commonComponents'
 import VibeZoneLogo from "../../assets/images/VibeZoneLogo.svg"
 import "./videocallInterface.css";
 import CallIcons from "../CallIcons/index.js";
+import { useSelector } from "react-redux";
 
 const VideoCallInterFace = (props) => {
   const {localStream, remoteStream} = props
+  const { chatBot } = useSelector(state => state.callSlice)
   return (
     <div className="video-call-interface-bg-container">
       <div className="video-img-container">
@@ -21,10 +23,10 @@ const VideoCallInterFace = (props) => {
             }}
           > 
         {
-          remoteStream ? 
+          remoteStream || chatBot ? 
           <video
             id="userVideo"
-            style={{ width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }}
+            style={chatBot ? {background: 'black', width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)'} : { width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }}
             ref={(video) => {
               if (video) video.srcObject = remoteStream;
             }}

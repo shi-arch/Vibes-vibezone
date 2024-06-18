@@ -3,8 +3,8 @@ import _ from 'lodash'
 import { LogoSvg } from "../svgComponents";
 import "./index.css"
 import { useSelector, useDispatch } from "react-redux";
-import { setCallState, setDisableButton, setKeyWords, setTimer, setDisable } from "../../redux/features/callSlice";
-import { setUserName } from "../../redux/features/chatSlice";
+import { setCallState, setDisableButton, setKeyWords, setTimer, setDisable, setChatBot, setBotTimer } from "../../redux/features/callSlice";
+import { setMessages, setSessionId, setUserName } from "../../redux/features/chatSlice";
 import { getActiveUser, updateName } from "../../app/utils/wssConnection/wssConnection";
 import ActiveUsers from "../ActiveUsers";
 import ReactGA from "react-ga4"
@@ -12,15 +12,25 @@ import { disableColor, enableColor, initialColor } from "../../app/utils/constan
 
 const HeaderNew = (props) => {
   const dispatch = useDispatch();
-  const { userName } = useSelector(state => state.chatSlice)
-  const { callState, buttonLabel, isActive, keyWords, disableButton, userToCall, disable } = useSelector((state) => state.callSlice);
-  const skipCall = () => {
-    props?.currentCall?.close()
+  const { callState, buttonLabel, isActive, keyWords, disableButton, userToCall, displayConnect, chatBot } = useSelector((state) => state.callSlice);
+  const skipCall = async () => {
+    if (chatBot) {
+      dispatch(setSessionId(""))
+      dispatch(setMessages([]))
+      dispatch(setTimer(true))
+      dispatch(setChatBot(''))
+      dispatch(setDisableButton(true))
+      dispatch(setCallState('CALL_AVAILABLE'))
+      await getActiveUser()
+    } else {
+      props?.currentCall?.close()
+      dispatch(setBotTimer(true))
+    }
   }
 
   const startRandomCall = async () => {
-    dispatch(setDisable(true))
     dispatch(setTimer(true))
+    dispatch(setBotTimer(true))
     dispatch(setDisableButton(true))
     dispatch(setCallState('CALL_AVAILABLE'))
     await getActiveUser()
@@ -45,22 +55,25 @@ const HeaderNew = (props) => {
         value={keyWords}
       />
 
-      <button
-        disabled={disable ? true : disableButton}
-        style={disable ? { backgroundColor: disableColor, cursor: 'not-allowed' } : callState == 'CALL_UNAVAILABLE' && !disableButton ? { backgroundColor: initialColor } :
-          disableButton ? { backgroundColor: disableColor, cursor: 'not-allowed' } : { backgroundColor: enableColor }}
-        className="call-buttons call-button-css"
-        onClick={() => {
-          ReactGA.event({
-            category: "Connect",
-            action: "connect button",
-            label: "Connect",
-          });
-          userToCall ? skipCall() : startRandomCall()
-        }}
-      >
-        {buttonLabel}
-      </button>
+      {
+        displayConnect ?
+          <button
+            disabled={disableButton}
+            style={callState == 'CALL_UNAVAILABLE' ? { backgroundColor: initialColor } :
+              disableButton ? { backgroundColor: disableColor, cursor: 'not-allowed' } : { backgroundColor: enableColor }}
+            className="call-buttons call-button-css"
+            onClick={() => {
+              ReactGA.event({
+                category: "Connect",
+                action: "connect button",
+                label: "Connect",
+              });
+              userToCall || chatBot ? skipCall() : startRandomCall()
+            }}
+          >
+            {buttonLabel}
+          </button> : null
+      }
 
       <div className="header-active-users">
         <ActiveUsers />
@@ -75,13 +88,12 @@ const ChildComponent = memo(() => {
   const [name, setName] = useState("")
   const [updateFlag, setUpdateFlag] = useState(false)
   useEffect(() => {
-    if(userName){
+    if (userName) {
       setName(userName)
-      debugger
     }
   }, [userName])
   useEffect(() => {
-    if(updateFlag) {
+    if (updateFlag) {
       setUpdateFlag(false)
       updateName(userName)
     }

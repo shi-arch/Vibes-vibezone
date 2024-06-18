@@ -6,8 +6,8 @@ import VideoCallInterFace from '../../components/VideoCallInterFace';
 import ChatInterfaceNew from '../../components/ChatInerfaceNew';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
-import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setMessage, setPeer, setTimer, setTriggerCall, setSkipTimer, setUserToCall, setDisable, setPeerId } from '../../redux/features/callSlice';
-import { connectWithWebSocket, handleCamera, registerNewUser, startCall } from '../utils/wssConnection/wssConnection';
+import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setDisplayConnect, setPeer, setTimer, setTriggerCall, setSkipTimer, setUserToCall, setDisable, setPeerId, setBotTimer, setChatBot } from '../../redux/features/callSlice';
+import { connectWithWebSocket, handleCamera, registerNewUser, sendBotMessage, startCall, updateUser } from '../utils/wssConnection/wssConnection';
 import { LogoSvg } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
 import ActiveUsers from '../../components/ActiveUsers';
@@ -19,15 +19,16 @@ import { setMessages, setUserName } from "../../redux/features/chatSlice";
 const VideoChat = () => {
   const dispatch = useDispatch()
   const [localStream, setLocalStream] = useState(null)
+  const [msg, setMessage] = useState(null)  
   const [remoteStream, setRemoteStream] = useState(null)
+  const [localTime, setLocalTime] = useState(null)
   const [peer, setPeer] = useState(null)
   const [currentCall, setCurrentCall] = useState(null)
-  const { peerId, userToCall, triggerCall, timer, socketId, skipTimer, buttonLabel, localCameraEnabled, enableDisableRemoteCam, enableDisableRemoteMic } = useSelector(state => state.callSlice)
+  const { peerId, userToCall, triggerCall, timer, socketId, skipTimer, buttonLabel, localCameraEnabled, enableDisableRemoteCam, enableDisableRemoteMic, callState, botTimer } = useSelector(state => state.callSlice)
 
   useEffect(() => {
     const checkUser = localStorage.getItem("user")
-    if (checkUser && !peerId ) {
-      debugger
+    if (checkUser && !peerId) {
       const newPeerId = (Math.random() + 1).toString(36).substring(7)
       localStorage.setItem("peerId", newPeerId)
       dispatch(setUserName(checkUser));
@@ -61,12 +62,12 @@ const VideoChat = () => {
       setCurrentCall(call)
       call.on('close', () => {
         setRemoteStream(null)
-        dispatch(setSkipTimer(true))
+        dispatch(setTimer(true))
         dispatch(setDisableButton(true))
         dispatch(setMessages([]))
         dispatch(setUserToCall(""))
         dispatch(setCallState('CALL_AVAILABLE'))
-        console.log('Call ended');
+        console.log('Call ended >>>>>>>>>>>>>>.');
       });
     });
     newPeer.on('error', (error) => {
@@ -78,20 +79,35 @@ const VideoChat = () => {
     if (timer) {
       setTimeout(() => {
         dispatch(setTimer(false))
-        dispatch(setDisable(false))
         dispatch(setDisableButton(false))
-      }, 2000)
+        dispatch(setButtonLabel('Skip'))
+      }, 5000)
     }
   }, [timer])
 
   useEffect(() => {
-    if (skipTimer) {
+    if (botTimer) {
+      //debugger
       setTimeout(() => {
-        dispatch(setSkipTimer(false))
-        dispatch(setDisableButton(false))
-      }, 5000)
+        dispatch(setBotTimer(false))
+        setLocalTime(true)
+      }, 20000)
     }
-  }, [skipTimer])
+  }, [botTimer])
+
+  useEffect(() => {
+    if (localTime) {
+      //debugger
+      dispatch(setBotTimer(false))
+      setLocalTime(false)
+      if (callState !== 'CALL_CONNECTED') {
+        dispatch(setChatBot('chatBot'))
+        dispatch(setCallState('CALL_CONNECTED'))
+        updateUser()
+        sendBotMessage([], "", setMessage)
+      }
+    }
+  }, [localTime])
 
   useEffect(() => {
     connectWithWebSocket()
@@ -144,7 +160,7 @@ const VideoChat = () => {
           if (res.dismiss == 'cancel') {
             enableCam = false
           }
-          registerNewUser(enableCam);
+          await registerNewUser(enableCam);
           localStream.getVideoTracks()[0].enabled = enableCam;
           dispatch(setLocalCameraEnabled(enableCam))
         }
@@ -152,12 +168,6 @@ const VideoChat = () => {
     }
 
   }, [localStream])
-
-  // useEffect(() => {
-  //   if (!userLoggedIn) {
-  //     window.location.href = window.location.origin
-  //   }
-  // }, [userLoggedIn])
   return (
     <div className="video-chat-bg-container">
       <EarlybardHeader />

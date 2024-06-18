@@ -1,8 +1,10 @@
 import socketClient from 'socket.io-client';
 import store from '../../../redux/store';
-import { setUserName, setMessages, setIsTyping } from '../../../redux/features/chatSlice';
-import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer, setCurrentCall, setEnableDisableRemoteCam, setLocalMicrophoneEnabled, setEnableDisableRemoteMic } from '../../../redux/features/callSlice';
+import { setUserName, setMessages, setIsTyping, setSessionId } from '../../../redux/features/chatSlice';
+import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer, setCurrentCall, setEnableDisableRemoteCam, setLocalMicrophoneEnabled, setEnableDisableRemoteMic, setChatBot, setTimer, setDisplayConnect } from '../../../redux/features/callSlice';
 import { setTotalUsers } from '../../../redux/features/loginSlice';
+import { postApi } from '../../../response/api';
+import { getRandomTimeInMilliseconds } from '../constant';
 const SERVER = process.env.REACT_APP_BASEURL;
 let socket;
 
@@ -23,7 +25,7 @@ export const connectWithWebSocket = async () => {
     dispatch(setUserName(""))
   });
   socket.on("skip-timer", () => {
-    store.dispatch(setSkipTimer(true))
+    store.dispatch(setTimer(true))
     store.dispatch(setDisableButton(true))
   });  
   socket.on("send-message", (data) => {
@@ -38,6 +40,7 @@ export const connectWithWebSocket = async () => {
   })
   socket.on("get-active-user", (user) => {
     if (store.getState().callSlice.callState == "CALL_AVAILABLE") {
+      console.log('2222222222222222222222222')
       console.log('user enters into get active user >>>>>>>>', user)      
       const dispatch = store.dispatch
       dispatch(setCallState('CALL_IN_PROGRESS'))
@@ -45,7 +48,7 @@ export const connectWithWebSocket = async () => {
       if (user && user?.findActiveUser) {
         userData = user?.findActiveUser
       } else {
-        dispatch(setTriggerCall(true))
+        dispatch(setTriggerCall(true))       
       }
       dispatch(setUserToCall(userData))
     }
@@ -56,9 +59,7 @@ export const connectWithWebSocket = async () => {
     }
   });
   socket.on('register-user', () => {
-    setTimeout(() => {
-      store.dispatch(setDisableButton(false))
-    }, 4000)
+    store.dispatch(setDisplayConnect(true))   
   });
   socket.on('handle-camera', (enable) => {
     store.dispatch(setEnableDisableRemoteCam(enable))
@@ -69,6 +70,9 @@ export const connectWithWebSocket = async () => {
   socket.on('enableDisableMic', (enable) => {
     store.dispatch(setEnableDisableRemoteMic(enable))
   })
+  socket.on('skip-user', () => {
+    
+  })
   socket.on('user-hanged-up', async () => {
     const dispatch = store.dispatch
     dispatch(setCallState('CALL_AVAILABLE'))
@@ -78,8 +82,8 @@ export const connectWithWebSocket = async () => {
   });
 };
 
-export const registerNewUser = (enableCam) => {
-  socket.emit('register-new-user', {
+export const registerNewUser = async (enableCam) => {
+  await socket.emit('register-new-user', { 
     username: store.getState().chatSlice.userName,
     socketId: store.getState().callSlice.socketId,
     peerId: store.getState().callSlice.peerId,
@@ -110,7 +114,7 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
       await setCurrentCall(call)
       call.on('close', async () => {
         setRemoteStream(null)
-        store.dispatch(setSkipTimer(true))
+        store.dispatch(setTimer(true))
         store.dispatch(setDisableButton(true))
         store.dispatch(setMessages([]))
         await getActiveUser('skip')
@@ -148,7 +152,11 @@ export const updateName = (username) => {
   socket.emit('update-name', { name: username, socketId: socket.id });
 };
 
-export const sendMessage = (message) => {
+export const updateUser = (username) => {
+  socket.emit('update-user', store.getState().callSlice.socketId);
+};
+
+export const sendMessage = async (message) => {
   let o = {
     socketIds: {
       mySocketId: socket.id,
@@ -160,6 +168,24 @@ export const sendMessage = (message) => {
     }
   }
   socket.emit('send-message', o);
+};
+
+export const sendBotMessage = async (arr, msg, setMessage) => {
+  let message = msg
+  setMessage("")
+  const sessionId = store.getState().callSlice.sessionId
+  const response = await postApi('/chat-bot', {message: message,sessionId})
+  if (response) {
+    if(!sessionId){
+      store.dispatch(setSessionId(response?.data?.sessionId))
+    }
+    let chatArr = _.cloneDeep(arr)
+    chatArr.push({ message: response?.data?.response, sender: false })
+    const randomTime = getRandomTimeInMilliseconds(3, 8);
+    setTimeout(() => {
+      store.dispatch(setMessages(chatArr))
+    }, randomTime);    
+  }
 };
 export const typingMethod = () => {
   socket.emit('typing', {

@@ -15,6 +15,13 @@ export const formatDate = (date) => {
     return `${day}-${month}-${year}`;
 };
 
+export const getRandomTimeInMilliseconds = (minSeconds, maxSeconds) => {
+    const minMilliseconds = minSeconds * 1000;
+    const maxMilliseconds = maxSeconds * 1000;
+    const randomMilliseconds = Math.random() * (maxMilliseconds - minMilliseconds) + minMilliseconds;
+    return randomMilliseconds;
+  }
+
 export const validation = async (dataToValidate, data) => {
     let result = { isErr: false, msg: "", type: ""  }
     for (let i = 0; i < dataToValidate.length; i++) {

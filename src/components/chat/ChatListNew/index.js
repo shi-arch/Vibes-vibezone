@@ -1,20 +1,32 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MsgSeen } from "../../svgComponents";
 import "./index.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { setUserName } from "../../../redux/features/chatSlice";
 
 const ChatsListNew = (props) => {
+  const dispatch = useDispatch();
+  const [chatBotName, setChatBotName] = useState("")
   const { messagesArr } = useSelector(state => state.chatSlice)
-  const { userToCall } = useSelector(state => state.callSlice)
+  const { userToCall, chatBot } = useSelector(state => state.callSlice)
   const bottomRef = useRef(null);
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messagesArr]);
 
+  useEffect(() => {
+    if(chatBot){
+      setChatBotName("Guest + " + Math.random().toString().substr(2, 8))
+    }
+  }, [chatBot]);
+
   return (
     <div className="chat-list-new-bg-container">
       <div className="guest-container">
-        <h1 className="guest-head">{props.remoteStream && userToCall && userToCall.username ? userToCall.username : "Guest"}</h1>
+        <h1 className="guest-head">{
+        chatBot && chatBotName ? chatBotName :  
+        props.remoteStream && userToCall && userToCall.username ? userToCall.username : "Guest"
+        }</h1>
       </div>
       <div className="chatListNew-scroll-container">
         {messagesArr.map((chat, index) => {
