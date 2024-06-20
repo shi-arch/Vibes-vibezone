@@ -10,7 +10,7 @@ export const initialColor = 'rgb(143, 71, 255)'
 export const formatDate = (date) => {
     const d = new Date(date);
     const year = d.getFullYear();
-    const month = ('0' + (d.getMonth() + 1)).slice(-2); 
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
     const day = ('0' + d.getDate()).slice(-2);
     return `${day}-${month}-${year}`;
 };
@@ -20,10 +20,46 @@ export const getRandomTimeInMilliseconds = (minSeconds, maxSeconds) => {
     const maxMilliseconds = maxSeconds * 1000;
     const randomMilliseconds = Math.random() * (maxMilliseconds - minMilliseconds) + minMilliseconds;
     return randomMilliseconds;
-  }
+}
+
+export const handleShowNotification = () => {
+    showNotification('Hey There...!', {
+        body: 'New user is visiting to vibezone'
+    });
+};
+
+export const requestNotificationPermission = () => {
+    if (!('Notification' in window)) {
+        console.log('This browser does not support notifications!');
+        return;
+    }
+    Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+            console.log('Notification permission granted.');
+        } else {
+            console.log('Notification permission denied.');
+        }
+    });
+}
+
+export const showNotification = (title, options) => {
+    if (!('Notification' in window)) {
+        console.log('This browser does not support notifications!');
+        return;
+    }
+    if (Notification.permission === 'granted') {
+        const notification = new Notification(title, options);
+        notification.onclick = (event) => {
+            event.preventDefault();
+            window.open("https://vibezone.in/", '_blank');
+        };
+    } else {
+        console.log('Notification permission not granted.');
+    }
+}
 
 export const validation = async (dataToValidate, data) => {
-    let result = { isErr: false, msg: "", type: ""  }
+    let result = { isErr: false, msg: "", type: "" }
     for (let i = 0; i < dataToValidate.length; i++) {
         result = validate(dataToValidate[i], data)
         if (result.isErr) {
@@ -61,7 +97,7 @@ const validate = (expression, o) => {
                 obj.type = "contact"
             }
             break;
-            case 'name':
+        case 'name':
             const name = o.name
             if (!name) {
                 obj.isErr = true
@@ -69,7 +105,7 @@ const validate = (expression, o) => {
                 obj.type = "name"
             }
             break;
-            case 'userName':
+        case 'userName':
             const userName = o.userName
             if (!userName) {
                 obj.isErr = true
@@ -77,7 +113,7 @@ const validate = (expression, o) => {
                 obj.type = "userName"
             }
             break;
-            case 'gender':
+        case 'gender':
             const gender = o.gender
             if (!gender) {
                 obj.isErr = true
@@ -85,13 +121,13 @@ const validate = (expression, o) => {
                 obj.type = "gender"
             }
             break;
-            case 'dob':
-                const dob = o.dob
-                if (!dob) {
-                    obj.isErr = true
-                    obj.msg = "Date of birth is required!"
-                    obj.type = "dob"
-                }
+        case 'dob':
+            const dob = o.dob
+            if (!dob) {
+                obj.isErr = true
+                obj.msg = "Date of birth is required!"
+                obj.type = "dob"
+            }
     }
     return obj
 }
@@ -110,20 +146,20 @@ export const isNumeric = (str) => {
 //   console.log(differenceInMinutes)
 //   if(differenceInMinutes > 5){
 //     dispatch(setTimeDiff(differenceInMinutes))
-//   }    
+//   }
 
 
 // if (userObjectId && timeDiff) {
-  //   getApi("/profile", token).then(res => {
-  //     if (res) {
-  //       const { profileImage, name, contact, userName, status } = res.data
-  //       const o = {
-  //         profileImage: profileImage || "",
-  //         name: name || contact || email
-  //       }
-  //       sendRequest({userData: o, callerSocketId: userToCall.socketId})
-  //     }
-  //   })
-  //   dispatch(setTimeDiff(""))
-  //   dispatch(setUserObjectId(""))
-  // }
+//   getApi("/profile", token).then(res => {
+//     if (res) {
+//       const { profileImage, name, contact, userName, status } = res.data
+//       const o = {
+//         profileImage: profileImage || "",
+//         name: name || contact || email
+//       }
+//       sendRequest({userData: o, callerSocketId: userToCall.socketId})
+//     }
+//   })
+//   dispatch(setTimeDiff(""))
+//   dispatch(setUserObjectId(""))
+// }

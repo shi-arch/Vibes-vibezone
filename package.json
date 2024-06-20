@@ -18,6 +18,7 @@
     "axios": "^0.21.1",
     "chat-app": "file:..",
     "dotenv": "^16.4.5",
+    "firebase": "^10.12.2",
     "framer-motion": "^4.1.17",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",

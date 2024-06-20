@@ -15,9 +15,11 @@ import EarlyBoardAccessModal from "../../components/Modals/EarlyAccessBardModal"
 import EarlybardHeader from "../../components/EarlyBardHeader";
 import Peer from "peerjs";
 import { setMessages, setUserName } from "../../redux/features/chatSlice";
-
+import { getFirebaseToken, onForegroundMessage } from "../../firebase";
+import { postApi } from "../../response/api";
 const VideoChat = () => {
   const dispatch = useDispatch()
+  const [showNotificationBanner, setShowNotificationBanner] = useState(Notification.permission === 'default');
   const [localStream, setLocalStream] = useState(null)
   const [msg, setMessage] = useState(null)  
   const [remoteStream, setRemoteStream] = useState(null)
@@ -25,6 +27,31 @@ const VideoChat = () => {
   const [peer, setPeer] = useState(null)
   const [currentCall, setCurrentCall] = useState(null)
   const { peerId, userToCall, triggerCall, timer, socketId, skipTimer, buttonLabel, localCameraEnabled, enableDisableRemoteCam, enableDisableRemoteMic, callState, botTimer } = useSelector(state => state.callSlice)
+
+  useEffect(() => {
+    onForegroundMessage()
+      .then((payload) => {
+        console.log('Received foreground message: ', payload);
+        const { notification: { title, body } } = payload;
+        toast(<ToastifyNotification title={title} body={body} />);
+      })
+      .catch(err => console.log('An error occured while retrieving foreground message. ', err));
+  }, []);
+
+  const handleGetFirebaseToken = async () => {
+    try {
+      const firebaseToken = await getFirebaseToken()
+      if(firebaseToken){
+        const save = await postApi('/save-push-notification-token', {token: firebaseToken})
+        if(save){
+          console.log('Firebase token: ', firebaseToken);
+          setShowNotificationBanner(false);
+        }
+      }
+    } catch (error) {
+      console.error('An error occured while retrieving firebase token. ', error);
+    }
+  }
 
   useEffect(() => {
     const checkUser = localStorage.getItem("user")
@@ -170,6 +197,16 @@ const VideoChat = () => {
   }, [localStream])
   return (
     <div className="video-chat-bg-container">
+      {showNotificationBanner && <div className="notification-banner">
+        <span>The app needs permission to</span>
+        <a
+          href="#"
+          className="notification-banner-link"
+          onClick={handleGetFirebaseToken}
+        >
+          enable push notifications.
+        </a>
+      </div>}
       <EarlybardHeader />
       <EarlyBoardAccessModal />
       <SideBarNew />
