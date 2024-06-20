@@ -28,30 +28,30 @@ const VideoChat = () => {
   const [currentCall, setCurrentCall] = useState(null)
   const { peerId, userToCall, triggerCall, timer, socketId, skipTimer, buttonLabel, localCameraEnabled, enableDisableRemoteCam, enableDisableRemoteMic, callState, botTimer } = useSelector(state => state.callSlice)
 
-  useEffect(() => {
-    onForegroundMessage()
-      .then((payload) => {
-        console.log('Received foreground message: ', payload);
-        const { notification: { title, body } } = payload;
-        toast(<ToastifyNotification title={title} body={body} />);
-      })
-      .catch(err => console.log('An error occured while retrieving foreground message. ', err));
-  }, []);
+  // useEffect(() => {
+  //   onForegroundMessage()
+  //     .then((payload) => {
+  //       console.log('Received foreground message: ', payload);
+  //       const { notification: { title, body } } = payload;
+  //       toast(<ToastifyNotification title={title} body={body} />);
+  //     })
+  //     .catch(err => console.log('An error occured while retrieving foreground message. ', err));
+  // }, []);
 
-  const handleGetFirebaseToken = async () => {
-    try {
-      const firebaseToken = await getFirebaseToken()
-      if(firebaseToken){
-        const save = await postApi('/save-push-notification-token', {token: firebaseToken})
-        if(save){
-          console.log('Firebase token: ', firebaseToken);
-          setShowNotificationBanner(false);
-        }
-      }
-    } catch (error) {
-      console.error('An error occured while retrieving firebase token. ', error);
-    }
-  }
+  // const handleGetFirebaseToken = async () => {
+  //   try {
+  //     const firebaseToken = await getFirebaseToken()
+  //     if(firebaseToken){
+  //       const save = await postApi('/save-push-notification-token', {token: firebaseToken})
+  //       if(save){
+  //         console.log('Firebase token: ', firebaseToken);
+  //         setShowNotificationBanner(false);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('An error occured while retrieving firebase token. ', error);
+  //   }
+  // }
 
   useEffect(() => {
     const checkUser = localStorage.getItem("user")
@@ -197,7 +197,7 @@ const VideoChat = () => {
   }, [localStream])
   return (
     <div className="video-chat-bg-container">
-      {showNotificationBanner && <div className="notification-banner">
+      {/* {showNotificationBanner && <div className="notification-banner">
         <span>The app needs permission to</span>
         <a
           href="#"
@@ -206,7 +206,7 @@ const VideoChat = () => {
         >
           enable push notifications.
         </a>
-      </div>}
+      </div>} */}
       <EarlybardHeader />
       <EarlyBoardAccessModal />
       <SideBarNew />
