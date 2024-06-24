@@ -13,7 +13,7 @@ const ActiveUsers = () => {
         <div style={{marginLeft: `2px`}} className="active-icon"></div>
         <p className="active-para" style={{marginLeft: `7px`}}>{totalUserCount}</p>
       </div>
-      <div className="active-status-container tooltip">
+      {/* <div className="active-status-container tooltip">
       <span class="tooltiptext">Total camera turned on</span>
         <span className="sm-lg-icons-rotate">
           <VideoIcon />
@@ -28,7 +28,7 @@ const ActiveUsers = () => {
           <EyeOffline />
         </span>
         <p className="active-para" style={{marginLeft: `3px`}}>{disableCam}</p>
-      </div>
+      </div> */}
       <div className="active-status-container tooltip" style={{marginLeft: `3px`}}>
       <span class="tooltiptext">Available users for call</span>
         <div style={{background: '#8f47ff'}} className="active-icon"></div>

@@ -64,7 +64,7 @@ const ChatInterfaceNew = (props) => {
       <div className="send-msg-con-1">
         <div className="send-msg-con-2">
           <div className="attach-type-con">
-            <Attachment />
+            {/* <Attachment /> */}
             <Input
               type="text"
               css="input-send-message"

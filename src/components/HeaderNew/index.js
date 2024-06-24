@@ -28,6 +28,17 @@ const HeaderNew = (props) => {
     }
   }
 
+  useEffect(() => {
+    if (chatBot && callState !== 'CALL_AVAILABLE') {
+      var min = 10,
+      max = 30;
+      var rand = Math.floor(Math.random() * (max - min + 1) + min);
+      setTimeout(() => {
+        skipCall()
+      }, rand * 1000)
+    }
+  }, [chatBot])
+
   const startRandomCall = async () => {
     dispatch(setTimer(true))
     dispatch(setBotTimer(true))
