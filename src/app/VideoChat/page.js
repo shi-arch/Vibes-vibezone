@@ -23,6 +23,7 @@ const VideoChat = () => {
   const [showNotificationBanner, setShowNotificationBanner] = useState(Notification.permission === 'default');
   const [localStream, setLocalStream] = useState(null)
   const [msg, setMessage] = useState(null)  
+  const [notificationPopup, setNotificationPopup] = useState(true)  
   const [remoteStream, setRemoteStream] = useState(null)
   const [localTime, setLocalTime] = useState(null)
   const [peer, setPeer] = useState(null)
@@ -116,7 +117,6 @@ const VideoChat = () => {
 
   useEffect(() => {
     if (botTimer) {
-      //debugger
       setTimeout(() => {
         dispatch(setBotTimer(false))
         setLocalTime(true)
@@ -126,7 +126,6 @@ const VideoChat = () => {
 
   useEffect(() => {
     if (localTime) {
-      //debugger
       dispatch(setBotTimer(false))
       setLocalTime(false)
       if (callState !== 'CALL_CONNECTED') {
@@ -174,6 +173,30 @@ const VideoChat = () => {
   }, [userToCall, triggerCall])
 
   useEffect(() => {
+    setTimeout(() => {   
+      let checkEnableOrNot = window.Notification.permission  
+      if (notificationPopup && checkEnableOrNot !== 'granted') {
+        setNotificationPopup(false)
+        Swal.fire({
+          title: "Want to enable notification?",
+          text: "Enabling notification will let you know new coming user",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, enable it!'
+        }).then(async (res) => {
+          if (res && res.isDenied == false) {
+            handleGetFirebaseToken()
+          }
+        })
+      }
+    }, 5000)
+    
+
+  }, [localStream])
+
+  useEffect(() => {
     if (localStream) {
       Swal.fire({
         title: "Want to enable the camera?",
@@ -199,7 +222,7 @@ const VideoChat = () => {
   }, [localStream])
   return (
     <div className="video-chat-bg-container">
-      {showNotificationBanner && <div className="notification-banner">
+      {/* {showNotificationBanner && <div className="notification-banner">
         <span>The app needs permission to</span>
         <a
           href="#"
@@ -208,7 +231,7 @@ const VideoChat = () => {
         >
           enable push notifications.
         </a>
-      </div>}
+      </div>} */}
       <EarlybardHeader />
       <EarlyBoardAccessModal />
       <SideBarNew />

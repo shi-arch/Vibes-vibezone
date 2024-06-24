@@ -15,6 +15,7 @@ const HeaderNew = (props) => {
   const { callState, buttonLabel, isActive, keyWords, disableButton, userToCall, displayConnect, chatBot } = useSelector((state) => state.callSlice);
   const skipCall = async () => {
     if (chatBot) {
+      debugger
       dispatch(setSessionId(""))
       dispatch(setMessages([]))
       dispatch(setTimer(true))
@@ -30,9 +31,10 @@ const HeaderNew = (props) => {
 
   useEffect(() => {
     if (chatBot && callState !== 'CALL_AVAILABLE') {
-      var min = 10,
-      max = 30;
+      var min = 30,
+      max = 60;
       var rand = Math.floor(Math.random() * (max - min + 1) + min);
+      console.log('rand >>>>>>>>>>>>>>>>>>>>>>>', rand)
       setTimeout(() => {
         skipCall()
       }, rand * 1000)
@@ -48,7 +50,7 @@ const HeaderNew = (props) => {
   }
 
   return (
-    <div className="header-new-bg-container">
+    <div className="header-new-bg-container" style={{marginBottom: '14px'}}>
       <div className="logo-lg-visible">
         <LogoSvg />
       </div>
