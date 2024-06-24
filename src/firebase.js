@@ -18,7 +18,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const messaging = getMessaging(firebaseApp);
 
 export const getOrRegisterServiceWorker = () => {
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator && 'PushManager' in window) {
     return window.navigator.serviceWorker
       .getRegistration('/firebase-push-notification-scope')
       .then((serviceWorker) => {
