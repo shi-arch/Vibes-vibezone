@@ -20,7 +20,7 @@ import { getFirebaseToken, onForegroundMessage } from "../../firebase";
 import { getApi, postApi } from "../../response/api";
 const VideoChat = () => {
   const dispatch = useDispatch()
-  const [showNotificationBanner, setShowNotificationBanner] = useState(Notification.permission === 'default');
+  const [showNotificationBanner, setShowNotificationBanner] = useState(Notification?.permission === 'default');
   const [localStream, setLocalStream] = useState(null)
   const [msg, setMessage] = useState(null)  
   const [notificationPopup, setNotificationPopup] = useState(true)  
@@ -174,7 +174,7 @@ const VideoChat = () => {
 
   useEffect(() => {
     setTimeout(() => {   
-      let checkEnableOrNot = window.Notification.permission  
+      let checkEnableOrNot = window?.Notification?.permission  
       if (notificationPopup && checkEnableOrNot !== 'granted') {
         setNotificationPopup(false)
         Swal.fire({

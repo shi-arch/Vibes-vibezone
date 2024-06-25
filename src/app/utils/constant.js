@@ -33,7 +33,7 @@ export const requestNotificationPermission = () => {
         console.log('This browser does not support notifications!');
         return;
     }
-    Notification.requestPermission().then(permission => {
+    Notification?.requestPermission().then(permission => {
         if (permission === 'granted') {
             console.log('Notification permission granted.');
         } else {
@@ -47,7 +47,7 @@ export const showNotification = (title, options) => {
         console.log('This browser does not support notifications!');
         return;
     }
-    if (Notification.permission === 'granted') {
+    if (Notification?.permission === 'granted') {
         const notification = new Notification(title, options);
         notification.onclick = (event) => {
             event.preventDefault();
