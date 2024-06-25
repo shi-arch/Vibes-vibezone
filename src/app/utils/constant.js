@@ -21,43 +21,6 @@ export const getRandomTimeInMilliseconds = (minSeconds, maxSeconds) => {
     const randomMilliseconds = Math.random() * (maxMilliseconds - minMilliseconds) + minMilliseconds;
     return randomMilliseconds;
 }
-
-export const handleShowNotification = () => {
-    showNotification('Hey There...!', {
-        body: 'New user is visiting to vibezone'
-    });
-};
-
-export const requestNotificationPermission = () => {
-    if (!('Notification' in window)) {
-        console.log('This browser does not support notifications!');
-        return;
-    }
-    Notification?.requestPermission().then(permission => {
-        if (permission === 'granted') {
-            console.log('Notification permission granted.');
-        } else {
-            console.log('Notification permission denied.');
-        }
-    });
-}
-
-export const showNotification = (title, options) => {
-    if (!('Notification' in window)) {
-        console.log('This browser does not support notifications!');
-        return;
-    }
-    if (Notification?.permission === 'granted') {
-        const notification = new Notification(title, options);
-        notification.onclick = (event) => {
-            event.preventDefault();
-            window.open("https://vibezone.in/", '_blank');
-        };
-    } else {
-        console.log('Notification permission not granted.');
-    }
-}
-
 export const validation = async (dataToValidate, data) => {
     let result = { isErr: false, msg: "", type: "" }
     for (let i = 0; i < dataToValidate.length; i++) {

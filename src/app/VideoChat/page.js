@@ -20,7 +20,6 @@ import { getFirebaseToken, onForegroundMessage } from "../../firebase";
 import { getApi, postApi } from "../../response/api";
 const VideoChat = () => {
   const dispatch = useDispatch()
-  const [showNotificationBanner, setShowNotificationBanner] = useState(Notification?.permission === 'default');
   const [localStream, setLocalStream] = useState(null)
   const [msg, setMessage] = useState(null)  
   const [notificationPopup, setNotificationPopup] = useState(true)  
@@ -30,32 +29,7 @@ const VideoChat = () => {
   const [currentCall, setCurrentCall] = useState(null)
   const { peerId, userToCall, triggerCall, timer, socketId, skipTimer, buttonLabel, localCameraEnabled, enableDisableRemoteCam, enableDisableRemoteMic, callState, botTimer } = useSelector(state => state.callSlice)
 
-  useEffect(() => {
-    onForegroundMessage()
-      .then((payload) => {
-        console.log('Received foreground message: ', payload);
-        const { notification: { title, body } } = payload;
-        toast(<ToastifyNotification title={title} body={body} />);
-      })
-      .catch(err => console.log('An error occured while retrieving foreground message. ', err));
-  }, []);
-
-  const handleGetFirebaseToken = async () => {
-    try {
-      const firebaseToken = await getFirebaseToken()
-      if(firebaseToken){
-        const getIp = await axios.get('https://api.ipify.org?format=json')
-        const save = await postApi('/save-push-notification-token', {token: firebaseToken, ipAddress: getIp.data.ip})
-        if(save){
-          console.log('Firebase token: ', firebaseToken);
-          setShowNotificationBanner(false);
-        }
-      }
-    } catch (error) {
-      console.error('An error occured while retrieving firebase token. ', error);
-    }
-  }
-
+  
   useEffect(() => {
     const checkUser = localStorage.getItem("user")
     if (checkUser && !peerId) {
@@ -173,30 +147,6 @@ const VideoChat = () => {
   }, [userToCall, triggerCall])
 
   useEffect(() => {
-    setTimeout(() => {   
-      let checkEnableOrNot = window?.Notification?.permission  
-      if (notificationPopup && checkEnableOrNot !== 'granted') {
-        setNotificationPopup(false)
-        Swal.fire({
-          title: "Want to enable notification?",
-          text: "Enabling notification will let you know new coming user",
-          type: "warning",
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, enable it!'
-        }).then(async (res) => {
-          if (res && res.isDenied == false) {
-            handleGetFirebaseToken()
-          }
-        })
-      }
-    }, 5000)
-    
-
-  }, [localStream])
-
-  useEffect(() => {
     if (localStream) {
       Swal.fire({
         title: "Want to enable the camera?",
@@ -222,16 +172,6 @@ const VideoChat = () => {
   }, [localStream])
   return (
     <div className="video-chat-bg-container">
-      {/* {showNotificationBanner && <div className="notification-banner">
-        <span>The app needs permission to</span>
-        <a
-          href="#"
-          className="notification-banner-link"
-          onClick={handleGetFirebaseToken}
-        >
-          enable push notifications.
-        </a>
-      </div>} */}
       <EarlybardHeader />
       <EarlyBoardAccessModal />
       <SideBarNew />
