@@ -16,7 +16,6 @@ import EarlyBoardAccessModal from "../../components/Modals/EarlyAccessBardModal"
 import EarlybardHeader from "../../components/EarlyBardHeader";
 import Peer from "peerjs";
 import { setMessages, setUserName } from "../../redux/features/chatSlice";
-import { getFirebaseToken, onForegroundMessage } from "../../firebase";
 import { getApi, postApi } from "../../response/api";
 const VideoChat = () => {
   const dispatch = useDispatch()
