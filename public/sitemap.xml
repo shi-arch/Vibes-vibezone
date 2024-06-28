@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Homepage -->
   <url>
-    <loc>https://www.vibezone.in/video-chat</loc>
+    <loc>https://vibezone.in/video-chat</loc>
     <lastmod>2024-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -10,7 +10,7 @@
   
   <!-- Product Page -->
   <url>
-    <loc>https://www.vibezone.in/</loc>
+    <loc>https://vibezone.in/</loc>
     <lastmod>2024-06-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

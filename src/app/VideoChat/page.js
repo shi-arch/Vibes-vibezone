@@ -44,11 +44,11 @@ const VideoChat = () => {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "VibeZone",
-    "url": "https://www.vibezone.in",
+    "url": "https://vibezone.in",
     "description": "Discover VibeZone, the leading Omegle alternative! Connect and talk to random people safely and enjoyably.",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://www.vibezone.in/search?query={search_term_string}",
+      "target": "https://vibezone.in/search?query={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   };
@@ -57,7 +57,7 @@ const VideoChat = () => {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "VibeZone",
-    "url": "https://www.vibezone.in",
+    "url": "https://vibezone.in",
     "logo": "https://vibezone-assets.s3.ap-south-1.amazonaws.com/vibezone_logo.png",
     "sameAs": [
       "https://www.facebook.com/vibezone",
@@ -93,7 +93,7 @@ const VideoChat = () => {
     },
     "offers": {
       "@type": "Offer",
-      "url": "https://www.vibezone.in/premium",
+      "url": "https://vibezone.in/premium",
       "priceCurrency": "USD",
       "price": "19.99",
       "priceValidUntil": "2025-12-31",
@@ -109,7 +109,7 @@ const VideoChat = () => {
   const aboutPageData = {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    "url": "https://www.vibezone.in/about",
+    "url": "https://vibezone.in/about",
     "name": "About VibeZone",
     "description": "Learn more about VibeZone, the best Omegle alternative to connect with random people online safely and enjoyably."
   };
@@ -117,7 +117,7 @@ const VideoChat = () => {
   const contactPageData = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
-    "url": "https://www.vibezone.in/contact",
+    "url": "https://vibezone.in/contact",
     "name": "Contact VibeZone",
     "description": "Get in touch with VibeZone customer service for any inquiries or support."
   };
