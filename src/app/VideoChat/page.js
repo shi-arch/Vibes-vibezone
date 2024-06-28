@@ -103,6 +103,7 @@ const VideoChat = () => {
         dispatch(setMessages([]))
         dispatch(setUserToCall(""))
         dispatch(setCallState('CALL_AVAILABLE'))
+        setCurrentCall(null)
         console.log('Call ended >>>>>>>>>>>>>>.');
       });  
     });
