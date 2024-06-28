@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import React, { useEffect, useState } from "react";
 import SideBarNew from "../../components/SideBarNew";
 import "./videochat.css"
@@ -206,6 +207,25 @@ const VideoChat = () => {
   return (
     <div className="video-chat-bg-container">
       {/* <button className="skip-button" onClick={() => status()}>status</button> */}
+      <Helmet>
+        <title>VibeZone - Random People Chat</title>
+        <meta name="description" content="Chat with random people from around the world on VibeZone. Make new friends, have fun, and stay connected!" />
+        <meta name="keywords" content="random chat, video chat, chat with strangers, VibeZone, online chat" />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="VibeZone - Random People Chat" />
+        <meta property="og:description" content="Chat with random people from around the world on VibeZone. Make new friends, have fun, and stay connected!" />
+        <meta property="og:image" content="./image.png" />
+        <meta property="og:url" content="https://vibezone.in/video-chat" />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="VibeZone - Random People Chat" />
+        <meta name="twitter:description" content="Chat with random people from around the world on VibeZone. Make new friends, have fun, and stay connected!" />
+        <meta name="twitter:image" content="./image.png" />
+        <meta name="twitter:url" content="https://vibezone.in" />
+      </Helmet>
       <EarlybardHeader />
       <EarlyBoardAccessModal />
       <SideBarNew />
