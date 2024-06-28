@@ -40,6 +40,90 @@ const VideoChat = () => {
       dispatch(setPeerId(newPeerId))
     }
   }, [])
+  const homepageData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "VibeZone",
+    "url": "https://www.vibezone.in",
+    "description": "Discover VibeZone, the leading Omegle alternative! Connect and talk to random people safely and enjoyably.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://www.vibezone.in/search?query={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  const organizationData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "VibeZone",
+    "url": "https://www.vibezone.in",
+    "logo": "https://vibezone-assets.s3.ap-south-1.amazonaws.com/vibezone_logo.png",
+    "sameAs": [
+      "https://www.facebook.com/vibezone",
+      "https://www.instagram.com/vibezone",
+      "https://www.linkedin.com/company/vibezone",
+      "https://twitter.com/vibezone"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+1-800-555-5555",
+      "contactType": "Customer Service"
+    }
+  };
+
+  const productData = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "VibeZone Premium Subscription",
+    "image": [
+      "https://vibezone-assets.s3.ap-south-1.amazonaws.com/vibezone_logo.png"
+    ],
+    "description": "Get access to premium features and connect with more people on VibeZone.",
+    "sku": "VIP-001",
+    "mpn": "VIP-001",
+    "brand": {
+      "@type": "Brand",
+      "name": "VibeZone"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "320"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": "https://www.vibezone.in/premium",
+      "priceCurrency": "USD",
+      "price": "19.99",
+      "priceValidUntil": "2025-12-31",
+      "itemCondition": "https://schema.org/NewCondition",
+      "availability": "https://schema.org/InStock",
+      "seller": {
+        "@type": "Organization",
+        "name": "VibeZone"
+      }
+    }
+  };
+
+  const aboutPageData = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "url": "https://www.vibezone.in/about",
+    "name": "About VibeZone",
+    "description": "Learn more about VibeZone, the best Omegle alternative to connect with random people online safely and enjoyably."
+  };
+
+  const contactPageData = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "url": "https://www.vibezone.in/contact",
+    "name": "Contact VibeZone",
+    "description": "Get in touch with VibeZone customer service for any inquiries or support."
+  };
+  
+  
+  
 
   // const status = async () => {
   //   try {
@@ -208,23 +292,23 @@ const VideoChat = () => {
     <div className="video-chat-bg-container">
       {/* <button className="skip-button" onClick={() => status()}>status</button> */}
       <Helmet>
-        <title>VibeZone - Random People Chat</title>
-        <meta name="description" content="Chat with random people from around the world on VibeZone. Make new friends, have fun, and stay connected!" />
-        <meta name="keywords" content="random chat, video chat, chat with strangers, VibeZone, online chat" />
-        
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="VibeZone - Random People Chat" />
-        <meta property="og:description" content="Chat with random people from around the world on VibeZone. Make new friends, have fun, and stay connected!" />
-        <meta property="og:image" content="./image.png" />
-        <meta property="og:url" content="https://vibezone.in/video-chat" />
-        
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="VibeZone - Random People Chat" />
-        <meta name="twitter:description" content="Chat with random people from around the world on VibeZone. Make new friends, have fun, and stay connected!" />
-        <meta name="twitter:image" content="./image.png" />
-        <meta name="twitter:url" content="https://vibezone.in" />
+      <title>VibeZone - Best Omegle Alternative to Talk to Random People</title>
+        <meta name="description" content="Discover VibeZone, the leading Omegle alternative! Connect and talk to random people safely and enjoyably." />
+        <script type="application/ld+json">
+          {JSON.stringify(homepageData)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(organizationData)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(productData)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(aboutPageData)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(contactPageData)}
+        </script>
       </Helmet>
       <EarlybardHeader />
       <EarlyBoardAccessModal />
