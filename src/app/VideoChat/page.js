@@ -17,6 +17,7 @@ import EarlybardHeader from "../../components/EarlyBardHeader";
 import Peer from "peerjs";
 import { setMessages, setUserName } from "../../redux/features/chatSlice";
 import { getApi, postApi } from "../../response/api";
+// import { Button } from "@mui/material";
 const VideoChat = () => {
   const dispatch = useDispatch()
   const [localStream, setLocalStream] = useState(null)
@@ -39,6 +40,33 @@ const VideoChat = () => {
     }
   }, [])
 
+  // const status = async () => {
+  //   try {
+  //     const stats = await currentCall?.peerConnection?.getStats(null);
+  //     if (stats) {
+  //       stats.forEach(report => {
+  //         if (report.type === 'candidate-pair' && report.state === 'succeeded' && report.bytesSent && report.bytesReceived) {
+  //           console.log(report);
+  //           const bytesSent = report.bytesSent;
+  //           const bytesReceived = report.bytesReceived;
+  //           const totalBytes = bytesSent + bytesReceived;
+            
+  //           // Calculate average bitrate in Mbps (assuming duration between last sent/received packets)
+  //           const durationInSeconds = (report.lastPacketReceivedTimestamp - report.lastPacketSentTimestamp) / 1000;
+  //           const bitrateMbps = (totalBytes / 8) / (durationInSeconds * 1000000); // Convert bytes to bits and divide by seconds
+  
+  //           console.log(`Estimated Bandwidth: ${bitrateMbps.toFixed(2)} Mbps`);
+  //         }
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching stats:', error);
+  //   }
+  // };
+  
+  
+  
+  
   const initiate = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -52,17 +80,22 @@ const VideoChat = () => {
       console.log('Peer ID:', newPeer.id);
     });
     newPeer.on('call', async (call) => {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      call.answer(stream);
-      call.on('stream', async (remoteStream) => {
-        await handleCamera(localCameraEnabled)
-        if (buttonLabel !== 'Skip') {
-          dispatch(setButtonLabel('Skip'))
-        }
-        setRemoteStream(remoteStream)
-        console.log(localCameraEnabled, 'user connected')
-      });
-      setCurrentCall(call)
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });  
+      if(!currentCall) {
+        call.answer(stream);
+        call.on('stream', async (remoteStream) => {
+          await handleCamera(localCameraEnabled)
+          if (buttonLabel !== 'Skip') {
+            dispatch(setButtonLabel('Skip'))
+          }
+          setRemoteStream(remoteStream)
+          console.log(localCameraEnabled, 'user connected')
+        });
+        setCurrentCall(call)
+      } else {
+        call.close()
+      }
+     
       call.on('close', () => {
         setRemoteStream(null)
         dispatch(setTimer(true))
@@ -71,7 +104,7 @@ const VideoChat = () => {
         dispatch(setUserToCall(""))
         dispatch(setCallState('CALL_AVAILABLE'))
         console.log('Call ended >>>>>>>>>>>>>>.');
-      });
+      });  
     });
     newPeer.on('error', (error) => {
       console.error('PeerJS error:', error);
@@ -171,6 +204,7 @@ const VideoChat = () => {
   }, [localStream])
   return (
     <div className="video-chat-bg-container">
+      {/* <button className="skip-button" onClick={() => status()}>status</button> */}
       <EarlybardHeader />
       <EarlyBoardAccessModal />
       <SideBarNew />
