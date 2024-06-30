@@ -8,7 +8,7 @@ import ChatInterfaceNew from '../../components/ChatInerfaceNew';
 import axios from "axios";
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
-import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setDisplayConnect, setPeer, setTimer, setTriggerCall, setSkipTimer, setUserToCall, setDisable, setPeerId, setBotTimer, setChatBot } from '../../redux/features/callSlice';
+import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setDisplayConnect, setPeer, setTimer, setTriggerCall, setSkipTimer, setUserToCall, setDisable, setPeerId } from '../../redux/features/callSlice';
 import { connectWithWebSocket, handleCamera, registerNewUser, sendBotMessage, startCall, updateUser } from '../utils/wssConnection/wssConnection';
 import { LogoSvg } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
@@ -200,34 +200,11 @@ const VideoChat = () => {
   useEffect(() => {
     if (timer) {
       setTimeout(() => {
-        dispatch(setTimer(false))
         dispatch(setDisableButton(false))
         dispatch(setButtonLabel('Skip'))
       }, 5000)
     }
   }, [timer])
-
-  useEffect(() => {
-    if (botTimer) {
-      setTimeout(() => {
-        dispatch(setBotTimer(false))
-        setLocalTime(true)
-      }, 20000)
-    }
-  }, [botTimer])
-
-  useEffect(() => {
-    if (localTime) {
-      dispatch(setBotTimer(false))
-      setLocalTime(false)
-      if (callState !== 'CALL_CONNECTED') {
-        dispatch(setChatBot('chatBot'))
-        dispatch(setCallState('CALL_CONNECTED'))
-        updateUser()
-        sendBotMessage([], "", setMessage)
-      }
-    }
-  }, [localTime])
 
   useEffect(() => {
     connectWithWebSocket()

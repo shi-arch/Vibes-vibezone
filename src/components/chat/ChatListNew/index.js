@@ -6,25 +6,18 @@ import { setUserName } from "../../../redux/features/chatSlice";
 
 const ChatsListNew = (props) => {
   const dispatch = useDispatch();
-  const [chatBotName, setChatBotName] = useState("")
   const { messagesArr } = useSelector(state => state.chatSlice)
-  const { userToCall, chatBot } = useSelector(state => state.callSlice)
+  const { userToCall } = useSelector(state => state.callSlice)
+  
   const bottomRef = useRef(null);
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messagesArr]);
 
-  useEffect(() => {
-    if(chatBot){
-      setChatBotName("Guest + " + Math.random().toString().substr(2, 8))
-    }
-  }, [chatBot]);
-
   return (
     <div className="chat-list-new-bg-container">
       <div className="guest-container">
         <h1 className="guest-head">{
-        chatBot && chatBotName ? chatBotName :  
         props.remoteStream && userToCall && userToCall.username ? userToCall.username : "Guest"
         }</h1>
       </div>
