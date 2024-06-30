@@ -159,7 +159,7 @@ const VideoChat = () => {
     } catch (error) {
       console.error('Error accessing media devices:', error);
     }
-    const newPeer = new Peer(peerId);
+    const newPeer = new Peer(peerId, { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }], 'sdpSemantics': 'unified-plan' });
     setPeer(newPeer)
     newPeer.on('open', () => {
       console.log('Peer ID:', newPeer.id);
