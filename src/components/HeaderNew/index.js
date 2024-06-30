@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { LogoSvg } from "../svgComponents";
 import "./index.css"
 import { useSelector, useDispatch } from "react-redux";
-import { setCallState, setDisableButton, setKeyWords, setTimer, setDisable, setChatBot, setBotTimer } from "../../redux/features/callSlice";
+import { setCallState, setDisableButton, setKeyWords, setTimer, setDisable } from "../../redux/features/callSlice";
 import { setMessages, setSessionId, setUserName } from "../../redux/features/chatSlice";
 import { getActiveUser, updateName } from "../../app/utils/wssConnection/wssConnection";
 import ActiveUsers from "../ActiveUsers";
@@ -12,38 +12,13 @@ import { disableColor, enableColor, initialColor } from "../../app/utils/constan
 
 const HeaderNew = (props) => {
   const dispatch = useDispatch();
-  const { callState, buttonLabel, isActive, keyWords, disableButton, userToCall, displayConnect, chatBot } = useSelector((state) => state.callSlice);
+  const { callState, buttonLabel, isActive, keyWords, disableButton, userToCall, displayConnect } = useSelector((state) => state.callSlice);
   const skipCall = async () => {
-    if (chatBot) {
-      debugger
-      dispatch(setSessionId(""))
-      dispatch(setMessages([]))
-      dispatch(setTimer(true))
-      dispatch(setChatBot(''))
-      dispatch(setDisableButton(true))
-      dispatch(setCallState('CALL_AVAILABLE'))
-      await getActiveUser()
-    } else {
-      props?.currentCall?.close()
-      dispatch(setBotTimer(true))
-    }
+    props?.currentCall?.close()
   }
-
-  useEffect(() => {
-    if (chatBot && callState !== 'CALL_AVAILABLE') {
-      var min = 30,
-      max = 60;
-      var rand = Math.floor(Math.random() * (max - min + 1) + min);
-      console.log('rand >>>>>>>>>>>>>>>>>>>>>>>', rand)
-      setTimeout(() => {
-        skipCall()
-      }, rand * 1000)
-    }
-  }, [chatBot])
 
   const startRandomCall = async () => {
     dispatch(setTimer(true))
-    dispatch(setBotTimer(true))
     dispatch(setDisableButton(true))
     dispatch(setCallState('CALL_AVAILABLE'))
     await getActiveUser()
@@ -81,7 +56,7 @@ const HeaderNew = (props) => {
                 action: "connect button",
                 label: "Connect",
               });
-              userToCall || chatBot ? skipCall() : startRandomCall()
+              userToCall ? skipCall() : startRandomCall()
             }}
           >
             {buttonLabel}

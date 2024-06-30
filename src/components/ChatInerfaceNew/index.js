@@ -18,7 +18,7 @@ import { postApi } from "../../response/api";
 const ChatInterfaceNew = (props) => {
   const dispatch = useDispatch()
   const [message, setMessage] = useState("")
-  const { callState, chatBot } = useSelector(state => state.callSlice)
+  const { callState } = useSelector(state => state.callSlice)
   const { calleeUserName, isTyping, messagesArr, sessionId } = useSelector(state => state.chatSlice)
 
   var input = document.getElementById("msg");
@@ -43,12 +43,8 @@ const ChatInterfaceNew = (props) => {
         arr.push(o)
       }
       dispatch(setMessages(arr))
-      if (chatBot) {
-        await sendBotMessage(arr, message, setMessage)        
-      } else {
-        await sendMessage(message);
-        setMessage("")
-      }
+      await sendMessage(message);
+      setMessage("")
       ReactGA.event({
         category: 'send Message',
         action: 'send Message Button',
