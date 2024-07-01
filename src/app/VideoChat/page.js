@@ -52,6 +52,16 @@ const VideoChat = () => {
       port: 3005,
       path: '/myapp',
       // secure: true  // Set to true if using HTTPS
+      config: {
+        iceServers: [
+          { url: 'stun:stun.l.google.com:19302' }, // Using Google's public STUN server
+          // {
+          //   url: 'turn:your-turn-server.com', // Replace with your TURN server
+          //   username: 'your-username', // TURN server username
+          //   credential: 'your-credential' // TURN server password
+          // }
+        ]
+      }
     });
     setPeer(newPeer)
     newPeer.on('open', () => {
