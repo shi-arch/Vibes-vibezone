@@ -29,15 +29,15 @@ const VideoChat = () => {
   const { peerId, userToCall, triggerCall, timer, socketId, skipTimer, buttonLabel, localCameraEnabled, enableDisableRemoteCam, enableDisableRemoteMic, callState, botTimer } = useSelector(state => state.callSlice)
 
   
-  useEffect(() => {
-    const checkUser = localStorage.getItem("user")
-    if (checkUser && !peerId) {
-      const newPeerId = (Math.random() + 1).toString(36).substring(7)
-      localStorage.setItem("peerId", newPeerId)
-      dispatch(setUserName(checkUser));
-      dispatch(setPeerId(newPeerId))
-    }
-  }, [])
+  // useEffect(() => {
+  //   const checkUser = localStorage.getItem("user")
+  //   if (checkUser && !peerId) {
+  //     // const newPeerId = (Math.random() + 1).toString(36).substring(7)
+  //     localStorage.setItem("peerId", newPeerId)
+  //     dispatch(setUserName(checkUser));
+  //     dispatch(setPeerId(newPeerId))
+  //   }
+  // }, [])
 
   const initiate = async () => {
     try {
@@ -46,10 +46,17 @@ const VideoChat = () => {
     } catch (error) {
       console.error('Error accessing media devices:', error);
     }
-    const newPeer = new Peer(peerId);
+    const publicIp = "3.108.243.143";
+    const newPeer = new Peer(undefined, {
+      host: publicIp,
+      port: 3005,
+      path: '/myapp',
+      // secure: true  // Set to true if using HTTPS
+    });
     setPeer(newPeer)
     newPeer.on('open', () => {
       console.log('Peer ID:', newPeer.id);
+      dispatch(setPeerId(newPeer.id))
     });
     newPeer.on('call', async (call) => {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
