@@ -21,7 +21,7 @@ import { setPeerId } from '../../redux/features/callSlice';
 const LandingPage = () => {
   const router = useNavigate();
   useEffect(() => {
-    localStorage.removeItem("user")
+    //localStorage.removeItem("user")
     localStorage.removeItem("peerId")
   }, [])
   return (

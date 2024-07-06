@@ -29,7 +29,7 @@ const initialState = {
   timer: false,
   flag: false,
   bgColor: '#8f47ff',
-  keyWords: "",
+  keyConnection: false,
   connectedTime: "",
   timeDiff: "",
   userObjectId: "",
@@ -40,10 +40,8 @@ const initialState = {
   skipTimer: false,
   disable: false,
   enableDisableRemoteCam: true,
-  chatBot: '',
   enableDisableRemoteMic: true,
   displayConnect: false,
-  botTimer: 0
 };
 
 
@@ -120,9 +118,6 @@ const callSlice = createSlice({
     setTimer: (state, actions) => {
       state.timer = actions.payload;
     },
-    setKeyWords: (state, actions) => {
-      state.keyWords = actions.payload;
-    },
     setConnectedTime: (state, actions) => {
       state.connectedTime = actions.payload;
     },
@@ -150,18 +145,21 @@ const callSlice = createSlice({
     setEnableDisableRemoteMic: (state, actions) => {
       state.enableDisableRemoteMic = actions.payload;
     },
-    setChatBot: (state, actions) => {
-      state.chatBot = actions.payload;
-    },
     setDisplayConnect: (state, actions) => {
       state.displayConnect = actions.payload;
     },
     setBotTimer: (state, actions) => {
       state.botTimer = actions.payload;
-    } 
+    },
+    setKeyConnection: (state, actions) => {
+      state.keyConnection = actions.payload;
+    },
+    setIpAddress: (state, actions) => {
+      state.ipAddress = actions.payload;
+    }
   }  
 });
 
-export const { setDisable, setBotTimer, setDisplayConnect, setChatBot, setEnableDisableRemoteMic, setEnableDisableRemoteCam, setSkipTimer, setTriggerEndCall, setPeer, setPeerId, setSocketId, setUserObjectId, setTimeDiff, setConnectedTime, setKeyWords, setBgColor, setFlag, setTimer, setSocketConnection, setUserToCall, setTriggerCall, setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
+export const { setIpAddress, setKeyConnection, setDisable, setBotTimer, setDisplayConnect, setChatBot, setEnableDisableRemoteMic, setEnableDisableRemoteCam, setSkipTimer, setTriggerEndCall, setPeer, setPeerId, setSocketId, setUserObjectId, setTimeDiff, setConnectedTime, setBgColor, setFlag, setTimer, setSocketConnection, setUserToCall, setTriggerCall, setCallRejected,setCallState,setCallerUsername,setCallingDialogVisible,setRemoteStream,setLocalCameraEnabled,setLocalMicrophoneEnabled,setScreenSharingActive,setGroupCallActive,setGroupCallStreams,setMessage, setDisableButton, setStartCall, setButtonLabel, setIsActive } = callSlice.actions;
 
 export default callSlice.reducer;

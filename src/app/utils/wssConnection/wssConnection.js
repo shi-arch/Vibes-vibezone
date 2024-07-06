@@ -1,6 +1,6 @@
 import socketClient from 'socket.io-client';
 import store from '../../../redux/store';
-import { setUserName, setMessages, setIsTyping, setSessionId } from '../../../redux/features/chatSlice';
+import { setUserName, setMessages, setIsTyping, setSessionId, setIsLoading } from '../../../redux/features/chatSlice';
 import { setTriggerCall, setUserToCall, setSocketId, setCallState, setButtonLabel, setTriggerEndCall, setDisableButton, setSkipTimer, setCurrentCall, setEnableDisableRemoteCam, setLocalMicrophoneEnabled, setEnableDisableRemoteMic, setChatBot, setTimer, setDisplayConnect } from '../../../redux/features/callSlice';
 import { setTotalUsers } from '../../../redux/features/loginSlice';
 import { postApi } from '../../../response/api';
@@ -40,7 +40,6 @@ export const connectWithWebSocket = async () => {
   })
   socket.on("get-active-user", (user) => {
     if (store.getState().callSlice.callState == "CALL_AVAILABLE") {
-      console.log('2222222222222222222222222')
       console.log('user enters into get active user >>>>>>>>', user)      
       const dispatch = store.dispatch
       dispatch(setCallState('CALL_IN_PROGRESS'))
@@ -70,8 +69,8 @@ export const connectWithWebSocket = async () => {
   socket.on('enableDisableMic', (enable) => {
     store.dispatch(setEnableDisableRemoteMic(enable))
   })
-  socket.on('skip-user', () => {
-    
+  socket.on('update-keywords', () => {
+    store.dispatch(setIsLoading(false))
   })
   socket.on('user-hanged-up', async () => {
     const dispatch = store.dispatch
@@ -82,13 +81,19 @@ export const connectWithWebSocket = async () => {
   });
 };
 
-export const registerNewUser = async (enableCam) => {
-  await socket.emit('register-new-user', { 
-    username: store.getState().chatSlice.userName,
-    socketId: store.getState().callSlice.socketId,
-    peerId: store.getState().callSlice.peerId,
-    enableCam: enableCam,
-    isActive: false
+export const registerNewUser = async (enableCam) => {  
+  const dispatch = store.dispatch
+  dispatch(setIsLoading(true))
+  const ipAddress = store.getState().callSlice.ipAddress
+  await postApi('/earlyAccess', {ipAddress, socketId: store.getState().callSlice.socketId, enableCam, isActive: false })
+  dispatch(setIsLoading(false))
+  dispatch(setDisplayConnect(true))
+};
+
+export const updateKeywords = async (data) => {
+  await socket.emit('update-keywords', {
+    socketId: store.getState().callSlice.socketId, 
+    keyWords: data
   });
 };
 
@@ -109,7 +114,7 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
         if(store.getState().callSlice.buttonLabel !== 'Skip'){
           store.dispatch(setButtonLabel('Skip'))
         }
-        console.log('user connected')
+        console.log('user connected >>>>>>>>>>>>>>>>')
       });
       await setCurrentCall(call)
       call.on('close', async () => {
@@ -145,7 +150,7 @@ export const endCall = async () => {
 }
 
 export const getActiveUser = async (flag) => {
-  socket.emit('get-active-user', { prevUser: store.getState().callSlice.userToCall || '', mySocketId: store.getState().callSlice.socketId, flag: flag || '' });
+  socket.emit('get-active-user', { prevUser: store.getState().callSlice.userToCall || '', ipAddress: store.getState().callSlice.ipAddress, flag: flag || '', myKeywords: store.getState().chatSlice.keyWords });
 };
 
 export const updateName = (username) => {
@@ -208,6 +213,7 @@ export const enableDisableMic = (enable) => {
   socket.emit('enableDisableMic', {enableOrDisable: enable, userSocketId: store.getState().callSlice.userToCall.socketId});
 };
 
-export const closeTab = () => {
-  socket.emit('disconnect-current-user', { userSocketId: store.getState().callSlice.userToCall.socketId, mySocketId: store.getState().callSlice.socketId });
+export const closeTab = async () => {
+  await postApi('/earlyAccess', {ipAddress: store.getState().callSlice.ipAddress, socketId: '', peerId: '', isActive: false})
+  //socket.emit('disconnect-current-user', { userSocketId: store.getState().callSlice.userToCall.socketId, mySocketId: store.getState().callSlice.socketId });
 };

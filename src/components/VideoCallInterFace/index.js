@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 
 const VideoCallInterFace = (props) => {
   const {localStream, remoteStream} = props
-  const { chatBot } = useSelector(state => state.callSlice)
   return (
     <div className="video-call-interface-bg-container">
       <div className="video-img-container">
@@ -23,10 +22,10 @@ const VideoCallInterFace = (props) => {
             }}
           > 
         {
-          remoteStream || chatBot ? 
+          remoteStream ? 
           <video
             id="userVideo"
-            style={chatBot ? {background: 'black', width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)'} : { width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }}
+            style={{ width: "100%", height: "229px", objectFit: "cover", transform: 'scale(-1,1)' }}
             ref={(video) => {
               if (video) video.srcObject = remoteStream;
             }}

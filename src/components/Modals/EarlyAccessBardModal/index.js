@@ -29,7 +29,7 @@ const input = ({ type, label, onChange, placeholder, value }) => {
   );
 };
 
-const EarlyBardAccessModal = () => {
+const EarlyBardAccessModal = (props) => {
   const contactPattern = /^\d{10}$/;
   const { Gender, Name, ProfileImage, Status, username, dob, Contact } = useSelector((state) => state.loginSlice.userProfile);
   const userProfile = useSelector((state) => state.loginSlice.userProfile);
@@ -138,6 +138,7 @@ const EarlyBardAccessModal = () => {
         <div className="Early-modal-bg-container">
           <div className="top-header">
             <h6 className="Early-bard-access">Early bird access</h6>
+            <h6 className="Early-bard-access">{props?.totalUserCount + ' / ' + 5000}</h6>            
             <button
               className="cross-button"
               type="button"

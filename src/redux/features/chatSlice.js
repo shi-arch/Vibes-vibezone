@@ -9,13 +9,15 @@ const initialState = {
   calleeUserName: "",
   activeUserData: [],
   updateMessage: "",
+  keyWords: [],
   socketConnected: false,
   loader: false,
   calleeUserData: "",
   isTyping: false,
   userAvailable: "",
   userLoggedIn: "",
-  sessionId: ""
+  sessionId: "",
+  isLoading: false
 };
 
 const chatSlice = createSlice({
@@ -69,10 +71,17 @@ const chatSlice = createSlice({
     },
     setSessionId: (state, actions) => {
       state.sessionId = actions.payload;
-    }
+    },
+    setKeyWords: (state, actions) => {
+      state.keyWords = actions.payload;
+    },
+    setIsLoading: (state, actions) => {
+      state.isLoading = actions.payload;
+    },
+    
   },
 });
 
-export const { addChat, setSessionId, setUserAvailable, setCalleeUserData, setLoader, setUserLoggedIn, setSearchUserData, setSelectedUserData, setChatData, setMessages, setUserName, setCalleeUserName, setActiveUserData, setUpdateMessage, setSocketConnected, setIsTyping } = chatSlice.actions;
+export const { setIsLoading, addChat, setKeyWords, setSessionId, setUserAvailable, setCalleeUserData, setLoader, setUserLoggedIn, setSearchUserData, setSelectedUserData, setChatData, setMessages, setUserName, setCalleeUserName, setActiveUserData, setUpdateMessage, setSocketConnected, setIsTyping } = chatSlice.actions;
 
 export default chatSlice.reducer;
