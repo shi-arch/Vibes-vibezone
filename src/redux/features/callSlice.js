@@ -40,10 +40,8 @@ const initialState = {
   skipTimer: false,
   disable: false,
   enableDisableRemoteCam: true,
-  chatBot: '',
   enableDisableRemoteMic: true,
   displayConnect: false,
-  botTimer: 0
 };
 
 
@@ -146,9 +144,6 @@ const callSlice = createSlice({
     },
     setEnableDisableRemoteMic: (state, actions) => {
       state.enableDisableRemoteMic = actions.payload;
-    },
-    setChatBot: (state, actions) => {
-      state.chatBot = actions.payload;
     },
     setDisplayConnect: (state, actions) => {
       state.displayConnect = actions.payload;

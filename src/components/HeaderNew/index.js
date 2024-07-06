@@ -33,18 +33,6 @@ const HeaderNew = (props) => {
     // }
   }
 
-  useEffect(() => {
-    if (chatBot && callState !== 'CALL_AVAILABLE') {
-      var min = 30,
-      max = 60;
-      var rand = Math.floor(Math.random() * (max - min + 1) + min);
-      console.log('rand >>>>>>>>>>>>>>>>>>>>>>>', rand)
-      setTimeout(() => {
-        skipCall()
-      }, rand * 1000)
-    }
-  }, [chatBot])
-
   const startRandomCall = async () => {
     if(keyWords.length){
       dispatch(setKeyConnection(true))
@@ -84,7 +72,7 @@ const HeaderNew = (props) => {
                 action: "connect button",
                 label: "Connect",
               });
-              userToCall || chatBot ? skipCall() : startRandomCall()
+              userToCall ? skipCall() : startRandomCall()
             }}
           >
             {buttonLabel}

@@ -138,7 +138,7 @@ const EarlyBardAccessModal = (props) => {
         <div className="Early-modal-bg-container">
           <div className="top-header">
             <h6 className="Early-bard-access">Early bird access</h6>
-            <h6 className="Early-bard-access">{props.totalUserCount}</h6>            
+            <h6 className="Early-bard-access">{props?.totalUserCount + ' / ' + 5000}</h6>            
             <button
               className="cross-button"
               type="button"

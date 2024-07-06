@@ -1,3 +1,4 @@
+//import { Helmet } from "react-helmet";
 import React, { useEffect, useState } from "react";
 import SideBarNew from "../../components/SideBarNew";
 import "./videochat.css"
@@ -7,7 +8,7 @@ import ChatInterfaceNew from '../../components/ChatInerfaceNew';
 import axios from "axios";
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
-import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setDisplayConnect, setPeer, setTimer, setTriggerCall, setSkipTimer, setUserToCall, setDisable, setPeerId, setBotTimer, setChatBot } from '../../redux/features/callSlice';
+import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setDisplayConnect, setPeer, setTimer, setTriggerCall, setSkipTimer, setUserToCall, setDisable, setPeerId } from '../../redux/features/callSlice';
 import { connectWithWebSocket, handleCamera, registerNewUser, sendBotMessage, startCall, updateUser } from '../utils/wssConnection/wssConnection';
 import { LogoSvg } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
@@ -39,6 +40,18 @@ const VideoChat = () => {
       dispatch(setPeerId(newPeerId))
     }
   }, [])
+  const homepageData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "VibeZone",
+    "url": "https://vibezone.in",
+    "description": "Discover VibeZone, the leading Omegle alternative! Connect and talk to random people safely and enjoyably.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://vibezone.in/search?query={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
 
   const NetworkQuality = {
     POOR: 0,
@@ -204,7 +217,6 @@ const VideoChat = () => {
   useEffect(() => {
     if (timer) {
       setTimeout(() => {
-        dispatch(setTimer(false))
         dispatch(setDisableButton(false))
         dispatch(setButtonLabel('Skip'))
       }, 5000)
