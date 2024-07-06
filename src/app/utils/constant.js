@@ -15,6 +15,18 @@ export const formatDate = (date) => {
     return `${day}-${month}-${year}`;
 };
 
+export const getStats = async (peerConnection) => {
+    const stats = await peerConnection.getStats();
+    let bandwidth, roundTripTime;
+    stats.forEach(report => {
+      if (report.type === 'candidate-pair' && report.state === 'succeeded') {
+        bandwidth = report.availableOutgoingBitrate;
+        roundTripTime = report.currentRoundTripTime;
+      }
+    });
+    return { bandwidth, roundTripTime };
+  }
+
 export const getRandomTimeInMilliseconds = (minSeconds, maxSeconds) => {
     const minMilliseconds = minSeconds * 1000;
     const maxMilliseconds = maxSeconds * 1000;

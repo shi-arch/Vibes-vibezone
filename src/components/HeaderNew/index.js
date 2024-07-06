@@ -3,30 +3,34 @@ import _ from 'lodash'
 import { LogoSvg } from "../svgComponents";
 import "./index.css"
 import { useSelector, useDispatch } from "react-redux";
-import { setCallState, setDisableButton, setKeyWords, setTimer, setDisable, setChatBot, setBotTimer } from "../../redux/features/callSlice";
+import { setCallState, setDisableButton, setKeyWords, setTimer, setDisable, setChatBot, setBotTimer, setKeyConnection } from "../../redux/features/callSlice";
 import { setMessages, setSessionId, setUserName } from "../../redux/features/chatSlice";
 import { getActiveUser, updateName } from "../../app/utils/wssConnection/wssConnection";
 import ActiveUsers from "../ActiveUsers";
 import ReactGA from "react-ga4"
 import { disableColor, enableColor, initialColor } from "../../app/utils/constant";
+import MultipleSelect from "../commonComponents/multi-ui-dropdown";
+import { Loader } from "../commonComponents/commonComponents";
+import { postApi } from "../../response/api";
 
 const HeaderNew = (props) => {
   const dispatch = useDispatch();
-  const { callState, buttonLabel, isActive, keyWords, disableButton, userToCall, displayConnect, chatBot } = useSelector((state) => state.callSlice);
+  const {keyWords, isLoading} = useSelector((state) => state.chatSlice)
+  const { callState, buttonLabel, isActive, disableButton, userToCall, displayConnect, chatBot } = useSelector((state) => state.callSlice);
   const skipCall = async () => {
-    if (chatBot) {
-      debugger
-      dispatch(setSessionId(""))
-      dispatch(setMessages([]))
-      dispatch(setTimer(true))
-      dispatch(setChatBot(''))
-      dispatch(setDisableButton(true))
-      dispatch(setCallState('CALL_AVAILABLE'))
-      await getActiveUser()
-    } else {
-      props?.currentCall?.close()
-      dispatch(setBotTimer(true))
-    }
+    props?.currentCall?.close()
+    // if (chatBot) {
+    //   dispatch(setSessionId(""))
+    //   dispatch(setMessages([]))
+    //   dispatch(setTimer(true))
+    //   dispatch(setChatBot(''))
+    //   dispatch(setDisableButton(true))
+    //   dispatch(setCallState('CALL_AVAILABLE'))
+    //   await getActiveUser()
+    // } else {
+    //   props?.currentCall?.close()
+    //   dispatch(setBotTimer(true))
+    // }
   }
 
   useEffect(() => {
@@ -42,8 +46,11 @@ const HeaderNew = (props) => {
   }, [chatBot])
 
   const startRandomCall = async () => {
+    if(keyWords.length){
+      dispatch(setKeyConnection(true))
+    }
     dispatch(setTimer(true))
-    dispatch(setBotTimer(true))
+    //dispatch(setBotTimer(true))
     dispatch(setDisableButton(true))
     dispatch(setCallState('CALL_AVAILABLE'))
     await getActiveUser()
@@ -60,14 +67,10 @@ const HeaderNew = (props) => {
         <span className="red-dots"></span>
       )}
       <ChildComponent />
-      <input
-        type="text"
-        className="head-input key-words-input"
-        placeholder="Key Words"
-        onChange={(e) => dispatch(setKeyWords(e.target.value))}
-        value={keyWords}
-      />
-
+      <MultipleSelect />
+      {
+        isLoading ? <Loader style={{position: 'absolute', right: '41%'}} /> : ""
+      }
       {
         displayConnect ?
           <button
@@ -98,6 +101,7 @@ const HeaderNew = (props) => {
 const ChildComponent = memo(() => {
   const dispatch = useDispatch();
   const { userName } = useSelector(state => state.chatSlice)
+  const { ipAddress } = useSelector(state => state.callSlice)
   const [name, setName] = useState("")
   const [updateFlag, setUpdateFlag] = useState(false)
   useEffect(() => {
@@ -108,7 +112,8 @@ const ChildComponent = memo(() => {
   useEffect(() => {
     if (updateFlag) {
       setUpdateFlag(false)
-      updateName(userName)
+      postApi('/earlyAccess', {ipAddress, userName})
+      //updateName(userName)
     }
   }, [updateFlag, userName])
   return <input

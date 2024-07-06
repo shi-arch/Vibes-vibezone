@@ -15,6 +15,8 @@ import store from '../../redux/store';
 import { setUserLoggedIn, setUserName } from '../../redux/features/chatSlice';
 import { setPeerId } from '../../redux/features/callSlice';
 import { Cookie } from '@mui/icons-material';
+import axios from 'axios';
+import { getApi, postApi } from '../../response/api';
 
 export const restoreLocalData = () => {
   const userData = localStorage.getItem("userData");
@@ -30,16 +32,20 @@ export const Loader = (style) => {
   </div>
 }
 
-export const getEarlyAccess = async () => {
-  const user = "Guest + " + Math.random().toString().substr(2, 8);
+export const getEarlyAccess = async (user) => {
   const peerId = (Math.random() + 1).toString(36).substring(7)
-  store.dispatch(setUserName(user));
-  store.dispatch(setPeerId(peerId))
-  const checkUser = localStorage.getItem("user")
-  if(!checkUser){
-    localStorage.setItem("user", user);
-    localStorage.setItem("peerId", peerId);
-  }  
+  const obj = {}
+  obj.peerId = peerId
+  obj.userName = user
+  const response = await axios.get('https://api.ipify.org?format=json')
+  if (response) {
+    obj.ipAddress = response.data.ip
+    const res = await postApi('/earlyAccess', obj)
+    if (res.status == 200) {
+      store.dispatch(setUserName(user));
+      store.dispatch(setPeerId(peerId))
+    }
+  }
 }
 
 export const validateEmail = (email) => {

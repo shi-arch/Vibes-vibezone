@@ -10,10 +10,10 @@ window.onbeforeunload = (event) => {
   closeTab() 
 };
 
-window.onerror = function (message, source, lineno, colno, error) {
-  console.error('Global error caught: ', message, source, lineno, colno, error);
-  alert('Please reload the page')
-};
+// window.onerror = function (message, source, lineno, colno, error) {
+//   console.error('Global error caught: ', message, source, lineno, colno, error);
+//   alert('Please reload the page')
+// };
 
 function App() {
   return (

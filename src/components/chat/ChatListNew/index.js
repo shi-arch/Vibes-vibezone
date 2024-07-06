@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { MsgSeen } from "../../svgComponents";
 import "./index.css";
 import { useEffect, useRef, useState } from "react";
-import { setUserName } from "../../../redux/features/chatSlice";
 
 const ChatsListNew = (props) => {
   const dispatch = useDispatch();
