@@ -20,7 +20,7 @@ function App() {
         {/* <Route path="/signup" element={<SignUp />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/chat" element={<Chat />} /> */}
-        <Route path="/video-chat" element={<VideoChat />} />
+        <Route path="/dev/video-chat" element={<VideoChat />} />
         {/* <Route path="/guest" element={<Guest />} /> */}
       </Routes>
     </Router>
