@@ -30,7 +30,7 @@ const EarlyAccess = () => {
             sx={{ fontWeight: "bold", fontSize: "30px", marginBottom: "20px" }}
           >
             The <span className="hash-one">#1 </span>Live Video Chat with Random
-            Stranger
+            Stranger Test
           </Typography>
           <Typography
             variant="body1"
