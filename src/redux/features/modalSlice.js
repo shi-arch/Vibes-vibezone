@@ -19,6 +19,7 @@ const modalSlice = createSlice({
   initialState: initialState,
   reducers: {
     setEarlyAccessBardModal: (state) => {
+      debugger
       state.earlyBardAccessModal = !state.earlyBardAccessModal;
     },
     setPreferenceModal: (state) => {

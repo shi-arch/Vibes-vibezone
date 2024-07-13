@@ -3,14 +3,19 @@ import { useNavigate } from "react-router-dom";
 import ReactGA from "react-ga4";
 import "./EarlyAccess.css";
 import { getEarlyAccess } from "../commonComponents/commonComponents";
+import { setEarlyAccessBardModal } from "../../redux/features/modalSlice";
+import { useSelector, useDispatch } from "react-redux";
+import EarlyBardAccessModal from "../Modals/EarlyAccessBardModal";
 
 const EarlyAccess = () => {
   const router = useNavigate();
+  const dispatch = useDispatch();
   return (
     <Box
     id="home"
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
     >
+      < EarlyBardAccessModal />
       <Box
         sx={{
           display: "flex",
@@ -46,13 +51,15 @@ const EarlyAccess = () => {
           </Typography>
           <Button
             onClick={async () => {
-              await getEarlyAccess()
+              // await getEarlyAccess()
               ReactGA.event({
                 category: "Early Access",
                 action: "Early Access Button",
                 label: "Button"
               });
-              router("/video-chat");
+              
+              dispatch(setEarlyAccessBardModal());
+              //router("/video-chat");
             }}
             variant="contained"
             sx={{
