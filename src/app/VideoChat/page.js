@@ -8,7 +8,7 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { setButtonLabel, setCallState, setDisableButton, setLocalCameraEnabled, setDisplayConnect, setPeer, setTimer, setTriggerCall, setSkipTimer, setUserToCall, setDisable, setPeerId, setBotTimer, setChatBot } from '../../redux/features/callSlice';
-import { connectWithWebSocket, handleCamera, registerNewUser, sendBotMessage, startCall, updateUser } from '../utils/wssConnection/wssConnection';
+import { connectWithWebSocket, createPeerConnection, handleCamera, initiateCall, registerNewUser, sendBotMessage, startCall, updateUser } from '../utils/wssConnection/wssConnection';
 import { LogoSvg } from '../../components/svgComponents';
 import CallIcons from '../../components/CallIcons';
 import ActiveUsers from '../../components/ActiveUsers';
@@ -43,6 +43,7 @@ const VideoChat = () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       setLocalStream(stream)
+      createPeerConnection(stream)
     } catch (error) {
       console.error('Error accessing media devices:', error);
     }
@@ -140,7 +141,8 @@ const VideoChat = () => {
 
   useEffect(() => {
     if (userToCall && triggerCall) {
-      startCall(peer, localStream, userToCall, setRemoteStream, setCurrentCall)
+      initiateCall(userToCall)
+      //startCall(peer, localStream, userToCall, setRemoteStream, setCurrentCall)
       dispatch(setTriggerCall(false))
     }
   }, [userToCall, triggerCall])

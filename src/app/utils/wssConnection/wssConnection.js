@@ -8,6 +8,69 @@ import { getRandomTimeInMilliseconds } from '../constant';
 const SERVER = process.env.REACT_APP_BASEURL;
 let socket;
 
+const defaultConstrains = {
+  video: {
+    width: 480,
+    height: 360
+  },
+  audio: true
+};
+
+const configuration = {
+  iceServers: [{
+    urls: 'stun:stun.l.google.com:13902'
+  }]
+};
+
+let connectedUserSocketId;
+let peerConnection;
+let dataChannel;
+
+export const createPeerConnection = (stream) => {
+  peerConnection = new RTCPeerConnection(configuration);
+  const localStream = stream
+  for (const track of localStream.getTracks()) {
+    peerConnection.addTrack(track, localStream);
+  }
+  peerConnection.ontrack = ({ streams: [stream] }) => {
+    store.dispatch(setRemoteStream(stream));
+  };
+  // incoming data channel messages
+  peerConnection.ondatachannel = (event) => {
+    const dataChannel = event.channel;
+
+    dataChannel.onopen = () => {
+      console.log('peer connection is ready to receive data channel messages');
+    };
+
+    dataChannel.onmessage = (event) => {
+      //store.dispatch(setMessage(true, event.data));
+    };
+  };
+
+  dataChannel = peerConnection.createDataChannel('chat');
+
+  dataChannel.onopen = () => {
+    console.log('chat data channel succesfully opened');
+  };
+
+  peerConnection.onicecandidate = (event) => {
+    console.log('geeting candidates from stun server');
+    if (event.candidate) {
+      wss.sendWebRTCCandidate({
+        candidate: event.candidate,
+        connectedUserSocketId: connectedUserSocketId
+      });
+    }
+  };
+
+  peerConnection.onconnectionstatechange = (event) => {
+    if (peerConnection.connectionState === 'connected') {
+      console.log('succesfully connected with other peer');
+    }
+  };
+};
+
 export const connectWithWebSocket = async () => {
   socket = socketClient(SERVER);
   socket.on('connection', () => {
@@ -27,7 +90,7 @@ export const connectWithWebSocket = async () => {
   socket.on("skip-timer", () => {
     store.dispatch(setTimer(true))
     store.dispatch(setDisableButton(true))
-  });  
+  });
   socket.on("send-message", (data) => {
     let arr = _.cloneDeep(store.getState().chatSlice.messagesArr)
     let o = { message: data.msgObj.message, sender: false }
@@ -35,31 +98,30 @@ export const connectWithWebSocket = async () => {
       arr[arr.length] = o
     } else {
       arr.push(o)
-    }
+    } 
     store.dispatch(setMessages(arr))
   })
   socket.on("get-active-user", (user) => {
     if (store.getState().callSlice.callState == "CALL_AVAILABLE") {
-      console.log('2222222222222222222222222')
-      console.log('user enters into get active user >>>>>>>>', user)      
+      console.log('user enters into get active user >>>>>>>>', user)
       const dispatch = store.dispatch
       dispatch(setCallState('CALL_IN_PROGRESS'))
       let userData = user
       if (user && user?.findActiveUser) {
         userData = user?.findActiveUser
       } else {
-        dispatch(setTriggerCall(true))       
+        dispatch(setTriggerCall(true))
       }
       dispatch(setUserToCall(userData))
     }
   });
   socket.on('broadcast', (data) => {
-    if(data && data.totalUsers){
+    if (data && data.totalUsers) {
       store.dispatch(setTotalUsers(data.totalUsers))
     }
   });
   socket.on('register-user', () => {
-    store.dispatch(setDisplayConnect(true))   
+    store.dispatch(setDisplayConnect(true))
   });
   socket.on('handle-camera', (enable) => {
     store.dispatch(setEnableDisableRemoteCam(enable))
@@ -70,8 +132,21 @@ export const connectWithWebSocket = async () => {
   socket.on('enableDisableMic', (enable) => {
     store.dispatch(setEnableDisableRemoteMic(enable))
   })
-  socket.on('skip-user', () => {
-    
+  socket.on('call-answered', (data) => {
+    if (data && data.answer) {
+      debugger
+      peerConnection.setRemoteDescription(data.answer);
+    }
+  })
+  socket.on('initiate-call', async (data) => {
+    debugger
+    await peerConnection.setRemoteDescription(data.offer);
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+    socket.emit('call-answered', {
+      answer: answer,
+      callerSocketId: connectedUserSocketId
+    });
   })
   socket.on('user-hanged-up', async () => {
     const dispatch = store.dispatch
@@ -83,7 +158,7 @@ export const connectWithWebSocket = async () => {
 };
 
 export const registerNewUser = async (enableCam) => {
-  await socket.emit('register-new-user', { 
+  await socket.emit('register-new-user', {
     username: store.getState().chatSlice.userName,
     socketId: store.getState().callSlice.socketId,
     peerId: store.getState().callSlice.peerId,
@@ -99,6 +174,17 @@ export const sendRequest = (user) => {
   });
 };
 
+export const initiateCall = async (user) => {
+  debugger
+  const offer = await peerConnection.createOffer();
+  await peerConnection.setLocalDescription(offer);
+  debugger
+  socket.emit('initiate-call', {
+    offer: offer,
+    callerSocketId: user.callerSocketId
+  });
+}
+
 export const startCall = async (peer, localStream, userToCall, setRemoteStream, setCurrentCall) => {
   try {
     const { peerId } = userToCall
@@ -106,7 +192,7 @@ export const startCall = async (peer, localStream, userToCall, setRemoteStream, 
       const call = await peer.call(peerId, localStream)
       call.on('stream', (remoteStream) => {
         setRemoteStream(remoteStream)
-        if(store.getState().callSlice.buttonLabel !== 'Skip'){
+        if (store.getState().callSlice.buttonLabel !== 'Skip') {
           store.dispatch(setButtonLabel('Skip'))
         }
         console.log('user connected')
@@ -133,7 +219,7 @@ export const handleUserHangedUp = async () => {
 };
 
 export const handleCamera = async () => {
-  socket.emit('handle-camera', {socketId: store.getState().callSlice.userToCall.socketId, enableOrDisable: store.getState().callSlice.localCameraEnabled})
+  socket.emit('handle-camera', { socketId: store.getState().callSlice.userToCall.socketId, enableOrDisable: store.getState().callSlice.localCameraEnabled })
 };
 
 export const handleSkipTimer = async () => {
@@ -174,9 +260,9 @@ export const sendBotMessage = async (arr, msg, setMessage) => {
   let message = msg
   setMessage("")
   const sessionId = store.getState().callSlice.sessionId
-  const response = await postApi('/chat-bot', {message: message,sessionId})
+  const response = await postApi('/chat-bot', { message: message, sessionId })
   if (response) {
-    if(!sessionId){
+    if (!sessionId) {
       store.dispatch(setSessionId(response?.data?.sessionId))
     }
     let chatArr = _.cloneDeep(arr)
@@ -184,7 +270,7 @@ export const sendBotMessage = async (arr, msg, setMessage) => {
     const randomTime = getRandomTimeInMilliseconds(3, 8);
     setTimeout(() => {
       store.dispatch(setMessages(chatArr))
-    }, randomTime);    
+    }, randomTime);
   }
 };
 export const typingMethod = () => {
@@ -201,11 +287,11 @@ export const stopTypingMethod = () => {
 // emitting events to server related with direct call
 
 export const enableDisableCam = (enable) => {
-  socket.emit('enableDisableCam', {enableOrDisable: enable, socketId: store.getState().callSlice.socketId, userSocketId: store.getState().callSlice.userToCall.socketId});
+  socket.emit('enableDisableCam', { enableOrDisable: enable, socketId: store.getState().callSlice.socketId, userSocketId: store.getState().callSlice.userToCall.socketId });
 };
 
 export const enableDisableMic = (enable) => {
-  socket.emit('enableDisableMic', {enableOrDisable: enable, userSocketId: store.getState().callSlice.userToCall.socketId});
+  socket.emit('enableDisableMic', { enableOrDisable: enable, userSocketId: store.getState().callSlice.userToCall.socketId });
 };
 
 export const closeTab = () => {

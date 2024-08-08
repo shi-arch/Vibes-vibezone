@@ -14,19 +14,18 @@ const HeaderNew = (props) => {
   const dispatch = useDispatch();
   const { callState, buttonLabel, isActive, keyWords, disableButton, userToCall, displayConnect, chatBot } = useSelector((state) => state.callSlice);
   const skipCall = async () => {
-    if (chatBot) {
-      debugger
-      dispatch(setSessionId(""))
-      dispatch(setMessages([]))
-      dispatch(setTimer(true))
-      dispatch(setChatBot(''))
-      dispatch(setDisableButton(true))
-      dispatch(setCallState('CALL_AVAILABLE'))
-      await getActiveUser()
-    } else {
-      props?.currentCall?.close()
-      dispatch(setBotTimer(true))
-    }
+    // if (chatBot) {
+    //   dispatch(setSessionId(""))
+    //   dispatch(setMessages([]))
+    //   dispatch(setTimer(true))
+    //   dispatch(setChatBot(''))
+    //   dispatch(setDisableButton(true))
+    //   dispatch(setCallState('CALL_AVAILABLE'))
+    //   await getActiveUser()
+    // } else {
+    //   props?.currentCall?.close()
+    //   dispatch(setBotTimer(true))
+    // }
   }
 
   useEffect(() => {
@@ -42,8 +41,8 @@ const HeaderNew = (props) => {
   }, [chatBot])
 
   const startRandomCall = async () => {
-    dispatch(setTimer(true))
-    dispatch(setBotTimer(true))
+    // dispatch(setTimer(true))
+    // dispatch(setBotTimer(true))
     dispatch(setDisableButton(true))
     dispatch(setCallState('CALL_AVAILABLE'))
     await getActiveUser()
@@ -69,7 +68,7 @@ const HeaderNew = (props) => {
       />
 
       {
-        displayConnect ?
+        true ?
           <button
             disabled={disableButton}
             style={callState == 'CALL_UNAVAILABLE' ? { backgroundColor: initialColor } :
